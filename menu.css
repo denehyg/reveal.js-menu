@@ -39,6 +39,10 @@
   text-decoration: none;
 }
 
+.slide-menu-item.no-title, .slide-menu-item-vertical.no-title {
+	font-style: italic;
+}
+
 .slide-menu--slide-left,
 .slide-menu--push-left {
   left: 0;

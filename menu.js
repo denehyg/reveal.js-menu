@@ -14,7 +14,6 @@
 // Cleanup styling/colours
 // Highlight link that matches current slide
 // Allow class to specify which element provides the slide title (possibly hidden)
-// Provide fallback slide link when no slide title is provided
 
 var RevealMenu = window.RevealMenu || (function(){
 	var options = Reveal.getConfig().menu || {};
@@ -33,26 +32,39 @@ var RevealMenu = window.RevealMenu || (function(){
 		$('.slide-menu-button').click(openMenu);
 
 		var items = $('.slide-menu-items');
-		$('.slides > section').each(function(d, h) {
-			var title = $('> h1, > h2, > h3', d).text();
-			var subsections = $('section', d);
+		var count = 0;
+		$('.slides > section').each(function(section, h) {
+			var subsections = $('section', section);
 			if (subsections.length > 0) {
-				subsections.each(function(e, v) {
-					var subtitle = $('h1,h2,h3', e).text();
+				subsections.each(function(subsection, v) {
+					count++;
 					var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-					items.append('<li class="' + type + '">' + itemLink(subtitle, h, v) + '</li>');
+					items.append(item(type, subsection, count, h, v));
 				});
 			} else {
-				items.append('<li class="slide-menu-item">' + itemLink(title, h) + '</li>');
+				count++;
+				var type = 'slide-menu-item';
+				items.append(item(type, section, count, h));
 			}
 		});
 		$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
 
-		function itemLink(title, h, v) {
+		function item(type, section, i, h, v) {
 			var link = '/#/' + h;
 			if (v) link += '/' + v;
 			else v = 0;
-			return '<a href="' + link + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</a>';
+
+			var title = $('> h1, > h2, > h3', section).text();
+			if (!title) {
+				title = "Slide " + i;
+				type += ' no-title';
+			}
+
+			return '<li class="' + type + '">' + '<a href="' + link + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</a>' + '</li>';
+		}
+
+		function itemLink(title, h, v) {
+			return ;
 		}
 
 		function clicked(event) {
