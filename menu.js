@@ -63,10 +63,6 @@ var RevealMenu = window.RevealMenu || (function(){
 			return '<li class="' + type + '">' + '<a href="' + link + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</a>' + '</li>';
 		}
 
-		function itemLink(title, h, v) {
-			return ;
-		}
-
 		function clicked(event) {
 			event.preventDefault();
 			Reveal.slide(event.srcElement.dataset.slideH, event.srcElement.dataset.slideV);
