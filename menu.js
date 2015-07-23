@@ -33,11 +33,6 @@ var RevealMenu = window.RevealMenu || (function(){
 		$('.slide-menu-button').click(openMenu);
 
 		var items = $('.slide-menu-items');
-		items.css({
-			'list-style-type': 'none',
-			'margin': '0',
-			'padding': '0'
-		});
 		$('.slides > section').each(function(d, h) {
 			var title = $('> h1, > h2, > h3', d).text();
 			var subsections = $('section', d);

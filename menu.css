@@ -14,6 +14,11 @@
   	color: #42affa;
 }
 
+.slide-menu-items {
+	margin: 0;
+	padding: 0;
+}
+
 .slide-menu-item, .slide-menu-item-vertical {
   display: block;
   text-align: left;
