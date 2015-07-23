@@ -72,7 +72,10 @@ var RevealMenu = window.RevealMenu || (function(){
 
 		function clicked(event) {
 			event.preventDefault();
-			Reveal.slide(event.srcElement.dataset.slideH, event.srcElement.dataset.slideV);
+			// if user clicking on span text, get the data from the parent (a element)
+			var h = event.srcElement.dataset.slideH || event.srcElement.parentElement.dataset.slideH;
+			var v = event.srcElement.dataset.slideV || event.srcElement.parentElement.dataset.slideV;
+			Reveal.slide(h, v);
 			closeMenu();
 		}
 
