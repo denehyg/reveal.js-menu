@@ -66,14 +66,16 @@ var RevealMenu = window.RevealMenu || (function(){
 			closeMenu();
 		}
 
-		function openMenu() {
+		function openMenu(event) {
+			if (event) event.preventDefault();
 		    $('body').addClass('slide-menu-active');
 		    $('.reveal').addClass('has-' + options.effect + '-' + options.side);
 		    $('.slide-menu').addClass('active');
 		    $('.slide-menu-overlay').addClass('active');
 		}
 
-		function closeMenu() {
+		function closeMenu(event) {
+			if (event) event.preventDefault();
 		    $('body').removeClass('slide-menu-active');
 		    $('.reveal').removeClass('has-' + options.effect + '-' + options.side);
 		    $('.slide-menu').removeClass('active');
