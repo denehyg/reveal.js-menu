@@ -39,6 +39,12 @@
   text-decoration: none;
 }
 
+.slide-menu-item > a.present,
+.slide-menu-item-vertical > a.present {
+	background-color: #555;
+	font-weight: bold;
+}
+
 .slide-menu-item.no-title, .slide-menu-item-vertical.no-title {
 	font-style: italic;
 }

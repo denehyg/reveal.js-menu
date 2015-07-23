@@ -12,7 +12,6 @@
 // Add option for slide numbers in slide links
 // Add toolbar - slides | themes | transitions | close
 // Cleanup styling/colours
-// Highlight link that matches current slide
 // Allow class to specify which element provides the slide title (possibly hidden)
 
 var RevealMenu = window.RevealMenu || (function(){
@@ -49,6 +48,9 @@ var RevealMenu = window.RevealMenu || (function(){
 		});
 		$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
 
+		Reveal.addEventListener( 'slidechanged', highlightCurrentSlide);
+		highlightCurrentSlide();
+
 		function item(type, section, i, h, v) {
 			var link = '/#/' + h;
 			if (v) link += '/' + v;
@@ -83,6 +85,13 @@ var RevealMenu = window.RevealMenu || (function(){
 		    $('.reveal').removeClass('has-' + options.effect + '-' + options.side);
 		    $('.slide-menu').removeClass('active');
 		    $('.slide-menu-overlay').removeClass('active');
+		}
+
+		function highlightCurrentSlide() {
+			var state = Reveal.getState();
+			$('.slide-menu-items > li > a').removeClass('present');
+			var sel = 'a[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
+			$(sel).addClass('present');
 		}
 	})
 	})
