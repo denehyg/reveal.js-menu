@@ -34,19 +34,27 @@
 
 .slide-menu-item > a, .slide-menu-item-vertical > a {
   display: block;
-  padding: 12px 24px;
+  padding: 12px 18px;
   color: #42affa;
   text-decoration: none;
 }
 
-.slide-menu-item > a.present,
-.slide-menu-item-vertical > a.present {
+.slide-menu-item a.present,
+.slide-menu-item-vertical a.present {
 	background-color: #555;
+}
+
+.slide-menu-item a.present .slide-menu-item-title,
+.slide-menu-item-vertical a.present .slide-menu-item-title {
 	font-weight: bold;
 }
 
-.slide-menu-item.no-title, .slide-menu-item-vertical.no-title {
+.slide-menu-item.no-title .slide-menu-item-title, .slide-menu-item-vertical.no-title .slide-menu-item-title {
 	font-style: italic;
+}
+
+.slide-menu-item-number {
+	color: #999;
 }
 
 .slide-menu--slide-left,

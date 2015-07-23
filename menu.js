@@ -7,9 +7,8 @@
 // Additional trigger options:
 // - wrap the slide number in a link
 // - hover zone at edge of slides
-// - keypress (probably 'm' by default)
+// - keypress to open/close menu (probably 'm' by default), and up/down/enter to select slide
 // - via links in the slides, at least for demo purposes
-// Add option for slide numbers in slide links
 // Add toolbar - slides | themes | transitions | close
 // Cleanup styling/colours
 // Allow class to specify which element provides the slide title (possibly hidden)
@@ -19,6 +18,7 @@ var RevealMenu = window.RevealMenu || (function(){
 	options.path = options.path || 'plugin/menu';
 	options.side = options.side || 'left';	// 'left' or 'right'
 	options.effect = options.effect || 'slide';  // 'slide' or 'push'
+	options.numbers = options.numbers || false;
 
 	loadResource(options.path + '/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
@@ -60,6 +60,11 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (!title) {
 				title = "Slide " + i;
 				type += ' no-title';
+			}
+
+			title = '<span class="slide-menu-item-title">' + title + '</span>';
+			if (options.numbers) {
+				title = '<span class="slide-menu-item-number">' + i + '. </span>' + title;
 			}
 
 			return '<li class="' + type + '">' + '<a href="' + link + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</a>' + '</li>';
