@@ -1,0 +1,108 @@
+.slide-menu {
+	background-color: #333;
+	z-index: 200;
+	position: fixed;
+	top: 0;
+	width: 300px;
+	height: 100%;
+	overflow-y: scroll;
+	transition: transform 0.3s;
+
+	font-family: 'Source Sans Pro', Helvetica, sans-serif;
+  	font-size: 16px;
+  	font-weight: normal;
+  	color: #42affa;
+}
+
+.slide-menu-item, .slide-menu-item-vertical {
+  display: block;
+  text-align: left;
+}
+
+.slide-menu-item {
+  border-top: solid 1px #3184a1;
+}
+
+.slide-menu-item:first-child {
+  border-top: none;
+}
+
+.slide-menu-item > a, .slide-menu-item-vertical > a {
+  display: block;
+  padding: 12px 24px;
+  color: #42affa;
+  text-decoration: none;
+}
+
+.slide-menu--slide-left,
+.slide-menu--push-left {
+  left: 0;
+  transform: translateX(-300px);
+}
+
+.slide-menu--slide-left.active,
+.slide-menu--push-left.active {
+  transform: translateX(0);
+}
+
+.slide-menu--slide-right,
+.slide-menu--push-right {
+  right: 0;
+  transform: translateX(300px);
+}
+
+.slide-menu--slide-right.active,
+.slide-menu--push-right.active {
+  transform: translateX(0);
+}
+
+.reveal.has-push-left {
+  transform: translateX(300px);
+}
+
+.reveal.has-push-right {
+  transform: translateX(-300px);
+}
+
+.reveal {
+	transition: transform 0.3s;
+}
+
+/*
+ * Menu controls
+ */
+.reveal .slide-menu-button {
+	position: fixed;
+	left: 30px;
+	bottom: 30px;
+	z-index: 30;
+	font-size: 24px;
+}
+
+.reveal .slide-menu-button a {
+	color: #42affa;
+}
+
+/*
+ * Menu overlay
+ */
+
+.slide-menu-overlay {
+  position: fixed;
+  z-index: 199;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  background-color: #000;
+  opacity: 0;
+  transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
+}
+
+.slide-menu-overlay.active {
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
