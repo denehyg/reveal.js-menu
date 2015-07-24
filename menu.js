@@ -17,7 +17,6 @@ var RevealMenu = window.RevealMenu || (function(){
 	var options = Reveal.getConfig().menu || {};
 	options.path = options.path || 'plugin/menu';
 	options.side = options.side || 'left';	// 'left' or 'right'
-	options.effect = options.effect || 'slide';  // 'slide' or 'push'
 	options.numbers = options.numbers || false;
 	if (typeof options.themes === "undefined") {
 		options.themes = [
