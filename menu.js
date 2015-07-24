@@ -143,7 +143,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 		function setTheme(event) {
 			if (event) event.preventDefault();
-			document.getElementById('theme').setAttribute('href', event.srcElement.dataset.theme);
+			$('#theme').attr('href', event.srcElement.dataset.theme);
 			closeMenu();
 		}
 
