@@ -14,6 +14,10 @@
   	color: #42affa;
 }
 
+/*
+ * Slides menu
+ */
+
 .slide-menu-items {
 	margin: 0;
 	padding: 0;
@@ -89,6 +93,64 @@
 
 .reveal {
 	transition: transform 0.3s;
+}
+
+/*
+ * Toolbar
+ */
+.slide-menu-toolbar {
+ 	height: 60px;
+ 	width: 100%;
+ 	font-size: 12px;
+    display: table;
+    table-layout: fixed; /* ensures equal width */
+    margin: 0;
+    padding: 0;
+	border-bottom: solid 2px #999;
+}
+
+.slide-menu-toolbar > li {
+    display: table-cell;
+ 	line-height: 150%;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+	color: #aaa;
+	border-radius: 3px;
+}
+
+.slide-menu-toolbar > li.active-toolbar-button {
+ 	color: white;
+ 	text-shadow: 0 1px black;	
+}
+
+.slide-menu-toolbar > li:hover {
+	color: white;
+}
+
+/*
+ * Panels
+ */
+.slide-menu-panel {
+	position: absolute;
+	width: 100%;
+	visibility: hidden;
+}
+
+.slide-menu-panel.active-menu-panel {
+	visibility: visible;
+}
+
+/*
+ * Theme and Transitions buttons
+ */
+
+div[data-panel="Themes"] li,
+div[data-panel="Transitions"] li {
+	display: block;
+	text-align: left;
+	cursor: pointer;
+	padding: 6px 18px;
 }
 
 /*

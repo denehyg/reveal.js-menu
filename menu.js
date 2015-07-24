@@ -9,9 +9,11 @@
 // - hover zone at edge of slides
 // - keypress to open/close menu (probably 'm' by default), and up/down/enter to select slide
 // - via links in the slides, at least for demo purposes
-// Add toolbar - slides | themes | transitions | close
-// Cleanup styling/colours
+// Highlight current theme & transition in the menu
+// Add menu panel for changing options, for both reveal (eg autoSlide, loop, show/hide controls, ...) and menu (eg change side, effect, ...)
 // Allow class to specify which element provides the slide title (possibly hidden)
+// Cleanup styling/colours
+// Integrate theme into styling ?
 
 var RevealMenu = window.RevealMenu || (function(){
 	var options = Reveal.getConfig().menu || {};
@@ -19,17 +21,63 @@ var RevealMenu = window.RevealMenu || (function(){
 	options.side = options.side || 'left';	// 'left' or 'right'
 	options.effect = options.effect || 'slide';  // 'slide' or 'push'
 	options.numbers = options.numbers || false;
+	if (typeof options.themes === "undefined") {
+		options.themes = [
+			{ name: 'Black', theme: 'css/theme/black.css' },
+			{ name: 'White', theme: 'css/theme/white.css' },
+			{ name: 'League', theme: 'css/theme/league.css' },
+			{ name: 'Sky', theme: 'css/theme/sky.css' },
+			{ name: 'Beige', theme: 'css/theme/beige.css' },
+			{ name: 'Simple', theme: 'css/theme/simple.css' },
+			{ name: 'Serif', theme: 'css/theme/serif.css' },
+			{ name: 'Blood', theme: 'css/theme/blood.css' },
+			{ name: 'Night', theme: 'css/theme/night.css' },
+			{ name: 'Moon', theme: 'css/theme/moon.css' },
+			{ name: 'Solarized', theme: 'css/theme/solarized.css' }
+		];
+	}
+	options.transitions = options.transitions || true;
 
 	loadResource(options.path + '/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
 	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
-		$('.reveal').after('<nav class="slide-menu slide-menu--' + options.effect + '-' + options.side + '"><ul class="slide-menu-items"></ul></nav>');
-		$('.reveal').after('<div class="slide-menu-overlay"></div>');
-		$('.slide-menu-overlay').click(closeMenu);
+		$('<nav class="slide-menu slide-menu--' + options.effect + '-' + options.side + '"></nav>')
+			.insertAfter($('.reveal'));
+		$('<div class="slide-menu-overlay"></div>')
+			.insertAfter($('.reveal'))
+			.click(closeMenu);
 
-		$('.reveal').append('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>');
-		$('.slide-menu-button').click(openMenu);
+		$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
+			.appendTo($('.reveal'))
+			.click(openMenu);
 
+		var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
+		$('<li data-panel="Slides"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
+			.appendTo(toolbar)
+			.addClass('active-toolbar-button')
+			.click(openPanel);
+		if (options.themes) {
+			$('<li data-panel="Themes"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
+				.appendTo(toolbar)
+				.click(openPanel);
+		}
+		if (options.transitions) {
+			$('<li data-panel="Transitions"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
+				.appendTo(toolbar)
+				.click(openPanel);
+		}
+		$('<li id="close"><span class="slide-menu-toolbar-label">Close</span><br/><i class="fa fa-times"></i></li>')
+			.appendTo(toolbar)
+			.click(closeMenu);
+
+		var panels = $('<div class="slide-menu-panels"></div>').appendTo($('.slide-menu'));
+
+		//
+		// Slide links
+		//
+		$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
+			.appendTo(panels)
+			.addClass('active-menu-panel');
 		var items = $('.slide-menu-items');
 		var count = 0;
 		$('.slides > section').each(function(section, h) {
@@ -56,7 +104,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (v) link += '/' + v;
 			else v = 0;
 
-			var title = $('> h1, > h2, > h3', section).text();
+			var title = $('h1, h2, h3', section).text();
 			if (!title) {
 				title = "Slide " + i;
 				type += ' no-title';
@@ -79,6 +127,53 @@ var RevealMenu = window.RevealMenu || (function(){
 			closeMenu();
 		}
 
+		function highlightCurrentSlide() {
+			var state = Reveal.getState();
+			$('.slide-menu-items > li > a').removeClass('present');
+			var sel = 'a[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
+			$(sel).addClass('present');
+		}
+
+		//
+		// Themes
+		//
+		if (options.themes) {
+			var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
+			options.themes.forEach(function(t) {
+				$('<li data-theme="' + t.theme + '">' + t.name + '</li>').appendTo(panel).click(setTheme);
+			})
+		}
+
+		function setTheme(event) {
+			if (event) event.preventDefault();
+			document.getElementById('theme').setAttribute('href', event.srcElement.dataset.theme);
+			closeMenu();
+		}
+
+		//
+		// Transitions
+		//
+		if (options.transitions) {
+			var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>')
+				.appendTo(panels);
+			$('<li data-transition="none">None</li>').appendTo(panel).click(setTransition);
+			$('<li data-transition="fade">Fade</li>').appendTo(panel).click(setTransition);
+			$('<li data-transition="slide">Slide</li>').appendTo(panel).click(setTransition);
+			$('<li data-transition="convex">Convex</li>').appendTo(panel).click(setTransition);
+			$('<li data-transition="concave">Concave</li>').appendTo(panel).click(setTransition);
+			$('<li data-transition="zoom">Zoom</li>').appendTo(panel).click(setTransition);
+		}
+
+		function setTransition(event) {
+			if (event) event.preventDefault();
+			Reveal.configure({ transition: event.srcElement.dataset.transition });
+			closeMenu();
+		}
+
+		//
+		// Utilty functions
+		//
+
 		function openMenu(event) {
 			if (event) event.preventDefault();
 		    $('body').addClass('slide-menu-active');
@@ -95,11 +190,13 @@ var RevealMenu = window.RevealMenu || (function(){
 		    $('.slide-menu-overlay').removeClass('active');
 		}
 
-		function highlightCurrentSlide() {
-			var state = Reveal.getState();
-			$('.slide-menu-items > li > a').removeClass('present');
-			var sel = 'a[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
-			$(sel).addClass('present');
+		function openPanel(event) {
+			openMenu(event);
+			var panel = event.srcElement.dataset.panel || event.srcElement.parentElement.dataset.panel;
+			$('.slide-menu-toolbar > li').removeClass('active-toolbar-button');
+			$('li[data-panel="' + panel + '"]').addClass('active-toolbar-button');
+			$('.slide-menu-panel').removeClass('active-menu-panel');
+			$('div[data-panel="' + panel + '"]').addClass('active-menu-panel');
 		}
 	})
 	})
