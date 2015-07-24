@@ -12,8 +12,6 @@
 // Highlight current theme & transition in the menu
 // Add menu panel for changing options, for both reveal (eg autoSlide, loop, show/hide controls, ...) and menu (eg change side, effect, ...)
 // Allow class to specify which element provides the slide title (possibly hidden)
-// Cleanup styling/colours
-// Integrate theme into styling ?
 
 var RevealMenu = window.RevealMenu || (function(){
 	var options = Reveal.getConfig().menu || {};
@@ -41,10 +39,10 @@ var RevealMenu = window.RevealMenu || (function(){
 	loadResource(options.path + '/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
 	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
-		$('<nav class="slide-menu slide-menu--' + options.effect + '-' + options.side + '"></nav>')
-			.insertAfter($('.reveal'));
+		$('<nav class="slide-menu slide-menu--' + options.side + '"></nav>')
+			.appendTo($('.reveal'));
 		$('<div class="slide-menu-overlay"></div>')
-			.insertAfter($('.reveal'))
+			.appendTo($('.reveal'))
 			.click(closeMenu);
 
 		$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')

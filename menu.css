@@ -1,4 +1,4 @@
-.slide-menu {
+.reveal .slide-menu {
 	background-color: #333;
 	z-index: 200;
 	position: fixed;
@@ -7,79 +7,78 @@
 	height: 100%;
 	overflow-y: scroll;
 	transition: transform 0.3s;
-
-	font-family: 'Source Sans Pro', Helvetica, sans-serif;
   	font-size: 16px;
   	font-weight: normal;
-  	color: #42affa;
+  	/*color: #42affa;*/
 }
 
 /*
  * Slides menu
  */
 
-.slide-menu-items {
+.reveal .slide-menu-items {
 	margin: 0;
 	padding: 0;
+	width: 100%;
 }
 
-.slide-menu-item, .slide-menu-item-vertical {
+.reveal .slide-menu-item, 
+.reveal .slide-menu-item-vertical {
   display: block;
   text-align: left;
 }
 
-.slide-menu-item {
-  border-top: solid 1px #3184a1;
+.reveal .slide-menu-item {
+  border-top: solid 1px #666;
 }
 
-.slide-menu-item:first-child {
+.reveal .slide-menu-item:first-child {
   border-top: none;
 }
 
-.slide-menu-item > a, .slide-menu-item-vertical > a {
-  display: block;
-  padding: 12px 18px;
-  color: #42affa;
-  text-decoration: none;
+.reveal .slide-menu-item > a, 
+.reveal .slide-menu-item-vertical > a {
+	display: block;
+	padding: 12px 18px;
+	color: #aaa;
+	text-decoration: none;
 }
 
-.slide-menu-item a.present,
-.slide-menu-item-vertical a.present {
-	background-color: #555;
+.reveal .slide-menu-item > a:hover, 
+.reveal .slide-menu-item-vertical > a:hover {
+	color: #eee;
 }
 
-.slide-menu-item a.present .slide-menu-item-title,
-.slide-menu-item-vertical a.present .slide-menu-item-title {
-	font-weight: bold;
+.reveal .slide-menu-item a.present,
+.reveal .slide-menu-item-vertical a.present {
+	background-color: #222;
+	color: white;
 }
 
-.slide-menu-item.no-title .slide-menu-item-title, .slide-menu-item-vertical.no-title .slide-menu-item-title {
+.reveal .slide-menu-item.no-title .slide-menu-item-title, 
+.reveal .slide-menu-item-vertical.no-title .slide-menu-item-title {
 	font-style: italic;
 }
 
-.slide-menu-item-number {
+.reveal .slide-menu-item-number {
 	color: #999;
 }
 
-.slide-menu--slide-left,
-.slide-menu--push-left {
+.reveal .slide-menu--left {
   left: 0;
   transform: translateX(-300px);
 }
 
-.slide-menu--slide-left.active,
-.slide-menu--push-left.active {
+.reveal .slide-menu--left.active {
   transform: translateX(0);
 }
 
-.slide-menu--slide-right,
-.slide-menu--push-right {
+.reveal .slide-menu--right {
   right: 0;
   transform: translateX(300px);
 }
 
-.slide-menu--slide-right.active,
-.slide-menu--push-right.active {
+.reveal .slide-menu--right.active {
   transform: translateX(0);
 }
 
@@ -95,10 +94,11 @@
 	transition: transform 0.3s;
 }
 
+
 /*
  * Toolbar
  */
-.slide-menu-toolbar {
+.reveal .slide-menu-toolbar {
  	height: 60px;
  	width: 100%;
  	font-size: 12px;
@@ -106,10 +106,10 @@
     table-layout: fixed; /* ensures equal width */
     margin: 0;
     padding: 0;
-	border-bottom: solid 2px #999;
+	border-bottom: solid 2px #666;
 }
 
-.slide-menu-toolbar > li {
+.reveal .slide-menu-toolbar > li {
     display: table-cell;
  	line-height: 150%;
     text-align: center;
@@ -119,7 +119,7 @@
 	border-radius: 3px;
 }
 
-.slide-menu-toolbar > li.active-toolbar-button {
+.reveal .slide-menu-toolbar > li.active-toolbar-button {
  	color: white;
  	text-shadow: 0 1px black;	
 }
@@ -131,13 +131,13 @@
 /*
  * Panels
  */
-.slide-menu-panel {
+.reveal .slide-menu-panel {
 	position: absolute;
 	width: 100%;
 	visibility: hidden;
 }
 
-.slide-menu-panel.active-menu-panel {
+.reveal .slide-menu-panel.active-menu-panel {
 	visibility: visible;
 }
 
@@ -145,12 +145,18 @@
  * Theme and Transitions buttons
  */
 
-div[data-panel="Themes"] li,
-div[data-panel="Transitions"] li {
+.reveal div[data-panel="Themes"] li,
+.reveal div[data-panel="Transitions"] li {
 	display: block;
 	text-align: left;
 	cursor: pointer;
 	padding: 6px 18px;
+	color: #848484;
+}
+
+.reveal div[data-panel="Themes"] li:hover,
+.reveal div[data-panel="Transitions"] li:hover {
+	color: #eee;
 }
 
 /*
@@ -164,15 +170,11 @@ div[data-panel="Transitions"] li {
 	font-size: 24px;
 }
 
-.reveal .slide-menu-button a {
-	color: #42affa;
-}
-
 /*
  * Menu overlay
  */
 
-.slide-menu-overlay {
+.reveal .slide-menu-overlay {
   position: fixed;
   z-index: 199;
   top: 0;
@@ -185,7 +187,7 @@ div[data-panel="Transitions"] li {
   transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
 }
 
-.slide-menu-overlay.active {
+.reveal .slide-menu-overlay.active {
   width: 100%;
   height: 100%;
   opacity: 0.7;
