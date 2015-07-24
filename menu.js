@@ -33,7 +33,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			{ name: 'Solarized', theme: 'css/theme/solarized.css' }
 		];
 	}
-	options.transitions = options.transitions || true;
+	if (typeof options.transitions === "undefined") {
+		options.transitions = options.transitions || true;
+	}
 
 	loadResource(options.path + '/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
