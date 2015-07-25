@@ -159,6 +159,11 @@
 	color: #eee;
 }
 
+.reveal div[data-panel="Transitions"] li.active {
+	color: #eee;
+	background-color: #222;
+}
+
 /*
  * Menu controls
  */

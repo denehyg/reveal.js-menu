@@ -179,6 +179,8 @@ var RevealMenu = window.RevealMenu || (function(){
 		    $('.reveal').addClass('has-' + options.effect + '-' + options.side);
 		    $('.slide-menu').addClass('active');
 		    $('.slide-menu-overlay').addClass('active');
+		    $('div[data-panel="Transitions"] li').removeClass('active');
+		    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
 		}
 
 		function closeMenu(event) {
