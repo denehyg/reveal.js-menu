@@ -179,6 +179,12 @@ var RevealMenu = window.RevealMenu || (function(){
 		    $('.reveal').addClass('has-' + options.effect + '-' + options.side);
 		    $('.slide-menu').addClass('active');
 		    $('.slide-menu-overlay').addClass('active');
+
+		    // set highlight for selected theme
+		    $('div[data-panel="Themes"] li').removeClass('active');
+		    $('li[data-theme="' + $('#theme').attr('href') + '"]').addClass('active');
+
+		    // set hightlight for selected transition
 		    $('div[data-panel="Transitions"] li').removeClass('active');
 		    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
 		}

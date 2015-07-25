@@ -159,6 +159,7 @@
 	color: #eee;
 }
 
+.reveal div[data-panel="Themes"] li.active,
 .reveal div[data-panel="Transitions"] li.active {
 	color: #eee;
 	background-color: #222;
