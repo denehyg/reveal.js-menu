@@ -35,7 +35,7 @@ var RevealMenu = window.RevealMenu || (function(){
 	if (typeof options.openButton === "undefined") options.openButton = true;
 	if (typeof options.openSlideNumber === "undefined") options.openSlideNumber = false;
 
-	loadResource(options.path + '/jeesh.min.js', 'script', function() {
+	loadResource(options.path + '/lib/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
 	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
 		$('<nav class="slide-menu slide-menu--' + options.side + '"></nav>')
