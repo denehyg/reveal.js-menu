@@ -5,11 +5,9 @@
 
 // TODO
 // Additional trigger options:
-// - wrap the slide number in a link
 // - hover zone at edge of slides
 // - keypress to open/close menu (probably 'm' by default), and up/down/enter to select slide
 // - via links in the slides, at least for demo purposes
-// Highlight current theme & transition in the menu
 // Add menu panel for changing options, for both reveal (eg autoSlide, loop, show/hide controls, ...) and menu (eg change side, effect, ...)
 // Allow class to specify which element provides the slide title (possibly hidden)
 
@@ -33,9 +31,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			{ name: 'Solarized', theme: 'css/theme/solarized.css' }
 		];
 	}
-	if (typeof options.transitions === "undefined") {
-		options.transitions = options.transitions || true;
-	}
+	if (typeof options.transitions === "undefined") options.transitions = true;
+	if (typeof options.openButton === "undefined") options.openButton = true;
+	if (typeof options.openSlideNumber === "undefined") options.openSlideNumber = false;
 
 	loadResource(options.path + '/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
@@ -45,10 +43,6 @@ var RevealMenu = window.RevealMenu || (function(){
 		$('<div class="slide-menu-overlay"></div>')
 			.appendTo($('.reveal'))
 			.click(closeMenu);
-
-		$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
-			.appendTo($('.reveal'))
-			.click(openMenu);
 
 		var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
 		$('<li data-panel="Slides"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
@@ -168,6 +162,24 @@ var RevealMenu = window.RevealMenu || (function(){
 			Reveal.configure({ transition: event.srcElement.dataset.transition });
 			closeMenu();
 		}
+
+		//
+		// Open menu options
+		//
+		if (options.openButton) {
+			// add menu button
+			$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
+				.appendTo($('.reveal'))
+				.click(openMenu);
+		}
+
+		if (options.openSlideNumber) {
+			// wrap slide number in link
+			$('<div class="slide-number-wrapper"><a href="#"></a></div>').insertAfter($('div.slide-number'));
+			$('.slide-number').appendTo($('.slide-number-wrapper a'));
+			$('.slide-number-wrapper a').click(openMenu);
+		}
+
 
 		//
 		// Utilty functions
