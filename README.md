@@ -70,6 +70,8 @@ Reveal.initialize({
 });
 ```
 
+## License
 
+MIT licensed
 
-
+Copyright (C) 2015 Greg Denehy
