@@ -105,7 +105,22 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			title = '<span class="slide-menu-item-title">' + title + '</span>';
 			if (options.numbers) {
-				title = '<span class="slide-menu-item-number">' + i + '. </span>' + title;
+				// Number formatting taken from reveal.js
+
+				// Default to only showing the current slide number
+				var format = 'c';
+
+				// Check if a custom slide number format is available
+				if( typeof options.numbers === 'string' ) {
+					format = options.numbers;
+				}
+
+				var n = format.replace( /h/g, h )
+								.replace( /v/g, v )
+								.replace( /c/g, i )
+								.replace( /t/g, Reveal.getTotalSlides() );
+
+				title = '<span class="slide-menu-item-number">' + n + '. </span>' + title;
 			}
 
 			return '<li class="' + type + '">' + '<a href="' + link + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</a>' + '</li>';
