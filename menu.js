@@ -152,8 +152,9 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function highlightCurrentSlide() {
 				var state = Reveal.getState();
-				$('li.slide-menu-item').removeClass('active');
-				var sel = 'li.slide-menu-item[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
+				$('li.slide-menu-item, li.slide-menu-item-vertical').removeClass('active');
+				var dataSel = '[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
+				var sel = 'li.slide-menu-item' + dataSel + ', li.slide-menu-item-vertical' + dataSel;
 				$(sel).addClass('active');
 			}
 
