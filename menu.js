@@ -112,7 +112,9 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (v) link += '/' + v;
 				else v = 0;
 
-				var title = $('h1, h2, h3', section).text();
+				var title = $(section).data('menu-title') ||
+					$('.menu-title', section).text() ||
+					$('h1, h2, h3, h4, h5, h6', section).text();
 				if (!title) {
 					title = "Slide " + i;
 					type += ' no-title';

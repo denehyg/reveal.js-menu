@@ -70,6 +70,52 @@ Reveal.initialize({
 });
 ```
 
+## Slide Titles
+
+The slide titles used in the menu can be supplied explicitly or are taken directly from the presentation, using the following rules...
+
+###### 1. The section's ```data-menu-title``` attribute.
+If the slide's section element contains a ```data-menu-title``` attribute this will be used for the slide title in the menu. For example...
+
+```html
+<section data-menu-title="Custom Menu Title">
+	<h1>Title</h1>
+	<p>...</p>
+</section>
+```
+
+###### 2. Any element with the class ```menu-title```.
+If the slide's section contains an element with the class ```menu-title``` then the element's text will be used for the title. The first such element found will be used if there are more than one. Note the element need not be displayed to be used. For example...
+
+```html
+<section>
+	<h1>Title</h1>
+	<span class="menu-title" style="display: none">Custom Menu Title</span>
+	<p>...</p>
+</section>
+```
+
+###### 3. The first heading found
+If not explicitly specified (as above), the title will be taken from the first heading element found in the slide. For example...
+
+```html
+<section>
+	<h3>This will be the slide title in the menu</h3>
+	<h1>Title</h1>
+	<p>...</p>
+</section>
+```
+
+###### 4. No title is provided
+If no title can be found using the above methods, a default title incorporating the slide number will be used. For example, the following would result in a slide title in the format of 'Slide 12'...
+
+```html
+<section>
+	<p>...</p>
+</section>
+```
+
+
 ## License
 
 MIT licensed
