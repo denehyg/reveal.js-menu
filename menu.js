@@ -129,14 +129,10 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function clicked(event) {
 				event.preventDefault();
+				var elem = $(event.srcElement);
 				// if user clicked on child element of the link, go to the parent(s) to get the data attributes
-				var elem = event.srcElement;
-				while (!elem.attributes.getNamedItem('data-slide-h')) {
-					elem = elem.parentElement;
-				}
-				var h = elem.attributes.getNamedItem('data-slide-h').value;
-				var v = elem.attributes.getNamedItem('data-slide-v').value;
-				Reveal.slide(h, v);
+				while (typeof elem.data('slide-h') === 'undefined') { elem = elem.parent(); }
+				Reveal.slide(elem.data('slide-h'), elem.data('slide-v'));
 				closeMenu();
 			}
 
@@ -159,7 +155,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function setTheme(event) {
 				if (event) event.preventDefault();
-				$('#theme').attr('href', event.srcElement.attributes.getNamedItem('data-theme').value);
+				$('#theme').attr('href', $(event.srcElement).data('theme'));
 				closeMenu();
 			}
 
@@ -179,7 +175,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function setTransition(event) {
 				if (event) event.preventDefault();
-				Reveal.configure({ transition: event.srcElement.attributes.getNamedItem('data-transition').value });
+				Reveal.configure({ transition: $(event.srcElement).data('transition') });
 				closeMenu();
 			}
 
@@ -232,11 +228,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			function openPanel(event) {
 				openMenu(event);
 				// if user clicked on child element of the link, go to the parent(s) to get the data attributes
-				var elem = event.srcElement;
-				while (!elem.attributes.getNamedItem('data-panel')) {
-					elem = elem.parentElement;
-				}
-				var panel = elem.attributes.getNamedItem('data-panel').value;
+				var elem = $(event.srcElement);
+				while (typeof elem.data('panel') === 'undefined') { elem = elem.parent(); }
+				var panel = elem.data('panel');
 				$('.slide-menu-toolbar > li').removeClass('active-toolbar-button');
 				$('li[data-panel="' + panel + '"]').addClass('active-toolbar-button');
 				$('.slide-menu-panel').removeClass('active-menu-panel');
