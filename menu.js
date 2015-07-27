@@ -140,7 +140,14 @@ var RevealMenu = window.RevealMenu || (function(){
 					title = '<span class="slide-menu-item-number">' + n + '. </span>' + title;
 				}
 
-				return '<li class="' + type + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</li>';
+				var markers = '';
+				if (options.markers) {
+					markers = '<i class="fa fa-check-circle past"></i>' +
+								'<i class="fa fa-dot-circle-o present"></i>' + 
+								'<i class="fa fa-circle-thin future"></i>';
+				}
+
+				return '<li class="' + type + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + markers + title + '</li>';
 			}
 
 			function clicked(event) {
@@ -152,10 +159,24 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function highlightCurrentSlide() {
 				var state = Reveal.getState();
-				$('li.slide-menu-item, li.slide-menu-item-vertical').removeClass('active');
-				var dataSel = '[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
-				var sel = 'li.slide-menu-item' + dataSel + ', li.slide-menu-item-vertical' + dataSel;
-				$(sel).addClass('active');
+				$('li.slide-menu-item, li.slide-menu-item-vertical')
+					.removeClass('past')
+					.removeClass('present')
+					.removeClass('future');
+
+				$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
+					var h = $(e).data('slide-h');
+					var v = $(e).data('slide-v');
+					if (h < state.indexh || (h === state.indexh && v < state.indexv)) {
+						$(e).addClass('past');
+					}
+					else if (h === state.indexh && v === state.indexv) {
+						$(e).addClass('present');
+					}
+					else {
+						$(e).addClass('future');
+					}
+				});
 			}
 
 			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')

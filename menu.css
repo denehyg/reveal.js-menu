@@ -30,6 +30,10 @@
 	cursor: pointer;
 }
 
+.reveal .slide-menu-item-vertical {
+	padding-left: 30px;
+}
+
 .reveal .slide-menu-item {
   border-top: solid 1px #666;
 }
@@ -43,8 +47,8 @@
 	color: #eee;
 }
 
-.reveal .slide-menu-item.active,
-.reveal .slide-menu-item-vertical.active {
+.reveal .slide-menu-item.present,
+.reveal .slide-menu-item-vertical.present {
 	background-color: #222;
 	color: white;
 }
@@ -56,6 +60,27 @@
 
 .reveal .slide-menu-item-number {
 	color: #999;
+	padding-right:6px;
+}
+
+.reveal .slide-menu-item i.fa,
+.reveal .slide-menu-item-vertical i.fa {
+	padding-right: 12px;
+	display: none;
+}
+
+.reveal .slide-menu-item.past i.fa.past,
+.reveal .slide-menu-item-vertical.past i.fa.past,
+.reveal .slide-menu-item.present i.fa.present,
+.reveal .slide-menu-item-vertical.present i.fa.present,
+.reveal .slide-menu-item.future i.fa.future,
+.reveal .slide-menu-item-vertical.future i.fa.future {
+	display: inline-block;
+}
+
+.reveal .slide-menu-item i.fa,
+.reveal .slide-menu-item-vertical i.fa {
+	opacity: 0.4;
 }
 
 .reveal .slide-menu--left {
