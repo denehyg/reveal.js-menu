@@ -54,6 +54,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			options.side = options.side || 'left';	// 'left' or 'right'
 			options.numbers = options.numbers || false;
+			options.markers = options.markers || false;
 			if (typeof options.themes === "undefined") {
 				options.themes = [
 					{ name: 'Black', theme: 'css/theme/black.css' },
