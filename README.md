@@ -38,6 +38,10 @@ Reveal.initialize({
 		// Use 'true' or format string (same as reveal.js slide numbers)
 		numbers: false,
 
+		// Add markers to the slide titles to indicate the 
+		// progress through the presentation
+		markers: false,
+
 		// Specifies the themes that will be available in the themes
 		// menu panel. Set to 'false' to hide themes panel.
 		themes: [
