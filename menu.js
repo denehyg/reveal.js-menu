@@ -14,6 +14,44 @@ var RevealMenu = window.RevealMenu || (function(){
 	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
 		// does not support IE8 or below
 		if (!bowser.msie || bowser.version >= 9) {
+			//
+			// Utilty functions
+			//
+
+			function openMenu(event) {
+				if (event) event.preventDefault();
+			    $('body').addClass('slide-menu-active');
+			    $('.reveal').addClass('has-' + options.effect + '-' + options.side);
+			    $('.slide-menu').addClass('active');
+			    $('.slide-menu-overlay').addClass('active');
+
+			    // set highlight for selected theme
+			    $('div[data-panel="Themes"] li').removeClass('active');
+			    $('li[data-theme="' + $('#theme').attr('href') + '"]').addClass('active');
+
+			    // set hightlight for selected transition
+			    $('div[data-panel="Transitions"] li').removeClass('active');
+			    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
+			}
+
+			function closeMenu(event) {
+				if (event) event.preventDefault();
+			    $('body').removeClass('slide-menu-active');
+			    $('.reveal').removeClass('has-' + options.effect + '-' + options.side);
+			    $('.slide-menu').removeClass('active');
+			    $('.slide-menu-overlay').removeClass('active');
+			}
+
+			function openPanel(event) {
+				openMenu(event);
+				var panel = $(event.currentTarget).data('panel');
+				$('.slide-menu-toolbar > li').removeClass('active-toolbar-button');
+				$('li[data-panel="' + panel + '"]').addClass('active-toolbar-button');
+				$('.slide-menu-panel').removeClass('active-menu-panel');
+				$('div[data-panel="' + panel + '"]').addClass('active-menu-panel');
+			}
+
+
 			options.side = options.side || 'left';	// 'left' or 'right'
 			options.numbers = options.numbers || false;
 			if (typeof options.themes === "undefined") {
@@ -69,30 +107,6 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			// Slide links
 			//
-			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
-				.appendTo(panels)
-				.addClass('active-menu-panel');
-			var items = $('.slide-menu-items');
-			var count = 0;
-			$('.slides > section').each(function(section, h) {
-				var subsections = $('section', section);
-				if (subsections.length > 0) {
-					subsections.each(function(subsection, v) {
-						count++;
-						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						items.append(item(type, subsection, count, h, v));
-					});
-				} else {
-					count++;
-					var type = 'slide-menu-item';
-					items.append(item(type, section, count, h));
-				}
-			});
-			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
-
-			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
-			highlightCurrentSlide();
-
 			function item(type, section, i, h, v) {
 				var link = '/#/' + h;
 				if (v) link += '/' + v;
@@ -124,28 +138,56 @@ var RevealMenu = window.RevealMenu || (function(){
 					title = '<span class="slide-menu-item-number">' + n + '. </span>' + title;
 				}
 
-				return '<li class="' + type + '">' + '<a href="' + link + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</a>' + '</li>';
+				return '<li class="' + type + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + title + '</li>';
 			}
 
 			function clicked(event) {
 				event.preventDefault();
-				var elem = $(event.srcElement);
-				// if user clicked on child element of the link, go to the parent(s) to get the data attributes
-				while (typeof elem.data('slide-h') === 'undefined') { elem = elem.parent(); }
+				var elem = $(event.currentTarget);
 				Reveal.slide(elem.data('slide-h'), elem.data('slide-v'));
 				closeMenu();
 			}
 
 			function highlightCurrentSlide() {
 				var state = Reveal.getState();
-				$('.slide-menu-items > li > a').removeClass('present');
-				var sel = 'a[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
-				$(sel).addClass('present');
+				$('li.slide-menu-item').removeClass('active');
+				var sel = 'li.slide-menu-item[data-slide-h="' + state.indexh + '"][data-slide-v="' + state.indexv + '"]';
+				$(sel).addClass('active');
 			}
+
+			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
+				.appendTo(panels)
+				.addClass('active-menu-panel');
+			var items = $('.slide-menu-items');
+			var count = 0;
+			$('.slides > section').each(function(section, h) {
+				var subsections = $('section', section);
+				if (subsections.length > 0) {
+					subsections.each(function(subsection, v) {
+						count++;
+						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
+						items.append(item(type, subsection, count, h, v));
+					});
+				} else {
+					count++;
+					var type = 'slide-menu-item';
+					items.append(item(type, section, count, h));
+				}
+			});
+			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+
+			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
+			highlightCurrentSlide();
 
 			//
 			// Themes
 			//
+			function setTheme(event) {
+				if (event) event.preventDefault();
+				$('#theme').attr('href', $(event.currentTarget).data('theme'));
+				closeMenu();
+			}
+
 			if (options.themes) {
 				var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
 				options.themes.forEach(function(t) {
@@ -153,15 +195,15 @@ var RevealMenu = window.RevealMenu || (function(){
 				})
 			}
 
-			function setTheme(event) {
-				if (event) event.preventDefault();
-				$('#theme').attr('href', $(event.srcElement).data('theme'));
-				closeMenu();
-			}
-
 			//
 			// Transitions
 			//
+			function setTransition(event) {
+				if (event) event.preventDefault();
+				Reveal.configure({ transition: $(event.currentTarget).data('transition') });
+				closeMenu();
+			}
+
 			if (options.transitions) {
 				var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>')
 					.appendTo(panels);
@@ -171,12 +213,6 @@ var RevealMenu = window.RevealMenu || (function(){
 				$('<li data-transition="convex">Convex</li>').appendTo(panel).click(setTransition);
 				$('<li data-transition="concave">Concave</li>').appendTo(panel).click(setTransition);
 				$('<li data-transition="zoom">Zoom</li>').appendTo(panel).click(setTransition);
-			}
-
-			function setTransition(event) {
-				if (event) event.preventDefault();
-				Reveal.configure({ transition: $(event.srcElement).data('transition') });
-				closeMenu();
 			}
 
 			//
@@ -194,47 +230,6 @@ var RevealMenu = window.RevealMenu || (function(){
 				$('<div class="slide-number-wrapper"><a href="#"></a></div>').insertAfter($('div.slide-number'));
 				$('.slide-number').appendTo($('.slide-number-wrapper a'));
 				$('.slide-number-wrapper a').click(openMenu);
-			}
-
-
-			//
-			// Utilty functions
-			//
-
-			function openMenu(event) {
-				if (event) event.preventDefault();
-			    $('body').addClass('slide-menu-active');
-			    $('.reveal').addClass('has-' + options.effect + '-' + options.side);
-			    $('.slide-menu').addClass('active');
-			    $('.slide-menu-overlay').addClass('active');
-
-			    // set highlight for selected theme
-			    $('div[data-panel="Themes"] li').removeClass('active');
-			    $('li[data-theme="' + $('#theme').attr('href') + '"]').addClass('active');
-
-			    // set hightlight for selected transition
-			    $('div[data-panel="Transitions"] li').removeClass('active');
-			    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
-			}
-
-			function closeMenu(event) {
-				if (event) event.preventDefault();
-			    $('body').removeClass('slide-menu-active');
-			    $('.reveal').removeClass('has-' + options.effect + '-' + options.side);
-			    $('.slide-menu').removeClass('active');
-			    $('.slide-menu-overlay').removeClass('active');
-			}
-
-			function openPanel(event) {
-				openMenu(event);
-				// if user clicked on child element of the link, go to the parent(s) to get the data attributes
-				var elem = $(event.srcElement);
-				while (typeof elem.data('panel') === 'undefined') { elem = elem.parent(); }
-				var panel = elem.data('panel');
-				$('.slide-menu-toolbar > li').removeClass('active-toolbar-button');
-				$('li[data-panel="' + panel + '"]').addClass('active-toolbar-button');
-				$('.slide-menu-panel').removeClass('active-menu-panel');
-				$('div[data-panel="' + panel + '"]').addClass('active-menu-panel');
 			}
 		}
 	})

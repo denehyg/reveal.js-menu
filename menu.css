@@ -23,8 +23,11 @@
 
 .reveal .slide-menu-item, 
 .reveal .slide-menu-item-vertical {
-  display: block;
-  text-align: left;
+	display: block;
+	text-align: left;
+	padding: 12px 18px;
+	color: #aaa;
+	cursor: pointer;
 }
 
 .reveal .slide-menu-item {
@@ -35,21 +38,13 @@
   border-top: none;
 }
 
-.reveal .slide-menu-item > a, 
-.reveal .slide-menu-item-vertical > a {
-	display: block;
-	padding: 12px 18px;
-	color: #aaa;
-	text-decoration: none;
-}
-
-.reveal .slide-menu-item > a:hover, 
-.reveal .slide-menu-item-vertical > a:hover {
+.reveal .slide-menu-item:hover, 
+.reveal .slide-menu-item-vertical:hover {
 	color: #eee;
 }
 
-.reveal .slide-menu-item a.present,
-.reveal .slide-menu-item-vertical a.present {
+.reveal .slide-menu-item.active,
+.reveal .slide-menu-item-vertical.active {
 	background-color: #222;
 	color: white;
 }
