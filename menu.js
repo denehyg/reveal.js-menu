@@ -8,6 +8,8 @@ var RevealMenu = window.RevealMenu || (function(){
 	var options = Reveal.getConfig().menu || {};
 	options.path = options.path || 'plugin/menu';
 
+	var module = {};
+
 	loadResource(options.path + '/lib/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/lib/bowser.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
@@ -40,6 +42,14 @@ var RevealMenu = window.RevealMenu || (function(){
 			    $('.reveal').removeClass('has-' + options.effect + '-' + options.side);
 			    $('.slide-menu').removeClass('active');
 			    $('.slide-menu-overlay').removeClass('active');
+			}
+
+			function toggleMenu(event) {
+				if ($('body').hasClass('slide-menu-active')) {
+					closeMenu(event);
+				} else {
+					openMenu(event);
+				}
 			}
 
 			function openPanel(event) {
@@ -256,6 +266,8 @@ var RevealMenu = window.RevealMenu || (function(){
 				$('.slide-number').appendTo($('.slide-number-wrapper a'));
 				$('.slide-number-wrapper a').click(openMenu);
 			}
+
+			module.toggle = toggleMenu;
 		}
 	})
 	})
@@ -299,4 +311,5 @@ var RevealMenu = window.RevealMenu || (function(){
 		head.appendChild( resource );
 	}
 
+	return module;
 })();
