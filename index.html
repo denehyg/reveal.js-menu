@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js-menu</title>
+
+		<meta name="description" content="A slideout menu for reveal.sj, a framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Greg Denehy">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="reveal.js/lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<style>
+			.reveal .slide-number {
+				font-size: 0.6em;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Reveal.js-menu</h1>
+					<h3>A slideout menu for navigating reveal.js presentations</h3>
+					<p>
+						<small>Created by <a href="https://github.com/denehyg">Greg Denehy</a> / <a href="http://twitter.com/gregdenehy">@gregdenehy</a></small>
+					</p>
+				</section>
+
+				<section>
+					<h3>Hey There</h3>
+					<p>Have you ever used <a href="https://github.com/hakimel/reveal.js">reveal.js</a> and wanted jump <br/>somewhere else in your presentation?</p>
+					<p>The slide overview is great but perhaps you want to <br/>change slides without your audience seeing everything.</p>
+					<p>Perhaps you need to quickly change the <br/>theme without editing the slide source.</p>
+					<p>Give <a href="https://github.com/denehyg/reveal.js-menu">reveal.js-menu</a> a try</p>
+				</section>
+
+				<section data-menu-title="Opening the menu">
+					<p>See the &nbsp;<a href="#" onclick="RevealMenu.toggle(); return false;"><i class="fa fa-bars"></i></a>&nbsp; in the corner?</p>
+					<p>Click it and the menu will open from the side.</p>
+					<p>
+						Click anywhere on the slide to return to the presentation,<br>
+						or use the close button in the menu.
+					</p>
+				</section>
+
+				<section data-menu-title="Using the slide number">
+					<p>If you don't like the menu button,<br/>you can use the slide number instead.</p>
+					<p>Go on, give it a go.</p>
+					<p>The menu button can be hidden using the options, <br/>but you need to enable the slide number link.</p>
+				</section>
+
+				<section>
+					<h3>Left or Right</h3>
+					<p>You can configure the menu to slide in from the left or right</p>
+				</section>
+
+				<section>
+					<h3>Markers</h3>
+					<p>The slide markers in the menu can be useful to show <br/>you the progress through the presentation.</p>
+					<p>You can hide them if you want.</p>
+					<p>You can also add slide numbers.</p>
+				</section>
+
+				<section>
+					<h3>Slide Titles</h3>
+					<p>
+						The menu uses the first heading to label each slide<br/>
+						but you can specify another label if you want.
+					</p>
+					<p>
+						Use a <code>data-menu-title</code> attribute in the section element to give the slide a custom label,
+						or add a <code>menu-title</code> class to any element in the slide you wish.
+					</p>
+				</section>
+
+				<section>
+					<section>
+						<h2>Vertical Slides</h2>
+						<p>The menu indents your vertical slides so it's easy to see the structure of your presentation.</p>
+						<br>
+						<a href="#" class="navigate-down">
+							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+						</a>
+					</section>
+					<section>
+						<h2>Next slide down</h2>
+					</section>
+					<section>
+						<h2>At the bottom</h2>
+						<br>
+						<a href="#/2">
+							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="transform: rotate(180deg); -webkit-transform: rotate(180deg);">
+						</a>
+					</section>
+				</section>
+
+				<section>
+					<h3>Themes</h3>
+					<p>The menu can also be used to change the <br/>theme of your presentation.</p>
+					<p>Just click the Themes button at the top of the menu.</p>
+					<p>The list of themes can be configured in the options.</p>
+				</section>
+
+				<section>
+					<h3>Transitions</h3>
+					<p>You can also change the default <br/>transition style from the menu.</p>
+				</section>
+
+				<section data-menu-title="Hiding menu panels">
+					<p>Of course,</p>
+					<p>if you don't want to see the <i>Themes</i> or <i>Transitions</i> menus you can hide them in the options.</p>
+				</section>
+
+				<section>
+					<h3>Speaker View</h3>
+					<p>The menu works independently in the speaker view.</p>
+					<p>You can changes slides without your audience <br/>seeing you doing any of it.</p>
+				</section>
+
+				<section style="text-align: left;">
+					<h1>THE END</h1>
+					<p><a href="https://github.com/denehyg/reveal.js-menu/archive/master.zip">Download reveal.js-menu</a> and add it to your plugin folder</p>
+					<p>Have a look at the <a href="https://github.com/denehyg/reveal.js-menu">source code &amp; documentation</a></p>
+					<p>And don't forget to check out <a href="https://github.com/hakimel/reveal.js">Reveal.js</a> if you haven't already</p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				slideNumber: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				menu: {
+					markers: true,
+					openSlideNumber: true,
+					themes: [
+						{ name: 'Black', theme: 'reveal.js/css/theme/black.css' },
+						{ name: 'White', theme: 'reveal.js/css/theme/white.css' },
+						{ name: 'League', theme: 'reveal.js/css/theme/league.css' },
+						{ name: 'Sky', theme: 'reveal.js/css/theme/sky.css' },
+						{ name: 'Beige', theme: 'reveal.js/css/theme/beige.css' },
+						{ name: 'Simple', theme: 'reveal.js/css/theme/simple.css' },
+						{ name: 'Serif', theme: 'reveal.js/css/theme/serif.css' },
+						{ name: 'Blood', theme: 'reveal.js/css/theme/blood.css' },
+						{ name: 'Night', theme: 'reveal.js/css/theme/night.css' },
+						{ name: 'Moon', theme: 'reveal.js/css/theme/moon.css' },
+						{ name: 'Solarized', theme: 'reveal.js/css/theme/solarized.css' }
+			        ]
+				},
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+					{ src: 'plugin/menu/menu.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

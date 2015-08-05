@@ -1,0 +1,220 @@
+.reveal .slide-menu {
+	background-color: #333;
+	z-index: 200;
+	position: fixed;
+	top: 0;
+	width: 300px;
+	height: 100%;
+	overflow-y: scroll;
+	transition: transform 0.3s;
+  	font-size: 16px;
+  	font-weight: normal;
+}
+
+/*
+ * Slides menu
+ */
+
+.reveal .slide-menu-items {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.reveal .slide-menu-item, 
+.reveal .slide-menu-item-vertical {
+	display: block;
+	text-align: left;
+	padding: 12px 18px;
+	color: #aaa;
+	cursor: pointer;
+}
+
+.reveal .slide-menu-item-vertical {
+	padding-left: 30px;
+}
+
+.reveal .slide-menu-item {
+  border-top: solid 1px #666;
+}
+
+.reveal .slide-menu-item:first-child {
+  border-top: none;
+}
+
+.reveal .slide-menu-item:hover, 
+.reveal .slide-menu-item-vertical:hover {
+	color: #eee;
+}
+
+.reveal .slide-menu-item.present,
+.reveal .slide-menu-item-vertical.present {
+	background-color: #222;
+	color: white;
+}
+
+.reveal .slide-menu-item.no-title .slide-menu-item-title, 
+.reveal .slide-menu-item-vertical.no-title .slide-menu-item-title {
+	font-style: italic;
+}
+
+.reveal .slide-menu-item-number {
+	color: #999;
+	padding-right:6px;
+}
+
+.reveal .slide-menu-item i.fa,
+.reveal .slide-menu-item-vertical i.fa {
+	padding-right: 12px;
+	display: none;
+}
+
+.reveal .slide-menu-item.past i.fa.past,
+.reveal .slide-menu-item-vertical.past i.fa.past,
+.reveal .slide-menu-item.present i.fa.present,
+.reveal .slide-menu-item-vertical.present i.fa.present,
+.reveal .slide-menu-item.future i.fa.future,
+.reveal .slide-menu-item-vertical.future i.fa.future {
+	display: inline-block;
+}
+
+.reveal .slide-menu-item i.fa,
+.reveal .slide-menu-item-vertical i.fa {
+	opacity: 0.4;
+}
+
+.reveal .slide-menu--left {
+  left: 0;
+  -webkit-transform: translateX(-300px);
+  -ms-transform: translateX(-300px);
+  transform: translateX(-300px);
+}
+
+.reveal .slide-menu--left.active {
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+
+.reveal .slide-menu--right {
+  right: 0;
+  -webkit-transform: translateX(300px);
+  -ms-transform: translateX(300px);
+  transform: translateX(300px);
+}
+
+.reveal .slide-menu--right.active {
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+
+.reveal {
+	transition: transform 0.3s;
+}
+
+
+/*
+ * Toolbar
+ */
+.reveal .slide-menu-toolbar {
+ 	height: 60px;
+ 	width: 100%;
+ 	font-size: 12px;
+    display: table;
+    table-layout: fixed; /* ensures equal width */
+    margin: 0;
+    padding: 0;
+	border-bottom: solid 2px #666;
+}
+
+.reveal .slide-menu-toolbar > li {
+    display: table-cell;
+ 	line-height: 150%;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+	color: #aaa;
+	border-radius: 3px;
+}
+
+.reveal .slide-menu-toolbar > li.active-toolbar-button {
+ 	color: white;
+ 	text-shadow: 0 1px black;	
+}
+
+.slide-menu-toolbar > li:hover {
+	color: white;
+}
+
+/*
+ * Panels
+ */
+.reveal .slide-menu-panel {
+	position: absolute;
+	width: 100%;
+	visibility: hidden;
+}
+
+.reveal .slide-menu-panel.active-menu-panel {
+	visibility: visible;
+}
+
+/*
+ * Theme and Transitions buttons
+ */
+
+.reveal div[data-panel="Themes"] li,
+.reveal div[data-panel="Transitions"] li {
+	display: block;
+	text-align: left;
+	cursor: pointer;
+	padding: 6px 18px;
+	color: #848484;
+}
+
+.reveal div[data-panel="Themes"] li:hover,
+.reveal div[data-panel="Transitions"] li:hover {
+	color: #eee;
+}
+
+.reveal div[data-panel="Themes"] li.active,
+.reveal div[data-panel="Transitions"] li.active {
+	color: #eee;
+	background-color: #222;
+}
+
+/*
+ * Menu controls
+ */
+.reveal .slide-menu-button {
+	position: fixed;
+	left: 30px;
+	bottom: 30px;
+	z-index: 30;
+	font-size: 24px;
+}
+
+/*
+ * Menu overlay
+ */
+
+.reveal .slide-menu-overlay {
+  position: fixed;
+  z-index: 199;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  background-color: #000;
+  opacity: 0;
+  transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
+}
+
+.reveal .slide-menu-overlay.active {
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
