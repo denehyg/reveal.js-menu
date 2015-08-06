@@ -6,19 +6,7 @@
 
 var RevealMenu = window.RevealMenu || (function(){
 	var options = Reveal.getConfig().menu || {};
-	options.path = options.path || function() {
-		// obtain plugin path from the script element
-		var path;
-		if (document.currentScript) {
-			path = document.currentScript.src.slice(0, -7);
-		} else {
-			var sel = document.querySelector('script[src$="/menu.js"]')
-			if (sel) {
-				path = sel.src.slice(0, -7);
-			}
-		}
-		return path || 'plugin/menu';
-	}();
+	options.path = options.path || scriptPath() || 'plugin/menu';
 
 	var module = {};
 
@@ -321,6 +309,20 @@ var RevealMenu = window.RevealMenu || (function(){
 
 		// Normal browsers
 		head.appendChild( resource );
+	}
+
+	function scriptPath() {
+		// obtain plugin path from the script element
+		var path;
+		if (document.currentScript) {
+			path = document.currentScript.src.slice(0, -7);
+		} else {
+			var sel = document.querySelector('script[src$="/menu.js"]')
+			if (sel) {
+				path = sel.src.slice(0, -7);
+			}
+		}
+		return path;
 	}
 
 	return module;
