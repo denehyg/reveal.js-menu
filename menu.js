@@ -80,11 +80,15 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function toggleMenu(event) {
-				if ($('body').hasClass('slide-menu-active')) {
+				if (isOpen()) {
 					closeMenu(event);
 				} else {
 					openMenu(event);
 				}
+			}
+
+			function isOpen() {
+				return $('body').hasClass('slide-menu-active');
 			}
 
 			function openPanel(event) {
@@ -277,6 +281,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			module.toggle = toggleMenu;
+			module.isOpen = isOpen;
 		}
 	})
 	})
