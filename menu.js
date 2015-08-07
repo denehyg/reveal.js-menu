@@ -5,7 +5,8 @@
  */
 
 var RevealMenu = window.RevealMenu || (function(){
-	var options = Reveal.getConfig().menu || {};
+	var config = Reveal.getConfig();
+	var options = config.menu || {};
 	options.path = options.path || scriptPath() || 'plugin/menu';
 
 	var module = {};
@@ -17,13 +18,47 @@ var RevealMenu = window.RevealMenu || (function(){
 		// does not support IE8 or below
 		if (!bowser.msie || bowser.version >= 9) {
 			//
+			// Set option defaults
+			//
+			var side = options.side || 'left';	// 'left' or 'right'
+			var numbers = options.numbers || false;
+			var markers = options.markers || false;
+			var themes = options.themes;
+			if (typeof themes === "undefined") {
+				themes = [
+					{ name: 'Black', theme: 'css/theme/black.css' },
+					{ name: 'White', theme: 'css/theme/white.css' },
+					{ name: 'League', theme: 'css/theme/league.css' },
+					{ name: 'Sky', theme: 'css/theme/sky.css' },
+					{ name: 'Beige', theme: 'css/theme/beige.css' },
+					{ name: 'Simple', theme: 'css/theme/simple.css' },
+					{ name: 'Serif', theme: 'css/theme/serif.css' },
+					{ name: 'Blood', theme: 'css/theme/blood.css' },
+					{ name: 'Night', theme: 'css/theme/night.css' },
+					{ name: 'Moon', theme: 'css/theme/moon.css' },
+					{ name: 'Solarized', theme: 'css/theme/solarized.css' }
+				];
+			}
+			var transitions = options.transitions;
+			if (typeof transitions === "undefined") transitions = true;
+			if (bowser.msie && bowser.version <= 9) {
+				// transitions aren't support in IE9 anyway, so no point in showing them
+				transitions = false;
+			}
+			var openButton = options.openButton;
+			if (typeof openButton === "undefined") openButton = true;
+			var openSlideNumber = options.openSlideNumber;
+			if (typeof openSlideNumber === "undefined") openSlideNumber = false;
+
+
+			//
 			// Utilty functions
 			//
 
 			function openMenu(event) {
 				if (event) event.preventDefault();
 			    $('body').addClass('slide-menu-active');
-			    $('.reveal').addClass('has-' + options.effect + '-' + options.side);
+			    $('.reveal').addClass('has-' + options.effect + '-' + side);
 			    $('.slide-menu').addClass('active');
 			    $('.slide-menu-overlay').addClass('active');
 
@@ -39,7 +74,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			function closeMenu(event) {
 				if (event) event.preventDefault();
 			    $('body').removeClass('slide-menu-active');
-			    $('.reveal').removeClass('has-' + options.effect + '-' + options.side);
+			    $('.reveal').removeClass('has-' + options.effect + '-' + side);
 			    $('.slide-menu').removeClass('active');
 			    $('.slide-menu-overlay').removeClass('active');
 			}
@@ -62,33 +97,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 
-			options.side = options.side || 'left';	// 'left' or 'right'
-			options.numbers = options.numbers || false;
-			options.markers = options.markers || false;
-			if (typeof options.themes === "undefined") {
-				options.themes = [
-					{ name: 'Black', theme: 'css/theme/black.css' },
-					{ name: 'White', theme: 'css/theme/white.css' },
-					{ name: 'League', theme: 'css/theme/league.css' },
-					{ name: 'Sky', theme: 'css/theme/sky.css' },
-					{ name: 'Beige', theme: 'css/theme/beige.css' },
-					{ name: 'Simple', theme: 'css/theme/simple.css' },
-					{ name: 'Serif', theme: 'css/theme/serif.css' },
-					{ name: 'Blood', theme: 'css/theme/blood.css' },
-					{ name: 'Night', theme: 'css/theme/night.css' },
-					{ name: 'Moon', theme: 'css/theme/moon.css' },
-					{ name: 'Solarized', theme: 'css/theme/solarized.css' }
-				];
-			}
-			if (typeof options.transitions === "undefined") options.transitions = true;
-			if (bowser.msie && bowser.version <= 9) {
-				// transitions aren't support in IE9 anyway, so no point in showing them
-				options.transitions = false;
-			}
-			if (typeof options.openButton === "undefined") options.openButton = true;
-			if (typeof options.openSlideNumber === "undefined") options.openSlideNumber = false;
-
-			$('<nav class="slide-menu slide-menu--' + options.side + '"></nav>')
+			$('<nav class="slide-menu slide-menu--' + side + '"></nav>')
 				.appendTo($('.reveal'));
 			$('<div class="slide-menu-overlay"></div>')
 				.appendTo($('.reveal'))
@@ -99,12 +108,12 @@ var RevealMenu = window.RevealMenu || (function(){
 				.appendTo(toolbar)
 				.addClass('active-toolbar-button')
 				.click(openPanel);
-			if (options.themes) {
+			if (themes) {
 				$('<li data-panel="Themes"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
 					.appendTo(toolbar)
 					.click(openPanel);
 			}
-			if (options.transitions) {
+			if (transitions) {
 				$('<li data-panel="Transitions"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
 					.appendTo(toolbar)
 					.click(openPanel);
@@ -132,15 +141,15 @@ var RevealMenu = window.RevealMenu || (function(){
 				}
 
 				title = '<span class="slide-menu-item-title">' + title + '</span>';
-				if (options.numbers) {
+				if (numbers) {
 					// Number formatting taken from reveal.js
 
 					// Default to only showing the current slide number
 					var format = 'c';
 
 					// Check if a custom slide number format is available
-					if( typeof options.numbers === 'string' ) {
-						format = options.numbers;
+					if( typeof numbers === 'string' ) {
+						format = numbers;
 					}
 
 					var n = format.replace( /h/g, h )
@@ -151,14 +160,14 @@ var RevealMenu = window.RevealMenu || (function(){
 					title = '<span class="slide-menu-item-number">' + n + '. </span>' + title;
 				}
 
-				var markers = '';
-				if (options.markers) {
-					markers = '<i class="fa fa-check-circle past"></i>' +
+				var m = '';
+				if (markers) {
+					m = '<i class="fa fa-check-circle past"></i>' +
 								'<i class="fa fa-dot-circle-o present"></i>' + 
 								'<i class="fa fa-circle-thin future"></i>';
 				}
 
-				return '<li class="' + type + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + markers + title + '</li>';
+				return '<li class="' + type + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
 			}
 
 			function clicked(event) {
@@ -223,9 +232,9 @@ var RevealMenu = window.RevealMenu || (function(){
 				closeMenu();
 			}
 
-			if (options.themes) {
+			if (themes) {
 				var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
-				options.themes.forEach(function(t) {
+				themes.forEach(function(t) {
 					$('<li data-theme="' + t.theme + '">' + t.name + '</li>').appendTo(panel).click(setTheme);
 				})
 			}
@@ -239,7 +248,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				closeMenu();
 			}
 
-			if (options.transitions) {
+			if (transitions) {
 				var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>')
 					.appendTo(panels);
 				$('<li data-transition="none">None</li>').appendTo(panel).click(setTransition);
@@ -253,14 +262,14 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			// Open menu options
 			//
-			if (options.openButton) {
+			if (openButton) {
 				// add menu button
 				$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
 					.appendTo($('.reveal'))
 					.click(openMenu);
 			}
 
-			if (options.openSlideNumber) {
+			if (openSlideNumber) {
 				// wrap slide number in link
 				$('<div class="slide-number-wrapper"><a href="#"></a></div>').insertAfter($('div.slide-number'));
 				$('.slide-number').appendTo($('.slide-number-wrapper a'));
