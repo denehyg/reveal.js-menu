@@ -52,6 +52,86 @@ var RevealMenu = window.RevealMenu || (function(){
 
 
 			//
+			// Keyboard handling
+			//
+			function onDocumentKeyDown(event) {
+				if (event.keyCode === 77) {
+					toggleMenu();
+				} else if (isOpen()) {
+					event.preventDefault();
+					//XXX handle other panels
+					switch( event.keyCode ) {
+						// h, left - change panel
+						// case 72: case 37: break;
+						// l, right - change panel
+						// case 76: case 39: break;
+						// k, up
+						case 75: case 38:
+							var currItem = $('.slide-menu-item.selected, .slide-menu-item-vertical.selected').get(0) || $('.slide-menu-item.present').get(0);
+							if (currItem) {
+								var slide = $(currItem).data('slide');
+								if (slide > 1) {
+									$(currItem).removeClass('selected');
+									$('.slide-menu-item[data-slide="' + (slide-1) + '"], .slide-menu-item-vertical[data-slide="' + (slide-1) + '"]')
+										.addClass('selected')
+										.get(0).scrollIntoView();
+								}
+							}
+							break;
+						// j, down
+						case 74: case 40: 
+							var currItem = $('.slide-menu-item.selected, .slide-menu-item-vertical.selected').get(0) || $('.slide-menu-item.present').get(0);
+							if (currItem) {
+								var slide = $(currItem).data('slide');
+								if (slide < slideCount) {
+									$(currItem).removeClass('selected');
+									$('.slide-menu-item[data-slide="' + (slide+1) + '"], .slide-menu-item-vertical[data-slide="' + (slide+1) + '"]')
+										.addClass('selected')
+										.get(0).scrollIntoView();
+								}
+							}
+							break;
+						// home
+						case 36:
+							$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
+							$('.slide-menu-item[data-slide="1"]')
+								.addClass('selected')
+								.get(0).scrollIntoView(true);
+							break;
+						// end
+						case 35:
+							$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
+							$('.slide-menu-item[data-slide="' + slideCount + '"], .slide-menu-item.vertical[data-slide="' + slideCount + '"]')
+								.addClass('selected')
+								.get(0).scrollIntoView(false);
+							break;
+						// space, return
+						case 32: case 13:
+							var currItem = $('.slide-menu-item.selected, .slide-menu-item-vertical.selected').get(0);
+							if (currItem) {
+								openItem(currItem);
+							}
+							break;
+						// esc
+						case 27: closeMenu(); break;
+					}
+				}
+			}
+			document.addEventListener( 'keydown', onDocumentKeyDown, false );
+
+			// Prevent reveal from processing keyboard events when the menu is open
+			if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
+				// combine user defined keyboard condition with the menu's own condition
+				var userCondition = config.keyboardCondition;
+				config.keyboardCondition = function() {
+					return userCondition() && !isOpen();
+				};
+			} else {
+				config.keyboardCondition = function() { return !isOpen(); }
+			}
+
+
+			//
 			// Utilty functions
 			//
 
@@ -61,6 +141,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			    $('.reveal').addClass('has-' + options.effect + '-' + side);
 			    $('.slide-menu').addClass('active');
 			    $('.slide-menu-overlay').addClass('active');
+			    $('.slide-menu-item.present').addClass('selected');
 
 			    // set highlight for selected theme
 			    $('div[data-panel="Themes"] li').removeClass('active');
@@ -77,6 +158,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			    $('.reveal').removeClass('has-' + options.effect + '-' + side);
 			    $('.slide-menu').removeClass('active');
 			    $('.slide-menu-overlay').removeClass('active');
+			    $('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
 			}
 
 			function toggleMenu(event) {
@@ -171,14 +253,17 @@ var RevealMenu = window.RevealMenu || (function(){
 								'<i class="fa fa-circle-thin future"></i>';
 				}
 
-				return '<li class="' + type + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
+				return '<li class="' + type + '" data-slide="' + i + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
+			}
+
+			function openItem(elem) {
+				Reveal.slide($(elem).data('slide-h'), $(elem).data('slide-v'));
+				closeMenu();
 			}
 
 			function clicked(event) {
 				event.preventDefault();
-				var elem = $(event.currentTarget);
-				Reveal.slide(elem.data('slide-h'), elem.data('slide-v'));
-				closeMenu();
+				openItem(event.currentTarget);
 			}
 
 			function highlightCurrentSlide() {
@@ -207,22 +292,31 @@ var RevealMenu = window.RevealMenu || (function(){
 				.appendTo(panels)
 				.addClass('active-menu-panel');
 			var items = $('.slide-menu-items');
-			var count = 0;
+			var slideCount = 0;
 			$('.slides > section').each(function(section, h) {
 				var subsections = $('section', section);
 				if (subsections.length > 0) {
 					subsections.each(function(subsection, v) {
-						count++;
+						slideCount++;
 						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						items.append(item(type, subsection, count, h, v));
+						items.append(item(type, subsection, slideCount, h, v));
 					});
 				} else {
-					count++;
+					slideCount++;
 					var type = 'slide-menu-item';
-					items.append(item(type, section, count, h));
+					items.append(item(type, section, slideCount, h));
 				}
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+			$('.slide-menu-item, .slide-menu-item-vertical').mouseenter(function(event) {
+				$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
+				var elem = $(event.currentTarget);
+				elem.addClass('selected');
+			});
+			$('.slide-menu-item, .slide-menu-item-vertical').mouseleave(function(event) {
+				var elem = $(event.currentTarget);
+				elem.removeClass('selected');
+			});
 
 			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
 			highlightCurrentSlide();

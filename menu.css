@@ -42,15 +42,15 @@
   border-top: none;
 }
 
-.reveal .slide-menu-item:hover, 
-.reveal .slide-menu-item-vertical:hover {
-	color: #eee;
+.reveal .slide-menu-item.selected, 
+.reveal .slide-menu-item-vertical.selected {
+	background-color: #222;
+	color: white;
 }
 
 .reveal .slide-menu-item.present,
 .reveal .slide-menu-item-vertical.present {
-	background-color: #222;
-	color: white;
+	color: #eee;
 }
 
 .reveal .slide-menu-item.no-title .slide-menu-item-title, 
