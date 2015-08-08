@@ -20,10 +20,7 @@ Reveal.initialize({
 		// ... 
 	  
 		{ src: 'bower_components/reveal-js-menu/menu.js' }
-	],
-	menu: {
-		path: 'bower_components/reveal-js-menu'
-	}
+	]
 });
 ```
 
