@@ -8,7 +8,7 @@ A slideout menu plugin for [Reveal.js](https://github.com/hakimel/reveal.js) to 
 
 Download and install the package in your project:
 
-```bower install reveal-js-menu```
+```bower install reveal.js-menu```
 
 Add the plugin to the dependencies in your presentation, as below. 
 
@@ -19,7 +19,7 @@ Reveal.initialize({
 	dependencies: [
 		// ... 
 	  
-		{ src: 'bower_components/reveal-js-menu/menu.js' }
+		{ src: 'bower_components/reveal.js-menu/menu.js' }
 	]
 });
 ```
