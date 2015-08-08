@@ -5,7 +5,7 @@
 	top: 0;
 	width: 300px;
 	height: 100%;
-	overflow-y: scroll;
+	/*overflow-y: scroll;*/
 	transition: transform 0.3s;
   	font-size: 16px;
   	font-weight: normal;
@@ -154,6 +154,8 @@
 	position: absolute;
 	width: 100%;
 	visibility: hidden;
+	height: calc(100% - 60px);
+	overflow-y: auto;
 }
 
 .reveal .slide-menu-panel.active-menu-panel {

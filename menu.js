@@ -208,7 +208,8 @@ var RevealMenu = window.RevealMenu || (function(){
 				.appendTo(toolbar)
 				.click(closeMenu);
 
-			var panels = $('<div class="slide-menu-panels"></div>').appendTo($('.slide-menu'));
+			// var panels = $('<div class="slide-menu-panels"></div>').appendTo($('.slide-menu'));
+			var panels = $('.slide-menu');
 
 			//
 			// Slide links
