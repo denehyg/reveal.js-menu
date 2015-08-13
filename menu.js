@@ -50,6 +50,18 @@ var RevealMenu = window.RevealMenu || (function(){
 			var openSlideNumber = options.openSlideNumber;
 			if (typeof openSlideNumber === "undefined") openSlideNumber = false;
 
+			function disableMouseSelection() {
+				mouseSelectionEnabled = false;
+			}
+
+			function reenableMouseSelection() {
+				// wait until the mouse has moved before re-enabling mouse selection
+				// to avoid selections on scroll
+				$('nav.slide-menu').one('mousemove', function(event) {
+					//XXX this should select the item under the mouse
+					mouseSelectionEnabled = true;
+				});
+			}
 
 			//
 			// Keyboard handling
@@ -68,22 +80,26 @@ var RevealMenu = window.RevealMenu || (function(){
 			function keepVisible(el) {
 				var offsetFromTop = getOffset(el).top - el.offsetParent.offsetTop;
 				if (offsetFromTop < 0) {
+					disableMouseSelection();
 					el.scrollIntoView(true);
+					reenableMouseSelection();
 				}
 				else {
 					var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
 					if (offsetFromBottom < 0) {
+						disableMouseSelection();
 						el.scrollIntoView(false);
+						reenableMouseSelection();	
 					}
 				}
 			}
 
+			//XXX change panels & change keyboard targets
 			function onDocumentKeyDown(event) {
 				if (event.keyCode === 77) {
 					toggleMenu();
 				} else if (isOpen()) {
 					event.preventDefault();
-					//XXX handle other panels
 					switch( event.keyCode ) {
 						// h, left - change panel
 						// case 72: case 37: break;
@@ -229,7 +245,6 @@ var RevealMenu = window.RevealMenu || (function(){
 				.appendTo(toolbar)
 				.click(closeMenu);
 
-			// var panels = $('<div class="slide-menu-panels"></div>').appendTo($('.slide-menu'));
 			var panels = $('.slide-menu');
 
 			//
@@ -330,10 +345,13 @@ var RevealMenu = window.RevealMenu || (function(){
 				}
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+
+			var mouseSelectionEnabled = true;
 			$('.slide-menu-item, .slide-menu-item-vertical').mouseenter(function(event) {
-				$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
-				var elem = $(event.currentTarget);
-				elem.addClass('selected');
+				if (mouseSelectionEnabled) {
+					$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
+					$(event.currentTarget).addClass('selected');
+				}
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').mouseleave(function(event) {
 				var elem = $(event.currentTarget);
