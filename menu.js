@@ -105,7 +105,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (event.keyCode === 77) {
 					toggleMenu();
 				} else if (isOpen()) {
-					event.preventDefault();
+					event.stopPropagation();
 					switch( event.keyCode ) {
 						// h, left - change panel
 						case 72: case 37:
@@ -163,8 +163,6 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 			document.addEventListener('keydown', onDocumentKeyDown, false);
 
-			//XXX this doesn't work for keys that close the menu.
-			///
 			// Prevent reveal from processing keyboard events when the menu is open
 			if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
 				// combine user defined keyboard condition with the menu's own condition
