@@ -50,6 +50,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			var openSlideNumber = options.openSlideNumber;
 			if (typeof openSlideNumber === "undefined") openSlideNumber = false;
 
+			//XXX add options for keyboard, ie disable, custom key codes, etc.
+
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
 			}
@@ -94,7 +96,11 @@ var RevealMenu = window.RevealMenu || (function(){
 				}
 			}
 
-			//XXX change panels & change keyboard targets
+			function selectItem(el) {
+				$(el).addClass('selected');
+				keepVisible(el);
+			}
+
 			function onDocumentKeyDown(event) {
 				if (event.keyCode === 77) {
 					toggleMenu();
@@ -102,48 +108,50 @@ var RevealMenu = window.RevealMenu || (function(){
 					event.preventDefault();
 					switch( event.keyCode ) {
 						// h, left - change panel
-						// case 72: case 37: break;
+						case 72: case 37:
+							prevPanel();
+							break;
 						// l, right - change panel
-						// case 76: case 39: break;
+						case 76: case 39:
+							nextPanel();
+							break;
 						// k, up
 						case 75: case 38:
-							var currItem = $('.slide-menu-item.selected, .slide-menu-item-vertical.selected').get(0) || $('.slide-menu-item.present').get(0);
+							var currItem = $('.active-menu-panel li.selected').get(0) || $('.active-menu-panel li.active').get(0);
 							if (currItem) {
-								var slide = $(currItem).data('slide');
-								if (slide > 1) {
-									$(currItem).removeClass('selected');
-									var sel = $('.slide-menu-item[data-slide="' + (slide-1) + '"], .slide-menu-item-vertical[data-slide="' + (slide-1) + '"]').addClass('selected').get(0);
-									keepVisible(sel);
-								}
+								$('.active-menu-panel li').removeClass('selected');
+								var nextItem = $('.active-menu-panel li[data-item="' + ($(currItem).data('item') - 1) + '"]').get(0) || currItem;
+								selectItem(nextItem);
+							} else {
+								selectItem($('.active-menu-panel li:first-of-type').addClass('selected').get(0));
 							}
 							break;
 						// j, down
-						case 74: case 40: 
-							var currItem = $('.slide-menu-item.selected, .slide-menu-item-vertical.selected').get(0) || $('.slide-menu-item.present').get(0);
+						case 74: case 40:
+							var currItem = $('.active-menu-panel li.selected').get(0) || $('.active-menu-panel li.active').get(0);
 							if (currItem) {
-								var slide = $(currItem).data('slide');
-								if (slide < slideCount) {
-									$(currItem).removeClass('selected');
-									var sel = $('.slide-menu-item[data-slide="' + (slide+1) + '"], .slide-menu-item-vertical[data-slide="' + (slide+1) + '"]').addClass('selected').get(0);
-									keepVisible(sel);
-								}
+								$('.active-menu-panel li').removeClass('selected');
+								var nextItem = $('.active-menu-panel li[data-item="' + ($(currItem).data('item') + 1) + '"]').get(0) || currItem;
+								selectItem(nextItem);
+							} else {
+								selectItem($('.active-menu-panel li:first-of-type').addClass('selected').get(0));
 							}
 							break;
 						// home
 						case 36:
-							$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
-							var sel = $('.slide-menu-item[data-slide="1"]').addClass('selected').get(0);
+							$('.active-menu-panel li').removeClass('selected');
+							var sel = $('.active-menu-panel li:first-of-type').addClass('selected').get(0);
 							keepVisible(sel);
 							break;
 						// end
 						case 35:
-							$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
-							var sel = $('.slide-menu-item[data-slide="' + slideCount + '"], .slide-menu-item.vertical[data-slide="' + slideCount + '"]').addClass('selected').get(0);
+							$('.active-menu-panel li').removeClass('selected');
+							var sel = $('.active-menu-panel li:last-of-type').addClass('selected').get(0);
 							keepVisible(sel);
 							break;
 						// space, return
 						case 32: case 13:
-							var currItem = $('.slide-menu-item.selected, .slide-menu-item-vertical.selected').get(0);
+						var currItem = $('.active-menu-panel li.selected').get(0);
 							if (currItem) {
 								openItem(currItem);
 							}
@@ -155,6 +163,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 			document.addEventListener('keydown', onDocumentKeyDown, false);
 
+			//XXX this doesn't work for keys that close the menu.
+			///
 			// Prevent reveal from processing keyboard events when the menu is open
 			if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
 				// combine user defined keyboard condition with the menu's own condition
@@ -173,20 +183,25 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function openMenu(event) {
 				if (event) event.preventDefault();
-			    $('body').addClass('slide-menu-active');
-			    $('.reveal').addClass('has-' + options.effect + '-' + side);
-			    $('.slide-menu').addClass('active');
-			    $('.slide-menu-overlay').addClass('active');
-			    var sel = $('.slide-menu-item.present, .slide-menu-item-vertical.present').addClass('selected').get(0);
-			    keepVisible(sel);
+				if (!isOpen()) {
+				    $('body').addClass('slide-menu-active');
+				    $('.reveal').addClass('has-' + options.effect + '-' + side);
+				    $('.slide-menu').addClass('active');
+				    $('.slide-menu-overlay').addClass('active');
 
-			    // set highlight for selected theme
-			    $('div[data-panel="Themes"] li').removeClass('active');
-			    $('li[data-theme="' + $('#theme').attr('href') + '"]').addClass('active');
+				    // identify active theme
+				    $('div[data-panel="Themes"] li').removeClass('active');
+				    $('li[data-theme="' + $('#theme').attr('href') + '"]').addClass('active');
 
-			    // set hightlight for selected transition
-			    $('div[data-panel="Transitions"] li').removeClass('active');
-			    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
+				    // identify active transition
+				    $('div[data-panel="Transitions"] li').removeClass('active');
+				    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
+
+				    // set item selections to match active items
+				    $('.slide-menu-panel li.active')
+				    	.addClass('selected')
+				    	.each(function(item) { keepVisible(item) });
+				}
 			}
 
 			function closeMenu(event) {
@@ -195,7 +210,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			    $('.reveal').removeClass('has-' + options.effect + '-' + side);
 			    $('.slide-menu').removeClass('active');
 			    $('.slide-menu-overlay').removeClass('active');
-			    $('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
+			    $('.slide-menu-panel li.selected').removeClass('selected');
 			}
 
 			function toggleMenu(event) {
@@ -210,15 +225,30 @@ var RevealMenu = window.RevealMenu || (function(){
 				return $('body').hasClass('slide-menu-active');
 			}
 
-			function openPanel(event) {
-				openMenu(event);
-				var panel = $(event.currentTarget).data('panel');
+			function openPanel(e) {
+				openMenu();
+				var panel = e;
+				if (typeof e !== "string") {
+					panel = $(e.currentTarget).data('panel');
+				}
 				$('.slide-menu-toolbar > li').removeClass('active-toolbar-button');
 				$('li[data-panel="' + panel + '"]').addClass('active-toolbar-button');
 				$('.slide-menu-panel').removeClass('active-menu-panel');
 				$('div[data-panel="' + panel + '"]').addClass('active-menu-panel');
 			}
 
+			function nextPanel() {
+				var next = ($('.active-toolbar-button').data('button') + 1) % buttons;
+				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
+			}
+
+			function prevPanel() {
+				var next = $('.active-toolbar-button').data('button') - 1;
+				if (next < 0) {
+					next = buttons - 1;
+				}
+				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
+			}
 
 			$('<nav class="slide-menu slide-menu--' + side + '"></nav>')
 				.appendTo($('.reveal'));
@@ -227,17 +257,18 @@ var RevealMenu = window.RevealMenu || (function(){
 				.click(closeMenu);
 
 			var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
-			$('<li data-panel="Slides"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
+			var buttons = 0;
+			$('<li data-panel="Slides" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
 				.appendTo(toolbar)
 				.addClass('active-toolbar-button')
 				.click(openPanel);
 			if (themes) {
-				$('<li data-panel="Themes"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
+				$('<li data-panel="Themes" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
 					.appendTo(toolbar)
 					.click(openPanel);
 			}
 			if (transitions) {
-				$('<li data-panel="Transitions"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
+				$('<li data-panel="Transitions" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
 					.appendTo(toolbar)
 					.click(openPanel);
 			}
@@ -286,16 +317,28 @@ var RevealMenu = window.RevealMenu || (function(){
 				var m = '';
 				if (markers) {
 					m = '<i class="fa fa-check-circle past"></i>' +
-								'<i class="fa fa-dot-circle-o present"></i>' + 
+								'<i class="fa fa-dot-circle-o active"></i>' + 
 								'<i class="fa fa-circle-thin future"></i>';
 				}
 
-				return '<li class="' + type + '" data-slide="' + i + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
+				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
 			}
 
-			function openItem(elem) {
-				Reveal.slide($(elem).data('slide-h'), $(elem).data('slide-v'));
-				closeMenu();
+			function openItem(item) {
+				var h = $(item).data('slide-h');
+				var v = $(item).data('slide-v');
+				var theme = $(item).data('theme');
+				var transition = $(item).data('transition');
+				if (typeof h !== "undefined" && typeof v !== "undefined") {
+					Reveal.slide(h, v);
+					closeMenu();
+				} else if (theme) {
+					$('#theme').attr('href', theme);
+					closeMenu();
+				} else if (transition) {
+					Reveal.configure({ transition: transition });
+					closeMenu();
+				}
 			}
 
 			function clicked(event) {
@@ -307,7 +350,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				var state = Reveal.getState();
 				$('li.slide-menu-item, li.slide-menu-item-vertical')
 					.removeClass('past')
-					.removeClass('present')
+					.removeClass('active')
 					.removeClass('future');
 
 				$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
@@ -317,7 +360,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						$(e).addClass('past');
 					}
 					else if (h === state.indexh && v === state.indexv) {
-						$(e).addClass('present');
+						$(e).addClass('active');
 					}
 					else {
 						$(e).addClass('future');
@@ -346,55 +389,28 @@ var RevealMenu = window.RevealMenu || (function(){
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
 
-			var mouseSelectionEnabled = true;
-			$('.slide-menu-item, .slide-menu-item-vertical').mouseenter(function(event) {
-				if (mouseSelectionEnabled) {
-					$('.slide-menu-item, .slide-menu-item-vertical').removeClass('selected');
-					$(event.currentTarget).addClass('selected');
-				}
-			});
-			$('.slide-menu-item, .slide-menu-item-vertical').mouseleave(function(event) {
-				var elem = $(event.currentTarget);
-				elem.removeClass('selected');
-			});
-
 			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
 			highlightCurrentSlide();
 
 			//
 			// Themes
 			//
-			function setTheme(event) {
-				if (event) event.preventDefault();
-				$('#theme').attr('href', $(event.currentTarget).data('theme'));
-				closeMenu();
-			}
-
 			if (themes) {
 				var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
-				themes.forEach(function(t) {
-					$('<li data-theme="' + t.theme + '">' + t.name + '</li>').appendTo(panel).click(setTheme);
+				themes.forEach(function(t, i) {
+					$('<li data-theme="' + t.theme + '" data-item="' + (i+1) + '">' + t.name + '</li>').appendTo(panel).click(clicked);
 				})
 			}
 
 			//
 			// Transitions
 			//
-			function setTransition(event) {
-				if (event) event.preventDefault();
-				Reveal.configure({ transition: $(event.currentTarget).data('transition') });
-				closeMenu();
-			}
-
 			if (transitions) {
 				var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>')
 					.appendTo(panels);
-				$('<li data-transition="none">None</li>').appendTo(panel).click(setTransition);
-				$('<li data-transition="fade">Fade</li>').appendTo(panel).click(setTransition);
-				$('<li data-transition="slide">Slide</li>').appendTo(panel).click(setTransition);
-				$('<li data-transition="convex">Convex</li>').appendTo(panel).click(setTransition);
-				$('<li data-transition="concave">Concave</li>').appendTo(panel).click(setTransition);
-				$('<li data-transition="zoom">Zoom</li>').appendTo(panel).click(setTransition);
+				['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom'].forEach(function(name, i) {
+					$('<li data-transition="' + name.toLowerCase() + '" data-item="' + (i+1) + '">' + name + '</li>').appendTo(panel).click(clicked);
+				})
 			}
 
 			//
@@ -413,6 +429,17 @@ var RevealMenu = window.RevealMenu || (function(){
 				$('.slide-number').appendTo($('.slide-number-wrapper a'));
 				$('.slide-number-wrapper a').click(openMenu);
 			}
+
+			//
+			// Handle mouse overs
+			//
+			var mouseSelectionEnabled = true;
+			$('.slide-menu-panel li').mouseenter(function(event) {
+				if (mouseSelectionEnabled) {
+					$('.active-menu-panel li').removeClass('selected');
+					$(event.currentTarget).addClass('selected');
+				}
+			});
 
 			module.toggle = toggleMenu;
 			module.isOpen = isOpen;

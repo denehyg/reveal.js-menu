@@ -42,14 +42,12 @@
   border-top: none;
 }
 
-.reveal .slide-menu-item.selected, 
-.reveal .slide-menu-item-vertical.selected {
+.reveal .active-menu-panel li.selected {
 	background-color: #222;
 	color: white;
 }
 
-.reveal .slide-menu-item.present,
-.reveal .slide-menu-item-vertical.present {
+.reveal .active-menu-panel li.active {
 	color: #eee;
 }
 
@@ -71,8 +69,8 @@
 
 .reveal .slide-menu-item.past i.fa.past,
 .reveal .slide-menu-item-vertical.past i.fa.past,
-.reveal .slide-menu-item.present i.fa.present,
-.reveal .slide-menu-item-vertical.present i.fa.present,
+.reveal .slide-menu-item.active i.fa.active,
+.reveal .slide-menu-item-vertical.active i.fa.active,
 .reveal .slide-menu-item.future i.fa.future,
 .reveal .slide-menu-item-vertical.future i.fa.future {
 	display: inline-block;
@@ -173,17 +171,6 @@
 	cursor: pointer;
 	padding: 6px 18px;
 	color: #848484;
-}
-
-.reveal div[data-panel="Themes"] li:hover,
-.reveal div[data-panel="Transitions"] li:hover {
-	color: #eee;
-}
-
-.reveal div[data-panel="Themes"] li.active,
-.reveal div[data-panel="Transitions"] li.active {
-	color: #eee;
-	background-color: #222;
 }
 
 /*
