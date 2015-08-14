@@ -49,8 +49,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof openButton === "undefined") openButton = true;
 			var openSlideNumber = options.openSlideNumber;
 			if (typeof openSlideNumber === "undefined") openSlideNumber = false;
-
-			//XXX add options for keyboard, ie disable, custom key codes, etc.
+			var keyboard = options.keyboard;
+			if (typeof keyboard === "undefined") keyboard = true;
 
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
@@ -161,17 +161,22 @@ var RevealMenu = window.RevealMenu || (function(){
 					}
 				}
 			}
-			document.addEventListener('keydown', onDocumentKeyDown, false);
 
-			// Prevent reveal from processing keyboard events when the menu is open
-			if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
-				// combine user defined keyboard condition with the menu's own condition
-				var userCondition = config.keyboardCondition;
-				config.keyboardCondition = function() {
-					return userCondition() && !isOpen();
-				};
-			} else {
-				config.keyboardCondition = function() { return !isOpen(); }
+			if (keyboard) {
+				//XXX add keyboard option for custom key codes, etc.
+
+				document.addEventListener('keydown', onDocumentKeyDown, false);
+
+				// Prevent reveal from processing keyboard events when the menu is open
+				if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
+					// combine user defined keyboard condition with the menu's own condition
+					var userCondition = config.keyboardCondition;
+					config.keyboardCondition = function() {
+						return userCondition() && !isOpen();
+					};
+				} else {
+					config.keyboardCondition = function() { return !isOpen(); }
+				}
 			}
 
 

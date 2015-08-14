@@ -90,7 +90,12 @@ Reveal.initialize({
 		// If 'true' allows the slide number in the presentation to
 		// open the menu panel. The reveal.js slideNumber option must 
 		// be displayed for this to take effect
-		openSlideNumber: false
+		openSlideNumber: false,
+
+		// If true allows the user to open and navigate the menu using
+		// the keyboard. Standard keyboard interaction with reveal
+		// will be disabled while the menu is open.
+		keyboard: true
 	},
 
 });
