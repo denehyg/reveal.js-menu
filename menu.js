@@ -105,7 +105,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (event.keyCode === 77) {
 					toggleMenu();
 				} else if (isOpen()) {
-					event.stopPropagation();
+					event.stopImmediatePropagation();
 					switch( event.keyCode ) {
 						// h, left - change panel
 						case 72: case 37:
