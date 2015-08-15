@@ -1,8 +1,30 @@
 # reveal.js-menu
 
-A slideout menu plugin for [Reveal.js](https://github.com/hakimel/reveal.js) to quickly jump to any slide by title. Also optionally change the theme and set the default transition.
+A slideout menu plugin for [Reveal.js](https://github.com/hakimel/reveal.js) to quickly jump to any slide by title. Also optionally change the theme and set the default transition. [Check out the live demo](https://denehyg.github.io/reveal.js-menu)
 
 ## Installation
+
+### Bower
+
+Download and install the package in your project:
+
+```bower install reveal.js-menu```
+
+Add the plugin to the dependencies in your presentation, as below. 
+
+```javascript
+Reveal.initialize({
+	// ...
+	
+	dependencies: [
+		// ... 
+	  
+		{ src: 'bower_components/reveal.js-menu/menu.js' }
+	]
+});
+```
+
+### Manual
 
 Copy this repository into the plugins folder of your reveal.js presentation, ie ```plugins/menu```.
 
@@ -68,7 +90,12 @@ Reveal.initialize({
 		// If 'true' allows the slide number in the presentation to
 		// open the menu panel. The reveal.js slideNumber option must 
 		// be displayed for this to take effect
-		openSlideNumber: false
+		openSlideNumber: false,
+
+		// If true allows the user to open and navigate the menu using
+		// the keyboard. Standard keyboard interaction with reveal
+		// will be disabled while the menu is open.
+		keyboard: true
 	},
 
 });

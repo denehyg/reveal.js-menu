@@ -1,8 +1,3 @@
 TODO
 
-Allow class to specify which element provides the slide title (possibly hidden)
-Additional trigger options:
-- hover zone at edge of slides
-- keypress to open/close menu (probably 'm' by default), and up/down/enter to select slide
-- via links in the slides, at least for demo purposes
 Add menu panel for changing options, for both reveal (eg autoSlide, loop, show/hide controls, ...) and menu (eg change side, effect, ...)
