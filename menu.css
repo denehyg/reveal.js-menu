@@ -154,10 +154,19 @@
 	visibility: hidden;
 	height: calc(100% - 60px);
 	overflow-y: auto;
+	color: #848484;
 }
 
 .reveal .slide-menu-panel.active-menu-panel {
 	visibility: visible;
+}
+
+.reveal .slide-menu-panel a {
+	color: white;
+}
+
+.reveal .slide-menu-panel a:hover {
+	background-color: #222;
 }
 
 /*
