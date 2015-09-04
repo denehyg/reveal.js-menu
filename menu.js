@@ -22,7 +22,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
 			var numbers = options.numbers || false;
+			var showDefaultTitles = options.showDefaultTitles || false;
 			var markers = options.markers || false;
+			var custom = options.custom;
 			var themes = options.themes;
 			if (typeof themes === "undefined") {
 				themes = [
@@ -265,6 +267,15 @@ var RevealMenu = window.RevealMenu || (function(){
 				.appendTo(toolbar)
 				.addClass('active-toolbar-button')
 				.click(openPanel);
+			if (custom) {
+				custom.forEach(function(element, index, array) {
+					$('<li data-panel="Custom' + index + '" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">' + element.title + '</span><br/>' + element.icon + '</i></li>')
+						.appendTo(toolbar)
+						.click(openPanel);
+				})
+			}
+
+
 			if (themes) {
 				$('<li data-panel="Themes" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
 					.appendTo(toolbar)
@@ -293,6 +304,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					$('.menu-title', section).text() ||
 					$('h1, h2, h3, h4, h5, h6', section).text();
 				if (!title) {
+					if (!showDefaultTitles) return '';
 					title = "Slide " + i;
 					type += ' no-title';
 				}
@@ -394,6 +406,43 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
 			highlightCurrentSlide();
+
+			// Custom menu
+			//
+			if (custom) {
+				custom.forEach(function(element, index, array) {
+					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel"></div>');
+					if (element.content) {
+						$(element.content).appendTo(panel);
+					}
+					if (element.src) {
+						var xhr = new XMLHttpRequest();
+						xhr.onreadystatechange = function() {
+							if( xhr.readyState === 4 ) {
+								// file protocol yields status code 0 (useful for local debug, mobile applications etc.)
+								if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
+									$(xhr.responseText).appendTo(panel);
+								}
+								else {
+									content = 'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
+										'Check your browser\'s JavaScript console for more details.' +
+										'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
+								}
+							}
+						};
+
+						xhr.open( 'GET', element.src, false );
+						try {
+							xhr.send();
+						}
+						catch ( e ) {
+							alert( 'Failed to get file ' + element.src + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
+						}
+
+					}
+					panel.appendTo(panels);
+				})
+			}
 
 			//
 			// Themes
