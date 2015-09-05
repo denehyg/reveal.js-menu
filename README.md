@@ -60,9 +60,20 @@ Reveal.initialize({
 		// Use 'true' or format string (same as reveal.js slide numbers)
 		numbers: false,
 
+		// For slide without heading show default title in menu.
+		// Set to 'false' to only list slides with titles.
+		showDefaultTitles: true;
+
 		// Add markers to the slide titles to indicate the 
 		// progress through the presentation
 		markers: false,
+
+		// Add custom panels to be included in the menu.
+		// Set to 'false' if no custom panel shall be added.
+		custom: [
+			{ title: 'Links', icon: '<i class="fa fa-external-link">', src: 'links.html' },
+			{ title: 'About', icon: '<i class="fa fa-info">', content: '<p>This slidedeck is created with reveal.js</p>' }
+		],
 
 		// Specifies the themes that will be available in the themes
 		// menu panel. Set to 'false' to hide themes panel.
@@ -138,7 +149,7 @@ If not explicitly specified (as above), the title will be taken from the first h
 ```
 
 ###### 4. No title is provided
-If no title can be found using the above methods, a default title incorporating the slide number will be used. For example, the following would result in a slide title in the format of 'Slide 12'...
+If no title can be found using the above methods, a default title incorporating the slide number will be used if the option ```showDefaultTitles``` is set to ```true```. For example, the following would result in a slide title in the format of 'Slide 12'...
 
 ```html
 <section>
@@ -146,6 +157,7 @@ If no title can be found using the above methods, a default title incorporating 
 </section>
 ```
 
+If the option ```showDefaultTitles``` is set to ```false```, the slide is not listed in the menu.
 
 ## License
 
