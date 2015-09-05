@@ -267,6 +267,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				.appendTo(toolbar)
 				.addClass('active-toolbar-button')
 				.click(openPanel);
+
 			if (custom) {
 				custom.forEach(function(element, index, array) {
 					$('<li data-panel="Custom' + index + '" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">' + element.title + '</span><br/>' + element.icon + '</i></li>')
@@ -274,7 +275,6 @@ var RevealMenu = window.RevealMenu || (function(){
 						.click(openPanel);
 				})
 			}
-
 
 			if (themes) {
 				$('<li data-panel="Themes" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
@@ -407,7 +407,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
 			highlightCurrentSlide();
 
-			// Custom menu
+			//
+			// Custom menu panels
 			//
 			if (custom) {
 				custom.forEach(function(element, index, array) {

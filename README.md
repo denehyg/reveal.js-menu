@@ -68,12 +68,10 @@ Reveal.initialize({
 		// progress through the presentation
 		markers: false,
 
-		// Add custom panels to be included in the menu.
-		// Set to 'false' if no custom panel shall be added.
-		custom: [
-			{ title: 'Links', icon: '<i class="fa fa-external-link">', src: 'links.html' },
-			{ title: 'About', icon: '<i class="fa fa-info">', content: '<p>This slidedeck is created with reveal.js</p>' }
-		],
+		// Specify custom panels to be included in the menu, by
+		// providing an array of objects with 'title', 'icon'
+		// properties, and either a 'src' or 'content' property.
+		custom: false,
 
 		// Specifies the themes that will be available in the themes
 		// menu panel. Set to 'false' to hide themes panel.
@@ -158,6 +156,28 @@ If no title can be found using the above methods, a default title incorporating 
 ```
 
 If the ```hideMissingTitles``` option is set to ```true```, however, the slide will not listed in the menu.
+
+
+## Custom Menu Panels
+
+Additional custom panels can be added the menu using the ```custom``` option.
+
+```javascript
+Reveal.initialize({
+	// ...
+
+	menu: {
+		// ...
+
+		custom: [
+			{ title: 'Links', icon: '<i class="fa fa-external-link">', src: 'links.html' },
+			{ title: 'About', icon: '<i class="fa fa-info">', content: '<p>This slidedeck is created with reveal.js</p>' }
+		]
+	}
+});
+```
+
+
 
 ## License
 
