@@ -154,21 +154,64 @@
 	visibility: hidden;
 	height: calc(100% - 60px);
 	overflow-y: auto;
-	color: #848484;
+	color: #AAA;
 }
 
 .reveal .slide-menu-panel.active-menu-panel {
 	visibility: visible;
 }
 
+.reveal .slide-menu-panel h1,
+.reveal .slide-menu-panel h2,
+.reveal .slide-menu-panel h3,
+.reveal .slide-menu-panel h4,
+.reveal .slide-menu-panel h5,
+.reveal .slide-menu-panel h6 {
+	margin: 20px 0 10px 0;
+	color: #FFF;
+	line-height: 1.2;
+	letter-spacing: normal;
+	text-shadow: none;
+}
+
+.reveal .slide-menu-panel h1 {
+	font-size: 1.6em;
+}
+.reveal .slide-menu-panel h2 {
+	font-size: 1.4em;
+}
+.reveal .slide-menu-panel h3 {
+	font-size: 1.3em;
+}
+.reveal .slide-menu-panel h4 {
+	font-size: 1.1em;
+}
+.reveal .slide-menu-panel h5 {
+	font-size: 1em;
+}
+.reveal .slide-menu-panel h6 {
+	font-size: 0.9em;
+}
+
+.reveal .slide-menu-panel p {
+	margin: 10px 0 5px 0;
+}
+
 .reveal .slide-menu-panel a {
-	color: white;
+	color: #CCC;
+	text-decoration: underline;
 }
 
 .reveal .slide-menu-panel a:hover {
-	background-color: #222;
+	color: white;
 }
 
+.reveal .slide-menu-custom-panel {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+ 
 /*
  * Theme and Transitions buttons
  */

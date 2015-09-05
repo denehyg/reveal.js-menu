@@ -1,3 +1,7 @@
 TODO
 
 Add menu panel for changing options, for both reveal (eg autoSlide, loop, show/hide controls, ...) and menu (eg change side, effect, ...)
+
+Menu support (ie consistent styling with other menus, keyboard support) for custom panels that use ul.slide-menu-items elements for links
+
+Customise width
