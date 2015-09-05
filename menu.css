@@ -211,6 +211,11 @@
 	padding-right: 10px;
 }
 
+.reveal .slide-menu-custom-panel .slide-menu-items {
+	margin-left: -10px;
+	padding-right: 10px;
+}
+
  
 /*
  * Theme and Transitions buttons
