@@ -22,7 +22,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
 			var numbers = options.numbers || false;
-			var showDefaultTitles = options.showDefaultTitles || false;
+			var hideMissingTitles = options.hideMissingTitles || false;
 			var markers = options.markers || false;
 			var custom = options.custom;
 			var themes = options.themes;
@@ -304,7 +304,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					$('.menu-title', section).text() ||
 					$('h1, h2, h3, h4, h5, h6', section).text();
 				if (!title) {
-					if (!showDefaultTitles) return '';
+					if (hideMissingTitles) return '';
 					title = "Slide " + i;
 					type += ' no-title';
 				}
