@@ -60,9 +60,18 @@ Reveal.initialize({
 		// Use 'true' or format string (same as reveal.js slide numbers)
 		numbers: false,
 
+		// Hide slides from the menu that do not have a title.
+		// Set to 'true' to only list slides with titles.
+		hideMissingTitles: false,
+
 		// Add markers to the slide titles to indicate the 
 		// progress through the presentation
 		markers: false,
+
+		// Specify custom panels to be included in the menu, by
+		// providing an array of objects with 'title', 'icon'
+		// properties, and either a 'src' or 'content' property.
+		custom: false,
 
 		// Specifies the themes that will be available in the themes
 		// menu panel. Set to 'false' to hide themes panel.
@@ -146,7 +155,58 @@ If no title can be found using the above methods, a default title incorporating 
 </section>
 ```
 
+If the ```hideMissingTitles``` option is set to ```true```, however, the slide will not listed in the menu.
 
+
+## Custom Menu Panels
+
+Additional custom panels can be added the menu using the ```custom``` option.
+
+```javascript
+Reveal.initialize({
+	// ...
+
+	menu: {
+		// ...
+
+		custom: [
+			{ title: 'Links', icon: '<i class="fa fa-external-link">', src: 'links.html' },
+			{ title: 'About', icon: '<i class="fa fa-info">', content: '<p>This slidedeck is created with reveal.js</p>' }
+		]
+	}
+});
+```
+
+```title``` and ```icon``` are used for the toolbar buttons at the top of the menu. There are two approaches you can use to provide content for the panels...
+
+* Provide html in ```content``` and this will be added to the custom panel.
+* You can also provide a URL in ```src``` to load html from another file.
+
+###### Custom slide menu items
+
+You can provide menu items in your custom panels using the following format. This allows you to define your own navigation links for your presentation.
+
+```html
+<h1>Links</h1>
+<ul class="slide-menu-items">
+	<li class="slide-menu-item"><a href="#/transitions">Transitions</a></li>
+	<li class="slide-menu-item"><a href="#/13">Code highlighting</a></li>
+</ul>
+```
+
+You are not limited to linking to presentation slides. You can provide any link you wish. 
+
+```html
+<h1>External Links</h1>
+<ul class="slide-menu-items">
+	<li class="slide-menu-item"><a href="https://github.com/denehyg/reveal.js-menu" target="_blank">Reveal.js-menu</a></li>
+	<li class="slide-menu-item"><a href="https://github.com/hakimel/reveal.js" target="_blank">Reveal.js</a></li>
+</ul>
+```
+
+Using menu items enables keyboard navigation of your links as with the other panels. However, you don't have to use menu items for your links. You can simply provide standard links and unordered lists in your html. Notice you can provide your custom menu items mixed with other html if you wish.
+
+ 
 ## License
 
 MIT licensed
