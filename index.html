@@ -46,7 +46,7 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section>
+				<section id="home">
 					<h1>Reveal.js-menu</h1>
 					<h3>A slideout menu for navigating reveal.js presentations</h3>
 					<p>
@@ -54,7 +54,7 @@
 					</p>
 				</section>
 
-				<section>
+				<section id="introduction">
 					<h3>Hey There</h3>
 					<p>Have you ever used <a href="https://github.com/hakimel/reveal.js">reveal.js</a> and wanted jump <br/>somewhere else in your presentation?</p>
 					<p>The slide overview is great but perhaps you want to <br/>change slides without your audience seeing everything.</p>
@@ -77,7 +77,7 @@
 					<p>The menu button can be hidden using the options, <br/>but you need to enable the slide number link.</p>
 				</section>
 
-				<section data-menu-title="Keyboard">
+				<section id="keyboard" data-menu-title="Keyboard">
 					<p>Or you can open the menu by pressing the <code>m</code> key.</p>
 					<p>
 						You can navigate the menu with the keyboard as well. <br/>Just use the arrow keys and <code>&lt;space&gt;</code> or <code>&lt;enter&gt;</code> to change slides.
@@ -97,7 +97,7 @@
 					<p>You can also add slide numbers.</p>
 				</section>
 
-				<section>
+				<section id="titles">
 					<h3>Slide Titles</h3>
 					<p>
 						The menu uses the first heading to label each slide<br/>
@@ -130,14 +130,14 @@
 					</section>
 				</section>
 
-				<section>
+				<section id="themes">
 					<h3>Themes</h3>
 					<p>The menu can also be used to change the <br/>theme of your presentation.</p>
 					<p>Just click the Themes button at the top of the menu.</p>
 					<p>The list of themes can be configured in the options.</p>
 				</section>
 
-				<section>
+				<section id="transitions">
 					<h3>Transitions</h3>
 					<p>You can also change the default <br/>transition style from the menu.</p>
 				</section>
@@ -145,6 +145,19 @@
 				<section data-menu-title="Hiding menu panels">
 					<p>Of course,</p>
 					<p>if you don't want to see the <i>Themes</i> or <i>Transitions</i> menus you can hide them in the options.</p>
+				</section>
+
+				<section id="custom">
+					<h3>Custom Panels</h3>
+					<p>
+						Create your own custom menu panels where<br/>
+						you can add your own html content.
+					</p>
+					<p>
+						Custom panels support menu items so you<br/>
+						can create your own menus that look and<br/>
+						behaviour just like the other menus.
+					</p>
 				</section>
 
 				<section>
@@ -195,6 +208,9 @@
 						{ name: 'Night', theme: 'reveal.js/css/theme/night.css' },
 						{ name: 'Moon', theme: 'reveal.js/css/theme/moon.css' },
 						{ name: 'Solarized', theme: 'reveal.js/css/theme/solarized.css' }
+			        ],
+			        custom: [
+			            { title: 'Custom', icon: '<i class="fa fa-bookmark">', src: 'links.html' },
 			        ]
 				},
 
