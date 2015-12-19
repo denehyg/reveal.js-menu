@@ -307,8 +307,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			function item(type, section, i, h, v) {
 				var link = '/#/' + h;
-				if (v) link += '/' + v;
-				else v = 0;
+				if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
 
 				var title = $(section).data('menu-title') ||
 					$('.menu-title', section).text() ||
@@ -322,21 +321,35 @@ var RevealMenu = window.RevealMenu || (function(){
 				title = '<span class="slide-menu-item-title">' + title + '</span>';
 				if (numbers) {
 					// Number formatting taken from reveal.js
+					var value = [];
+					var format = 'h.v';
 
-					// Default to only showing the current slide number
-					var format = 'c';
-
-					// Check if a custom slide number format is available
+					// Check if a custom number format is available
 					if( typeof numbers === 'string' ) {
 						format = numbers;
 					}
+					else if (typeof config.slideNumber === 'string') {
+						// Take user defined number format for slides
+						format = config.slideNumber;
+					}
 
-					var n = format.replace( /h/g, h )
-									.replace( /v/g, v )
-									.replace( /c/g, i )
-									.replace( /t/g, Reveal.getTotalSlides() );
+					switch( format ) {
+						case 'c':
+							value.push( i );
+							break;
+						case 'c/t':
+							value.push( i, '/', Reveal.getTotalSlides() );
+							break;
+						case 'h/v':
+							value.push( h + 1 );
+							if( typeof v === 'number' && !isNaN( v ) ) value.push( '/', v + 1 );
+							break;
+						default:
+							value.push( h + 1 );
+							if( typeof v === 'number' && !isNaN( v ) ) value.push( '.', v + 1 );
+					}
 
-					title = '<span class="slide-menu-item-number">' + n + '. </span>' + title;
+					title = '<span class="slide-menu-item-number">' + value.join('') + '. </span>' + title;
 				}
 
 				var m = '';
