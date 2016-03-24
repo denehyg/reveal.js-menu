@@ -307,7 +307,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			// Slide links
 			//
-			function item(type, section, i, h, v) {
+			function generateItem(type, section, i, h, v) {
 				var link = '/#/' + h;
 				if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
 
@@ -425,14 +425,19 @@ var RevealMenu = window.RevealMenu || (function(){
 				var subsections = $('section', section);
 				if (subsections.length > 0) {
 					subsections.each(function(subsection, v) {
-						slideCount++;
 						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						items.append(item(type, subsection, slideCount, h, v));
+						var item = generateItem(type, subsection, slideCount, h, v);
+						if (item) {
+							slideCount++;
+							items.append(item);
+						}
 					});
 				} else {
-					slideCount++;
-					var type = 'slide-menu-item';
-					items.append(item(type, section, slideCount, h));
+					var item = generateItem('slide-menu-item', section, slideCount, h);
+					if (item) {
+						slideCount++;
+						items.append(item);
+					}
 				}
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
