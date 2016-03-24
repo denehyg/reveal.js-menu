@@ -22,6 +22,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
 			var numbers = options.numbers || false;
+			var titleSelector = 'h1, h2, h3, h4, h5';
+			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
 			var markers = options.markers || false;
 			var custom = options.custom;
@@ -311,7 +313,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 				var title = $(section).data('menu-title') ||
 					$('.menu-title', section).text() ||
-					$('h1, h2, h3, h4, h5, h6', section).text();
+					$(titleSelector, section).text();
 				if (!title) {
 					if (hideMissingTitles) return '';
 					title = "Slide " + i;
