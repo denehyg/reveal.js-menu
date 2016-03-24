@@ -174,7 +174,7 @@ If no title can be found using the above methods, a default title incorporating 
 </section>
 ```
 
-If the ```hideMissingTitles``` option is set to ```true```, however, the slide will not listed in the menu.
+If the ```hideMissingTitles``` option is set to ```true```, however, the slide will not be listed in the menu.
 
 
 ## Custom Menu Panels
