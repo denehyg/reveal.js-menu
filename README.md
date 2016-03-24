@@ -60,6 +60,15 @@ Reveal.initialize({
 		// Use 'true' or format string (same as reveal.js slide numbers)
 		numbers: false,
 
+		// Specifies which slide elements will be used for generating
+		// the slide titles in the menu. The default selects the first
+		// heading element found in the slide, but you can specify any
+		// valid css selector and the text from the first matching
+		// element will be used.
+		// Note: that a section data-menu-title attribute or an element
+		// with a menu-title class will take precedence over this option
+		titleSelector: 'h1, h2, h3, h4, h5, h6',
+
 		// Hide slides from the menu that do not have a title.
 		// Set to 'true' to only list slides with titles.
 		hideMissingTitles: false,
@@ -135,13 +144,23 @@ If the slide's section contains an element with the class ```menu-title``` then 
 </section>
 ```
 
-###### 3. The first heading found
-If not explicitly specified (as above), the title will be taken from the first heading element found in the slide. For example...
+###### 3. The first heading found or a custom element selector
+The ```titleSelector``` option can be used to customise the elements that will be used to generate the slide titles in the menu. The default option selects the first heading element found in the slide. For example...
 
 ```html
 <section>
 	<h3>This will be the slide title in the menu</h3>
 	<h1>Title</h1>
+	<p>...</p>
+</section>
+```
+
+Any valid CSS selector should work but note the selector will only be applied to elements contained within the slide section. You could use the ```'h1'``` selector to only use level 1 headings or ```'p'``` to use the first paragraph element. For example, ```titleSelector: 'p.lead'``` would be used like this...
+
+```html
+<section>
+	<h1>Title</h1>
+	<p class="lead">This will be the slide title in the menu</p>
 	<p>...</p>
 </section>
 ```
