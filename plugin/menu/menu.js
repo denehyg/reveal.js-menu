@@ -22,6 +22,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
 			var numbers = options.numbers || false;
+			var titleSelector = 'h1, h2, h3, h4, h5';
+			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
 			var markers = options.markers || false;
 			var custom = options.custom;
@@ -305,14 +307,13 @@ var RevealMenu = window.RevealMenu || (function(){
 			//
 			// Slide links
 			//
-			function item(type, section, i, h, v) {
+			function generateItem(type, section, i, h, v) {
 				var link = '/#/' + h;
-				if (v) link += '/' + v;
-				else v = 0;
+				if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
 
 				var title = $(section).data('menu-title') ||
 					$('.menu-title', section).text() ||
-					$('h1, h2, h3, h4, h5, h6', section).text();
+					$(titleSelector, section).text();
 				if (!title) {
 					if (hideMissingTitles) return '';
 					title = "Slide " + i;
@@ -322,21 +323,35 @@ var RevealMenu = window.RevealMenu || (function(){
 				title = '<span class="slide-menu-item-title">' + title + '</span>';
 				if (numbers) {
 					// Number formatting taken from reveal.js
+					var value = [];
+					var format = 'h.v';
 
-					// Default to only showing the current slide number
-					var format = 'c';
-
-					// Check if a custom slide number format is available
+					// Check if a custom number format is available
 					if( typeof numbers === 'string' ) {
 						format = numbers;
 					}
+					else if (typeof config.slideNumber === 'string') {
+						// Take user defined number format for slides
+						format = config.slideNumber;
+					}
 
-					var n = format.replace( /h/g, h )
-									.replace( /v/g, v )
-									.replace( /c/g, i )
-									.replace( /t/g, Reveal.getTotalSlides() );
+					switch( format ) {
+						case 'c':
+							value.push( i );
+							break;
+						case 'c/t':
+							value.push( i, '/', Reveal.getTotalSlides() );
+							break;
+						case 'h/v':
+							value.push( h + 1 );
+							if( typeof v === 'number' && !isNaN( v ) ) value.push( '/', v + 1 );
+							break;
+						default:
+							value.push( h + 1 );
+							if( typeof v === 'number' && !isNaN( v ) ) value.push( '.', v + 1 );
+					}
 
-					title = '<span class="slide-menu-item-number">' + n + '. </span>' + title;
+					title = '<span class="slide-menu-item-number">' + value.join('') + '. </span>' + title;
 				}
 
 				var m = '';
@@ -410,14 +425,19 @@ var RevealMenu = window.RevealMenu || (function(){
 				var subsections = $('section', section);
 				if (subsections.length > 0) {
 					subsections.each(function(subsection, v) {
-						slideCount++;
 						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						items.append(item(type, subsection, slideCount, h, v));
+						var item = generateItem(type, subsection, slideCount, h, v);
+						if (item) {
+							slideCount++;
+							items.append(item);
+						}
 					});
 				} else {
-					slideCount++;
-					var type = 'slide-menu-item';
-					items.append(item(type, section, slideCount, h));
+					var item = generateItem('slide-menu-item', section, slideCount, h);
+					if (item) {
+						slideCount++;
+						items.append(item);
+					}
 				}
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);

@@ -150,6 +150,7 @@
 	width: 100%;
 	visibility: hidden;
 	height: calc(100% - 60px);
+	overflow-x: hidden;
 	overflow-y: auto;
 	color: #AAA;
 }
