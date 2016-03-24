@@ -165,6 +165,8 @@ Any valid CSS selector should work but note the selector will only be applied to
 </section>
 ```
 
+Using ```titleSelector: ''``` will ignore all elements and no title will be provided, unless the slide section contains a ```data-menu-title``` attribute or an element with the ```menu-title``` class.
+
 ###### 4. No title is provided
 If no title can be found using the above methods, a default title incorporating the slide number will be used. For example, the following would result in a slide title in the format of 'Slide 12'...
 
