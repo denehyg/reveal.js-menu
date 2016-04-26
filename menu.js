@@ -181,6 +181,14 @@ var RevealMenu = window.RevealMenu || (function(){
 
 				document.addEventListener('keydown', onDocumentKeyDown, false);
 
+				// handle key presses within speaker notes
+				window.addEventListener( 'message', function( event ) {
+					var data = JSON.parse( event.data );
+					if (data.method === 'triggerKey') {
+						onDocumentKeyDown( { keyCode: data.args[0], stopImmediatePropagation: function() {} } );
+					}
+				});
+
 				// Prevent reveal from processing keyboard events when the menu is open
 				if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
 					// combine user defined keyboard condition with the menu's own condition
