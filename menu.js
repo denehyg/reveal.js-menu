@@ -83,20 +83,20 @@ var RevealMenu = window.RevealMenu || (function(){
 				return { top: _y, left: _x };
 			}
 
-			function keepVisible(el) {
+			function visibleOffset(el) {
 				var offsetFromTop = getOffset(el).top - el.offsetParent.offsetTop;
-				if (offsetFromTop < 0) {
+				if (offsetFromTop < 0) return -offsetFromTop
+				var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
+				if (offsetFromBottom < 0) return offsetFromBottom; 
+				return 0;
+			}
+
+			function keepVisible(el) {
+				var offset = visibleOffset(el);
+				if (offset) {
 					disableMouseSelection();
-					el.scrollIntoView(true);
-					reenableMouseSelection();
-				}
-				else {
-					var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
-					if (offsetFromBottom < 0) {
-						disableMouseSelection();
-						el.scrollIntoView(false);
-						reenableMouseSelection();	
-					}
+					el.scrollIntoView(offset > 0);
+					reenableMouseSelection();	
 				}
 			}
 
@@ -145,6 +145,44 @@ var RevealMenu = window.RevealMenu || (function(){
 								if (items.length > 0) {
 									selectItem(items.get(0));
 								}
+							}
+							break;
+						// pageup, u
+						case 33: case 85:
+							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
+							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+
+							var firstVisible = visibleItems[0];
+							if ($(firstVisible).hasClass('selected') && itemsAbove.length > 0) {
+								// at top of viewport already, page scroll (if not at start)
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								itemsAbove[itemsAbove.length-1].scrollIntoView(false);
+								visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+								firstVisible = visibleItems[0];
+								selectItem(firstVisible);
+							} else {
+								// select item at top of viewport
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectItem(firstVisible);
+							}
+							break;
+						// pagedown, d
+						case 34: case 68:
+							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
+
+							var lastVisible = visibleItems[visibleItems.length-1];
+							if ($(lastVisible).hasClass('selected') && itemsBelow.length > 0) {
+								// at bottom of viewport already, page scroll (if not at end)
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								itemsBelow[0].scrollIntoView(true);
+								visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+								lastVisible = visibleItems[visibleItems.length-1];
+								selectItem(lastVisible);
+							} else {
+								// select item at bottom of viewport
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectItem(lastVisible);
 							}
 							break;
 						// home
