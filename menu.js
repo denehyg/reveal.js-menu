@@ -100,6 +100,14 @@ var RevealMenu = window.RevealMenu || (function(){
 				}
 			}
 
+			function scrollItemToTop(el) {
+				el.offsetParent.scrollTop = el.offsetTop;
+			}
+
+			function scrollItemToBottom(el) {
+				el.offsetParent.scrollTop = el.offsetTop - el.offsetParent.offsetHeight + el.offsetHeight
+			}
+
 			function selectItem(el) {
 				$(el).addClass('selected');
 				keepVisible(el);
@@ -152,38 +160,34 @@ var RevealMenu = window.RevealMenu || (function(){
 							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
 							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 
-							var firstVisible = visibleItems[0];
+							var firstVisible = (itemsAbove.length > 0 && Math.abs(visibleOffset(itemsAbove[itemsAbove.length-1])) < itemsAbove[itemsAbove.length-1].offsetHeight ? itemsAbove[itemsAbove.length-1] : visibleItems[0]);
 							if ($(firstVisible).hasClass('selected') && itemsAbove.length > 0) {
 								// at top of viewport already, page scroll (if not at start)
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
 								itemsAbove[itemsAbove.length-1].scrollIntoView(false);
 								visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 								firstVisible = visibleItems[0];
-								selectItem(firstVisible);
-							} else {
-								// select item at top of viewport
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-								selectItem(firstVisible);
 							}
+							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+							selectItem(firstVisible);
+							// ensure selected item is positioned at the top of the viewport
+							scrollItemToTop(firstVisible);
 							break;
 						// pagedown, d
 						case 34: case 68:
 							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
 
-							var lastVisible = visibleItems[visibleItems.length-1];
+							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].offsetHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
 							if ($(lastVisible).hasClass('selected') && itemsBelow.length > 0) {
 								// at bottom of viewport already, page scroll (if not at end)
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
 								itemsBelow[0].scrollIntoView(true);
 								visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 								lastVisible = visibleItems[visibleItems.length-1];
-								selectItem(lastVisible);
-							} else {
-								// select item at bottom of viewport
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-								selectItem(lastVisible);
 							}
+							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+							selectItem(lastVisible);
+							// ensure selected item is positioned at the bottom of the viewport
+							scrollItemToBottom(lastVisible);
 							break;
 						// home
 						case 36:
