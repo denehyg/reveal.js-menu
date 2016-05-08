@@ -160,11 +160,12 @@ var RevealMenu = window.RevealMenu || (function(){
 							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
 							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 
-							var firstVisible = (itemsAbove.length > 0 && Math.abs(visibleOffset(itemsAbove[itemsAbove.length-1])) < itemsAbove[itemsAbove.length-1].offsetHeight ? itemsAbove[itemsAbove.length-1] : visibleItems[0]);
+							var firstVisible = (itemsAbove.length > 0 && Math.abs(visibleOffset(itemsAbove[itemsAbove.length-1])) < itemsAbove[itemsAbove.length-1].clientHeight ? itemsAbove[itemsAbove.length-1] : visibleItems[0]);
 							if (firstVisible) {
 								if ($(firstVisible).hasClass('selected') && itemsAbove.length > 0) {
 									// at top of viewport already, page scroll (if not at start)
-									itemsAbove[itemsAbove.length-1].scrollIntoView(false);
+									// ...move selected item to bottom, and change selection to last fully visible item at top
+									scrollItemToBottom(firstVisible);
 									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 									firstVisible = visibleItems[0];
 								}
@@ -179,11 +180,12 @@ var RevealMenu = window.RevealMenu || (function(){
 							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
 
-							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].offsetHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
+							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].clientHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
 							if (lastVisible) {
 								if ($(lastVisible).hasClass('selected') && itemsBelow.length > 0) {
 									// at bottom of viewport already, page scroll (if not at end)
-									itemsBelow[0].scrollIntoView(true);
+									// ...move selected item to top, and change selection to last fully visible item at bottom
+									scrollItemToTop(lastVisible);
 									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 									lastVisible = visibleItems[visibleItems.length-1];
 								}
