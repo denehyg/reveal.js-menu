@@ -101,11 +101,15 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function scrollItemToTop(el) {
+				disableMouseSelection();
 				el.offsetParent.scrollTop = el.offsetTop;
+				reenableMouseSelection();	
 			}
 
 			function scrollItemToBottom(el) {
+				disableMouseSelection();
 				el.offsetParent.scrollTop = el.offsetTop - el.offsetParent.offsetHeight + el.offsetHeight
+				reenableMouseSelection();	
 			}
 
 			function selectItem(el) {
