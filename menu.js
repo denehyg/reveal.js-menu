@@ -167,7 +167,12 @@ var RevealMenu = window.RevealMenu || (function(){
 									// ...move selected item to bottom, and change selection to last fully visible item at top
 									scrollItemToBottom(firstVisible);
 									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
-									firstVisible = visibleItems[0];
+									if (visibleItems[0] == firstVisible) {
+										// prev item is still beyond the viewport (for custom panels)
+										firstVisible = itemsAbove[itemsAbove.length-1];
+									} else {
+										firstVisible = visibleItems[0];
+									}
 								}
 								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
 								selectItem(firstVisible);
@@ -187,7 +192,12 @@ var RevealMenu = window.RevealMenu || (function(){
 									// ...move selected item to top, and change selection to last fully visible item at bottom
 									scrollItemToTop(lastVisible);
 									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
-									lastVisible = visibleItems[visibleItems.length-1];
+									if (visibleItems[visibleItems.length-1] == lastVisible) {
+										// next item is still beyond the viewport (for custom panels)
+										lastVisible = itemsBelow[0];
+									} else {
+										lastVisible = visibleItems[visibleItems.length-1];
+									}
 								}
 								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
 								selectItem(lastVisible);
