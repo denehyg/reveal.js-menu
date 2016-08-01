@@ -416,6 +416,8 @@ var RevealMenu = window.RevealMenu || (function(){
 				});
 			}
 
+			function createSlideMenu() {
+				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed="true"]') ) {
 			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
 				.appendTo(panels)
 				.addClass('active-menu-panel');
@@ -441,9 +443,16 @@ var RevealMenu = window.RevealMenu || (function(){
 				}
 			});
 			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
-
-			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
 			highlightCurrentSlide();
+			}
+			else {
+			// wait for markdown to be loaded and parsed
+			setTimeout( createSlideMenu, 100 );
+			}
+			}
+
+			createSlideMenu();
+			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
 
 			//
 			// Custom menu panels
