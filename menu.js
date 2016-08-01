@@ -418,37 +418,37 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function createSlideMenu() {
 				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed="true"]') ) {
-			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
-				.appendTo(panels)
-				.addClass('active-menu-panel');
-			var items = $('.slide-menu-items');
-			var slideCount = 0;
-			$('.slides > section').each(function(section, h) {
-				var subsections = $('section', section);
-				if (subsections.length > 0) {
-					subsections.each(function(subsection, v) {
-						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						var item = generateItem(type, subsection, slideCount, h, v);
-						if (item) {
-							slideCount++;
-							items.append(item);
+					$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
+						.appendTo(panels)
+						.addClass('active-menu-panel');
+					var items = $('.slide-menu-items');
+					var slideCount = 0;
+					$('.slides > section').each(function(section, h) {
+						var subsections = $('section', section);
+						if (subsections.length > 0) {
+							subsections.each(function(subsection, v) {
+								var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
+								var item = generateItem(type, subsection, slideCount, h, v);
+								if (item) {
+									slideCount++;
+									items.append(item);
+								}
+							});
+						} else {
+							var item = generateItem('slide-menu-item', section, slideCount, h);
+							if (item) {
+								slideCount++;
+								items.append(item);
+							}
 						}
 					});
-				} else {
-					var item = generateItem('slide-menu-item', section, slideCount, h);
-					if (item) {
-						slideCount++;
-						items.append(item);
-					}
+					$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+					highlightCurrentSlide();
 				}
-			});
-			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
-			highlightCurrentSlide();
-			}
-			else {
-			// wait for markdown to be loaded and parsed
-			setTimeout( createSlideMenu, 100 );
-			}
+				else {
+				// wait for markdown to be loaded and parsed
+					setTimeout( createSlideMenu, 100 );
+				}
 			}
 
 			createSlideMenu();
