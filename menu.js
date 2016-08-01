@@ -421,7 +421,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
 						.appendTo(panels)
 						.addClass('active-menu-panel');
-					var items = $('.slide-menu-items');
+					var items = $('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
 					var slideCount = 0;
 					$('.slides > section').each(function(section, h) {
 						var subsections = $('section', section);
