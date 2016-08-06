@@ -627,6 +627,35 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			module.toggle = toggleMenu;
 			module.isOpen = isOpen;
+
+			/**
+			 * Extend object a with the properties of object b.
+			 * If there's a conflict, object b takes precedence.
+			 */
+			function extend( a, b ) {
+				for( var i in b ) {
+					a[ i ] = b[ i ];
+				}
+			}
+
+			/**
+			 * Dispatches an event of the specified type from the
+			 * reveal DOM element.
+			 */
+			function dispatchEvent( type, args ) {
+				var event = document.createEvent( 'HTMLEvents', 1, 2 );
+				event.initEvent( type, true, true );
+				extend( event, args );
+				document.querySelector('.reveal').dispatchEvent( event );
+
+				// If we're in an iframe, post each reveal.js event to the
+				// parent window. Used by the notes plugin
+				if( config.postMessageEvents && window.parent !== window.self ) {
+					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: getState() }), '*' );
+				}
+			}
+
+			dispatchEvent('menu-ready');
 		}
 	})
 	})

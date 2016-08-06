@@ -227,6 +227,17 @@ You are not limited to linking to presentation slides. You can provide any link 
 
 Using menu items enables keyboard navigation of your links as with the other panels. However, you don't have to use menu items for your links. You can simply provide standard links and unordered lists in your html. Notice you can provide your custom menu items mixed with other html if you wish.
 
+
+## Ready Event
+
+A 'menu-ready' event is fired when reveal.js-menu has loaded all non-async dependencies and is ready to start navigating.
+
+```javascript
+Reveal.addEventListener( 'menu-ready', function( event ) {
+	// your code
+} );
+```
+
  
 ## License
 
