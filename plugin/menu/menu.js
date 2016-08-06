@@ -83,21 +83,33 @@ var RevealMenu = window.RevealMenu || (function(){
 				return { top: _y, left: _x };
 			}
 
-			function keepVisible(el) {
+			function visibleOffset(el) {
 				var offsetFromTop = getOffset(el).top - el.offsetParent.offsetTop;
-				if (offsetFromTop < 0) {
+				if (offsetFromTop < 0) return -offsetFromTop
+				var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
+				if (offsetFromBottom < 0) return offsetFromBottom; 
+				return 0;
+			}
+
+			function keepVisible(el) {
+				var offset = visibleOffset(el);
+				if (offset) {
 					disableMouseSelection();
-					el.scrollIntoView(true);
-					reenableMouseSelection();
+					el.scrollIntoView(offset > 0);
+					reenableMouseSelection();	
 				}
-				else {
-					var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
-					if (offsetFromBottom < 0) {
-						disableMouseSelection();
-						el.scrollIntoView(false);
-						reenableMouseSelection();	
-					}
-				}
+			}
+
+			function scrollItemToTop(el) {
+				disableMouseSelection();
+				el.offsetParent.scrollTop = el.offsetTop;
+				reenableMouseSelection();	
+			}
+
+			function scrollItemToBottom(el) {
+				disableMouseSelection();
+				el.offsetParent.scrollTop = el.offsetTop - el.offsetParent.offsetHeight + el.offsetHeight
+				reenableMouseSelection();	
 			}
 
 			function selectItem(el) {
@@ -147,6 +159,56 @@ var RevealMenu = window.RevealMenu || (function(){
 								}
 							}
 							break;
+						// pageup, u
+						case 33: case 85:
+							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
+							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+
+							var firstVisible = (itemsAbove.length > 0 && Math.abs(visibleOffset(itemsAbove[itemsAbove.length-1])) < itemsAbove[itemsAbove.length-1].clientHeight ? itemsAbove[itemsAbove.length-1] : visibleItems[0]);
+							if (firstVisible) {
+								if ($(firstVisible).hasClass('selected') && itemsAbove.length > 0) {
+									// at top of viewport already, page scroll (if not at start)
+									// ...move selected item to bottom, and change selection to last fully visible item at top
+									scrollItemToBottom(firstVisible);
+									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+									if (visibleItems[0] == firstVisible) {
+										// prev item is still beyond the viewport (for custom panels)
+										firstVisible = itemsAbove[itemsAbove.length-1];
+									} else {
+										firstVisible = visibleItems[0];
+									}
+								}
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectItem(firstVisible);
+								// ensure selected item is positioned at the top of the viewport
+								scrollItemToTop(firstVisible);
+							}
+							break;
+						// pagedown, d
+						case 34: case 68:
+							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
+
+							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].clientHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
+							if (lastVisible) {
+								if ($(lastVisible).hasClass('selected') && itemsBelow.length > 0) {
+									// at bottom of viewport already, page scroll (if not at end)
+									// ...move selected item to top, and change selection to last fully visible item at bottom
+									scrollItemToTop(lastVisible);
+									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+									if (visibleItems[visibleItems.length-1] == lastVisible) {
+										// next item is still beyond the viewport (for custom panels)
+										lastVisible = itemsBelow[0];
+									} else {
+										lastVisible = visibleItems[visibleItems.length-1];
+									}
+								}
+								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectItem(lastVisible);
+								// ensure selected item is positioned at the bottom of the viewport
+								scrollItemToBottom(lastVisible);
+							}
+							break;
 						// home
 						case 36:
 							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
@@ -180,6 +242,14 @@ var RevealMenu = window.RevealMenu || (function(){
 				//XXX add keyboard option for custom key codes, etc.
 
 				document.addEventListener('keydown', onDocumentKeyDown, false);
+
+				// handle key presses within speaker notes
+				window.addEventListener( 'message', function( event ) {
+					var data = JSON.parse( event.data );
+					if (data.method === 'triggerKey') {
+						onDocumentKeyDown( { keyCode: data.args[0], stopImmediatePropagation: function() {} } );
+					}
+				});
 
 				// Prevent reveal from processing keyboard events when the menu is open
 				if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
@@ -361,7 +431,7 @@ var RevealMenu = window.RevealMenu || (function(){
 								'<i class="fa fa-circle-thin future"></i>';
 				}
 
-				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
+				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + (v === undefined ? 0 : v) + '">' + m + title + '</li>';
 			}
 
 			function openItem(item) {
@@ -416,76 +486,92 @@ var RevealMenu = window.RevealMenu || (function(){
 				});
 			}
 
-			$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
-				.appendTo(panels)
-				.addClass('active-menu-panel');
-			var items = $('.slide-menu-items');
-			var slideCount = 0;
-			$('.slides > section').each(function(section, h) {
-				var subsections = $('section', section);
-				if (subsections.length > 0) {
-					subsections.each(function(subsection, v) {
-						var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-						var item = generateItem(type, subsection, slideCount, h, v);
-						if (item) {
-							slideCount++;
-							items.append(item);
+			function createSlideMenu() {
+				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed="true"]') ) {
+					$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
+						.appendTo(panels)
+						.addClass('active-menu-panel');
+					var items = $('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
+					var slideCount = 0;
+					$('.slides > section').each(function(section, h) {
+						var subsections = $('section', section);
+						if (subsections.length > 0) {
+							subsections.each(function(subsection, v) {
+								var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
+								var item = generateItem(type, subsection, slideCount, h, v);
+								if (item) {
+									slideCount++;
+									items.append(item);
+								}
+							});
+						} else {
+							var item = generateItem('slide-menu-item', section, slideCount, h);
+							if (item) {
+								slideCount++;
+								items.append(item);
+							}
 						}
 					});
-				} else {
-					var item = generateItem('slide-menu-item', section, slideCount, h);
-					if (item) {
-						slideCount++;
-						items.append(item);
-					}
+					$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+					highlightCurrentSlide();
 				}
-			});
-			$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+				else {
+				// wait for markdown to be loaded and parsed
+					setTimeout( createSlideMenu, 100 );
+				}
+			}
 
+			createSlideMenu();
 			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
-			highlightCurrentSlide();
 
 			//
 			// Custom menu panels
 			//
 			if (custom) {
-				custom.forEach(function(element, index, array) {
-					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
-					if (element.content) {
-						$(element.content).appendTo(panel);
+				function xhrSuccess () {
+					if (this.status >= 200 && this.status < 300) {
+						$(this.responseText).appendTo(this.panel);
+						enableCustomLinks(this.panel);
 					}
-					if (element.src) {
-						var xhr = new XMLHttpRequest();
-						xhr.onreadystatechange = function() {
-							if( xhr.readyState === 4 ) {
-								// file protocol yields status code 0 (useful for local debug, mobile applications etc.)
-								if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
-									$(xhr.responseText).appendTo(panel);
-								}
-								else {
-									content = 'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
-										'Check your browser\'s JavaScript console for more details.' +
-										'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
-								}
-							}
-						};
-
-						xhr.open( 'GET', element.src, false );
-						try {
-							xhr.send();
-						}
-						catch ( e ) {
-							alert( 'Failed to get file ' + element.src + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
-						}
-
+					else {
+						showErrorMsg(this)
 					}
-
-					panel.appendTo(panels);
-
+				}
+				function xhrError () {
+					showErrorMsg(this)
+				}
+				function loadCustomPanelContent (panel, sURL) {
+					var oReq = new XMLHttpRequest();
+					oReq.panel = panel;
+					oReq.arguments = Array.prototype.slice.call(arguments, 2);
+					oReq.onload = xhrSuccess;
+					oReq.onerror = xhrError;
+					oReq.open("get", sURL, true);
+					oReq.send(null);
+				}
+				function enableCustomLinks(panel) {
 					$(panel).find('ul.slide-menu-items li.slide-menu-item').each(function(item, i) {
 						$(item).attr('data-item', i+1);
 						$(item).click(clicked);
 					});
+				}
+				function showErrorMsg(response) {
+					var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
+						response.status + ' (' + response.statusText + ').</p>' +
+						'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
+						$(msg).appendTo(response.panel)
+				}
+
+				custom.forEach(function(element, index, array) {
+					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
+					if (element.content) {
+						$(element.content).appendTo(panel);
+						enableCustomLinks(panel);
+					}
+					else if (element.src) {
+						loadCustomPanelContent(panel, element.src);
+					}
+					panel.appendTo(panels);
 				})
 			}
 
@@ -541,6 +627,35 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			module.toggle = toggleMenu;
 			module.isOpen = isOpen;
+
+			/**
+			 * Extend object a with the properties of object b.
+			 * If there's a conflict, object b takes precedence.
+			 */
+			function extend( a, b ) {
+				for( var i in b ) {
+					a[ i ] = b[ i ];
+				}
+			}
+
+			/**
+			 * Dispatches an event of the specified type from the
+			 * reveal DOM element.
+			 */
+			function dispatchEvent( type, args ) {
+				var event = document.createEvent( 'HTMLEvents', 1, 2 );
+				event.initEvent( type, true, true );
+				extend( event, args );
+				document.querySelector('.reveal').dispatchEvent( event );
+
+				// If we're in an iframe, post each reveal.js event to the
+				// parent window. Used by the notes plugin
+				if( config.postMessageEvents && window.parent !== window.self ) {
+					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: getState() }), '*' );
+				}
+			}
+
+			dispatchEvent('menu-ready');
 		}
 	})
 	})

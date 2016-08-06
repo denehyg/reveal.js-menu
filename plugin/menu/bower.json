@@ -1,6 +1,6 @@
 {
   "name": "reveal.js-menu",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "homepage": "https://denehyg.github.io/reveal.js-menu",
   "authors": [
     "Greg Denehy"
@@ -10,7 +10,7 @@
     "reveal",
     "menu"
   ],
-  "license": "MIT, Copyright (C) 2015 Greg Denehy",
+  "license": "MIT, Copyright (C) 2016 Greg Denehy",
   "ignore": [
     "**/.*",
     "node_modules",
