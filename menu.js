@@ -528,43 +528,50 @@ var RevealMenu = window.RevealMenu || (function(){
 			// Custom menu panels
 			//
 			if (custom) {
-				custom.forEach(function(element, index, array) {
-					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
-					if (element.content) {
-						$(element.content).appendTo(panel);
+				function xhrSuccess () {
+					if (this.status >= 200 && this.status < 300) {
+						$(this.responseText).appendTo(this.panel);
+						enableCustomLinks(this.panel);
 					}
-					if (element.src) {
-						var xhr = new XMLHttpRequest();
-						xhr.onreadystatechange = function() {
-							if( xhr.readyState === 4 ) {
-								// file protocol yields status code 0 (useful for local debug, mobile applications etc.)
-								if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
-									$(xhr.responseText).appendTo(panel);
-								}
-								else {
-									content = 'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
-										'Check your browser\'s JavaScript console for more details.' +
-										'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
-								}
-							}
-						};
-
-						xhr.open( 'GET', element.src, false );
-						try {
-							xhr.send();
-						}
-						catch ( e ) {
-							alert( 'Failed to get file ' + element.src + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
-						}
-
+					else {
+						showErrorMsg(this)
 					}
-
-					panel.appendTo(panels);
-
+				}
+				function xhrError () {
+					showErrorMsg(this)
+				}
+				function loadCustomPanelContent (panel, sURL) {
+					var oReq = new XMLHttpRequest();
+					oReq.panel = panel;
+					oReq.arguments = Array.prototype.slice.call(arguments, 2);
+					oReq.onload = xhrSuccess;
+					oReq.onerror = xhrError;
+					oReq.open("get", sURL, true);
+					oReq.send(null);
+				}
+				function enableCustomLinks(panel) {
 					$(panel).find('ul.slide-menu-items li.slide-menu-item').each(function(item, i) {
 						$(item).attr('data-item', i+1);
 						$(item).click(clicked);
 					});
+				}
+				function showErrorMsg(response) {
+					var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
+						response.status + ' (' + response.statusText + ').</p>' +
+						'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
+						$(msg).appendTo(response.panel)
+				}
+
+				custom.forEach(function(element, index, array) {
+					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
+					if (element.content) {
+						$(element.content).appendTo(panel);
+						enableCustomLinks(panel);
+					}
+					else if (element.src) {
+						loadCustomPanelContent(panel, element.src);
+					}
+					panel.appendTo(panels);
 				})
 			}
 
