@@ -431,7 +431,7 @@ var RevealMenu = window.RevealMenu || (function(){
 								'<i class="fa fa-circle-thin future"></i>';
 				}
 
-				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + v + '">' + m + title + '</li>';
+				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + (v === undefined ? 0 : v) + '">' + m + title + '</li>';
 			}
 
 			function openItem(item) {
