@@ -24,6 +24,26 @@ Reveal.initialize({
 });
 ```
 
+### npm
+
+Download and install the package in your project:
+
+```npm install --save reveal.js-menu```
+
+Add the plugin to the dependencies in your presentation, as below. 
+
+```javascript
+Reveal.initialize({
+	// ...
+	
+	dependencies: [
+		// ... 
+	  
+		{ src: 'node_modules/reveal.js-menu/menu.js' }
+	]
+});
+```
+
 ### Manual
 
 Copy this repository into the plugins folder of your reveal.js presentation, ie ```plugins/menu```.
