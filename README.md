@@ -200,8 +200,8 @@ Reveal.initialize({
 
 ```title``` and ```icon``` are used for the toolbar buttons at the top of the menu. There are two approaches you can use to provide content for the panels...
 
-* Provide html in ```content``` and this will be added to the custom panel.
-* You can also provide a URL in ```src``` to load html from another file.
+* You can provide a URL in ```src``` to load html from another file.
+* Alternatively, you can provide html in ```content``` and this will be added to the custom panel.
 
 ###### Custom slide menu items
 
