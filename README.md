@@ -133,7 +133,15 @@ Reveal.initialize({
 		// If true allows the user to open and navigate the menu using
 		// the keyboard. Standard keyboard interaction with reveal
 		// will be disabled while the menu is open.
-		keyboard: true
+		keyboard: true,
+
+		// Normally the menu will close on user actions such as
+		// selecting a menu item, or clicking the presentation area.
+		// If 'true', the sticky option will leave the menu open
+		// until it is explicitly closed, that is, using the close
+		// button or pressing the ESC or m key (when the keyboard 
+		// interaction option is enabled).
+		sticky: false
 	},
 
 });

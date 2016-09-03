@@ -55,6 +55,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof openSlideNumber === "undefined") openSlideNumber = false;
 			var keyboard = options.keyboard;
 			if (typeof keyboard === "undefined") keyboard = true;
+			var sticky = options.sticky;
+			if (typeof sticky === "undefined") sticky = false;
 
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
@@ -233,7 +235,7 @@ var RevealMenu = window.RevealMenu || (function(){
 							}
 							break;
 						// esc
-						case 27: closeMenu(); break;
+						case 27: closeMenu(null, true); break;
 					}
 				}
 			}
@@ -291,18 +293,20 @@ var RevealMenu = window.RevealMenu || (function(){
 				}
 			}
 
-			function closeMenu(event) {
+			function closeMenu(event, force) {
 				if (event) event.preventDefault();
+				if (!sticky || force) {
 			    $('body').removeClass('slide-menu-active');
 			    $('.reveal').removeClass('has-' + options.effect + '-' + side);
 			    $('.slide-menu').removeClass('active');
 			    $('.slide-menu-overlay').removeClass('active');
 			    $('.slide-menu-panel li.selected').removeClass('selected');
+			  }
 			}
 
 			function toggleMenu(event) {
 				if (isOpen()) {
-					closeMenu(event);
+					closeMenu(event, true);
 				} else {
 					openMenu(event);
 				}
@@ -370,7 +374,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 			$('<li id="close"><span class="slide-menu-toolbar-label">Close</span><br/><i class="fa fa-times"></i></li>')
 				.appendTo(toolbar)
-				.click(closeMenu);
+				.click(closeMenu, true);
 
 			var panels = $('.slide-menu');
 
