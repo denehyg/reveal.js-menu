@@ -141,7 +141,12 @@ Reveal.initialize({
 		// until it is explicitly closed, that is, using the close
 		// button or pressing the ESC or m key (when the keyboard 
 		// interaction option is enabled).
-		sticky: false
+		sticky: false,
+
+		// If 'true' standard menu items will be automatically opened
+		// when navigating using the keyboard. Note: this only takes 
+		// effect when both the 'keyboard' and 'sticky' options are enabled.
+		autoOpen: true
 	},
 
 });
