@@ -487,7 +487,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function createSlideMenu() {
-				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed="true"]') ) {
+				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed])') ) {
 					$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
 						.appendTo(panels)
 						.addClass('active-menu-panel');
