@@ -592,7 +592,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (transitions) {
 				var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>').appendTo(panels);
 				var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
-				['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom'].forEach(function(name, i) {
+				  ['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
 					$('<li class="slide-menu-item" data-transition="' + name.toLowerCase() + '" data-item="' + (i+1) + '">' + name + '</li>').appendTo(menu).click(clicked);
 				})
 			}
