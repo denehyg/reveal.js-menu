@@ -1,6 +1,6 @@
 {
   "name": "reveal.js-menu",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A slideout menu for navigating reveal.js presentations",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
