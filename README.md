@@ -253,8 +253,8 @@ You are not limited to linking to presentation slides. You can provide any link 
 ```html
 <h1>External Links</h1>
 <ul class="slide-menu-items">
-	<li class="slide-menu-item"><a href="https://github.com/denehyg/reveal.js-menu" target="_blank">Reveal.js-menu</a></li>
-	<li class="slide-menu-item"><a href="https://github.com/hakimel/reveal.js" target="_blank">Reveal.js</a></li>
+	<li class="slide-menu-item"><a href="https://github.com/denehyg/reveal.js-menu">Reveal.js-menu</a></li>
+	<li class="slide-menu-item"><a href="https://github.com/hakimel/reveal.js">Reveal.js</a></li>
 </ul>
 ```
 
