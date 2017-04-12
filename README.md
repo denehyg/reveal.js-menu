@@ -66,7 +66,6 @@ Reveal.initialize({
 
 You can configure the menu for your presentation by providing a ```menu``` option in the reveal.js initialization options. Note that all config values are optional and will default as specified below.
 
-
 ```javascript
 Reveal.initialize({
 	// ...
@@ -150,6 +149,13 @@ Reveal.initialize({
 	},
 
 });
+```
+
+Therefore add ```id``` attribute for ability to change theme
+```html
+<!-- ... -->
+<link rel="stylesheet" href="css/theme/black.css" id="theme">
+<!-- ... -->
 ```
 
 ## Slide Titles
