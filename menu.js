@@ -392,27 +392,26 @@ var RevealMenu = window.RevealMenu || (function(){
 				var title = $(section).data('menu-title') ||
 					$('.menu-title', section).text() ||
 					$(titleSelector, section).text();
+
+				if (!title && useTextContentForMissingTitles) {
+					// attempt to figure out a title based on the text in the slide
+					title = $(section).text().trim();
+					if (title) {
+						title = title.split('\n')
+							.map(function(t) { return t.trim() }).join(' ').trim()
+							.replace(/^(.{16}[^\s]*).*/, "$1") // limit to 16 chars plus any consecutive non-whitespace chars (to avoid breaking words)
+							.replace(/&/g, "&amp;")
+							.replace(/</g, "&lt;")
+							.replace(/>/g, "&gt;")
+							.replace(/"/g, "&quot;")
+							.replace(/'/g, "&#039;") + '...';
+					}
+				}
+
 				if (!title) {
 					if (hideMissingTitles) return '';
 					type += ' no-title';
-
-					if (useTextContentForMissingTitles) {
-						// attempt to figure out a title based on the text in the slide
-						title = $(section).text();
-						if (title) {
-							// limit to 16 chars plus any consecutive non-whitespace chars
-							title = title.split('\n')[0].replace(/^(.{16}[^\s]*).*/, "$1")
-								.replace(/&/g, "&amp;")
-								.replace(/</g, "&lt;")
-								.replace(/>/g, "&gt;")
-								.replace(/"/g, "&quot;")
-								.replace(/'/g, "&#039;") + '...';
-						}
-					}
-
-					if (!title) {
-						title = "Slide " + i;
-					}
+					title = "Slide " + i;
 				}
 
 				title = '<span class="slide-menu-item-title">' + title + '</span>';
