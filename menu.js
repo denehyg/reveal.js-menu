@@ -25,6 +25,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			var titleSelector = 'h1, h2, h3, h4, h5';
 			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
+			var useTextContentForMissingTitles = options.useTextContentForMissingTitles || false;
 			var markers = options.markers || false;
 			var custom = options.custom;
 			var themes = options.themes;
@@ -393,8 +394,25 @@ var RevealMenu = window.RevealMenu || (function(){
 					$(titleSelector, section).text();
 				if (!title) {
 					if (hideMissingTitles) return '';
-					title = "Slide " + i;
 					type += ' no-title';
+
+					if (useTextContentForMissingTitles) {
+						// attempt to figure out a title based on the text in the slide
+						title = $(section).text();
+						if (title) {
+							// limit to 16 chars plus any consecutive non-whitespace chars
+							title = title.split('\n')[0].replace(/^(.{16}[^\s]*).*/, "$1")
+								.replace(/&/g, "&amp;")
+								.replace(/</g, "&lt;")
+								.replace(/>/g, "&gt;")
+								.replace(/"/g, "&quot;")
+								.replace(/'/g, "&#039;") + '...';
+						}
+					}
+
+					if (!title) {
+						title = "Slide " + i;
+					}
 				}
 
 				title = '<span class="slide-menu-item-title">' + title + '</span>';

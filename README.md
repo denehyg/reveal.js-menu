@@ -92,6 +92,10 @@ Reveal.initialize({
 		// Set to 'true' to only list slides with titles.
 		hideMissingTitles: false,
 
+		// If slides do not have a title, attempt to use the first bit
+		// of text as the title instead, falling back to 'Slide #'
+		useTextContentForMissingTitles: false,
+
 		// Add markers to the slide titles to indicate the 
 		// progress through the presentation
 		markers: false,
