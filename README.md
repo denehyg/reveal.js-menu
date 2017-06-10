@@ -88,13 +88,13 @@ Reveal.initialize({
 		// with a menu-title class will take precedence over this option
 		titleSelector: 'h1, h2, h3, h4, h5, h6',
 
+		// If slides do not have a matching title, attempt to use the
+		// start of the text content as the title instead
+		useTextContentForMissingTitles: false,
+
 		// Hide slides from the menu that do not have a title.
 		// Set to 'true' to only list slides with titles.
 		hideMissingTitles: false,
-
-		// If slides do not have a title, attempt to use the first bit
-		// of text as the title instead, falling back to 'Slide #'
-		useTextContentForMissingTitles: false,
 
 		// Add markers to the slide titles to indicate the 
 		// progress through the presentation
