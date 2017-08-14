@@ -8,8 +8,10 @@ var RevealMenu = window.RevealMenu || (function(){
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
 	options.path = options.path || scriptPath() || 'plugin/menu';
-
+	var initialised = false;
+	
 	var module = {};
+
 
 	loadResource(options.path + '/lib/jeesh.min.js', 'script', function() {
 	loadResource(options.path + '/lib/bowser.min.js', 'script', function() {
@@ -60,6 +62,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof sticky === "undefined") sticky = false;
 			var autoOpen = options.autoOpen;
 			if (typeof autoOpen === "undefined") autoOpen = true;
+			var delayInit = options.delayInit;
+			if (typeof delayInit === "undefined") delayInit = false;
+			
 
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
@@ -345,315 +350,326 @@ var RevealMenu = window.RevealMenu || (function(){
 				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
 			}
 
-			$('<nav class="slide-menu slide-menu--' + side + '"></nav>')
-				.appendTo($('.reveal'));
-			$('<div class="slide-menu-overlay"></div>')
-				.appendTo($('.reveal'))
-				.click(closeMenu);
+			function init() {
+				if (!initialised) {
+					$('<nav class="slide-menu slide-menu--' + side + '"></nav>')
+						.appendTo($('.reveal'));
+					$('<div class="slide-menu-overlay"></div>')
+						.appendTo($('.reveal'))
+						.click(closeMenu);
 
-			var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
-			var buttons = 0;
-			$('<li data-panel="Slides" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
-				.appendTo(toolbar)
-				.addClass('active-toolbar-button')
-				.click(openPanel);
-
-			if (custom) {
-				custom.forEach(function(element, index, array) {
-					$('<li data-panel="Custom' + index + '" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">' + element.title + '</span><br/>' + element.icon + '</i></li>')
+					var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
+					var buttons = 0;
+					$('<li data-panel="Slides" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
 						.appendTo(toolbar)
+						.addClass('active-toolbar-button')
 						.click(openPanel);
-				})
-			}
 
-			if (themes) {
-				$('<li data-panel="Themes" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
-					.appendTo(toolbar)
-					.click(openPanel);
-			}
-			if (transitions) {
-				$('<li data-panel="Transitions" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
-					.appendTo(toolbar)
-					.click(openPanel);
-			}
-			$('<li id="close"><span class="slide-menu-toolbar-label">Close</span><br/><i class="fa fa-times"></i></li>')
-				.appendTo(toolbar)
-				.click(closeMenu, true);
-
-			var panels = $('.slide-menu');
-
-			//
-			// Slide links
-			//
-			function generateItem(type, section, i, h, v) {
-				var link = '/#/' + h;
-				if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
-
-				var title = $(section).data('menu-title') ||
-					$('.menu-title', section).text() ||
-					$(titleSelector, section).text();
-
-				if (!title && useTextContentForMissingTitles) {
-					// attempt to figure out a title based on the text in the slide
-					title = $(section).text().trim();
-					if (title) {
-						title = title.split('\n')
-							.map(function(t) { return t.trim() }).join(' ').trim()
-							.replace(/^(.{16}[^\s]*).*/, "$1") // limit to 16 chars plus any consecutive non-whitespace chars (to avoid breaking words)
-							.replace(/&/g, "&amp;")
-							.replace(/</g, "&lt;")
-							.replace(/>/g, "&gt;")
-							.replace(/"/g, "&quot;")
-							.replace(/'/g, "&#039;") + '...';
-					}
-				}
-
-				if (!title) {
-					if (hideMissingTitles) return '';
-					type += ' no-title';
-					title = "Slide " + i;
-				}
-
-				title = '<span class="slide-menu-item-title">' + title + '</span>';
-				if (numbers) {
-					// Number formatting taken from reveal.js
-					var value = [];
-					var format = 'h.v';
-
-					// Check if a custom number format is available
-					if( typeof numbers === 'string' ) {
-						format = numbers;
-					}
-					else if (typeof config.slideNumber === 'string') {
-						// Take user defined number format for slides
-						format = config.slideNumber;
+					if (custom) {
+						custom.forEach(function(element, index, array) {
+							$('<li data-panel="Custom' + index + '" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">' + element.title + '</span><br/>' + element.icon + '</i></li>')
+								.appendTo(toolbar)
+								.click(openPanel);
+						})
 					}
 
-					switch( format ) {
-						case 'c':
-							value.push( i );
-							break;
-						case 'c/t':
-							value.push( i, '/', Reveal.getTotalSlides() );
-							break;
-						case 'h/v':
-							value.push( h + 1 );
-							if( typeof v === 'number' && !isNaN( v ) ) value.push( '/', v + 1 );
-							break;
-						default:
-							value.push( h + 1 );
-							if( typeof v === 'number' && !isNaN( v ) ) value.push( '.', v + 1 );
+					if (themes) {
+						$('<li data-panel="Themes" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
+							.appendTo(toolbar)
+							.click(openPanel);
 					}
-
-					title = '<span class="slide-menu-item-number">' + value.join('') + '. </span>' + title;
-				}
-
-				var m = '';
-				if (markers) {
-					m = '<i class="fa fa-check-circle past"></i>' +
-								'<i class="fa fa-dot-circle-o active"></i>' + 
-								'<i class="fa fa-circle-thin future"></i>';
-				}
-
-				return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + (v === undefined ? 0 : v) + '">' + m + title + '</li>';
-			}
-
-			function openItem(item, force) {
-				var h = $(item).data('slide-h');
-				var v = $(item).data('slide-v');
-				var theme = $(item).data('theme');
-				var transition = $(item).data('transition');
-				if (typeof h !== "undefined" && typeof v !== "undefined") {
-					Reveal.slide(h, v);
-					closeMenu();
-				} else if (theme) {
-					$('#theme').attr('href', theme);
-					closeMenu();
-				} else if (transition) {
-					Reveal.configure({ transition: transition });
-					closeMenu();
-				} else {
-					var links = $(item).find('a');
-					if (links.length > 0) {
-						var link = links.get(0);
-						if (force || !sticky || (autoOpen && link.href.startsWith('#') || link.href.startsWith(window.location.origin + window.location.pathname + '#'))) {
-							links.get(0).click();
-						}
+					if (transitions) {
+						$('<li data-panel="Transitions" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
+							.appendTo(toolbar)
+							.click(openPanel);
 					}
-					closeMenu();
-				}
-			}
+					$('<li id="close"><span class="slide-menu-toolbar-label">Close</span><br/><i class="fa fa-times"></i></li>')
+						.appendTo(toolbar)
+						.click(closeMenu, true);
 
-			function clicked(event) {
-				if (event.target.nodeName !== "A") {
-					event.preventDefault();
-				}
-				openItem(event.currentTarget);
-			}
+					var panels = $('.slide-menu');
 
-			function highlightCurrentSlide() {
-				var state = Reveal.getState();
-				$('li.slide-menu-item, li.slide-menu-item-vertical')
-					.removeClass('past')
-					.removeClass('active')
-					.removeClass('future');
+					//
+					// Slide links
+					//
+					function generateItem(type, section, i, h, v) {
+						var link = '/#/' + h;
+						if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
 
-				$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
-					var h = $(e).data('slide-h');
-					var v = $(e).data('slide-v');
-					if (h < state.indexh || (h === state.indexh && v < state.indexv)) {
-						$(e).addClass('past');
-					}
-					else if (h === state.indexh && v === state.indexv) {
-						$(e).addClass('active');
-					}
-					else {
-						$(e).addClass('future');
-					}
-				});
-			}
+						var title = $(section).data('menu-title') ||
+							$('.menu-title', section).text() ||
+							$(titleSelector, section).text();
 
-			function createSlideMenu() {
-				if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed])') ) {
-					$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
-						.appendTo(panels)
-						.addClass('active-menu-panel');
-					var items = $('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
-					var slideCount = 0;
-					$('.slides > section').each(function(section, h) {
-						var subsections = $('section', section);
-						if (subsections.length > 0) {
-							subsections.each(function(subsection, v) {
-								var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-								var item = generateItem(type, subsection, slideCount, h, v);
-								if (item) {
-									slideCount++;
-									items.append(item);
-								}
-							});
-						} else {
-							var item = generateItem('slide-menu-item', section, slideCount, h);
-							if (item) {
-								slideCount++;
-								items.append(item);
+						if (!title && useTextContentForMissingTitles) {
+							// attempt to figure out a title based on the text in the slide
+							title = $(section).text().trim();
+							if (title) {
+								title = title.split('\n')
+									.map(function(t) { return t.trim() }).join(' ').trim()
+									.replace(/^(.{16}[^\s]*).*/, "$1") // limit to 16 chars plus any consecutive non-whitespace chars (to avoid breaking words)
+									.replace(/&/g, "&amp;")
+									.replace(/</g, "&lt;")
+									.replace(/>/g, "&gt;")
+									.replace(/"/g, "&quot;")
+									.replace(/'/g, "&#039;") + '...';
 							}
 						}
+
+						if (!title) {
+							if (hideMissingTitles) return '';
+							type += ' no-title';
+							title = "Slide " + i;
+						}
+
+						title = '<span class="slide-menu-item-title">' + title + '</span>';
+						if (numbers) {
+							// Number formatting taken from reveal.js
+							var value = [];
+							var format = 'h.v';
+
+							// Check if a custom number format is available
+							if( typeof numbers === 'string' ) {
+								format = numbers;
+							}
+							else if (typeof config.slideNumber === 'string') {
+								// Take user defined number format for slides
+								format = config.slideNumber;
+							}
+
+							switch( format ) {
+								case 'c':
+									value.push( i );
+									break;
+								case 'c/t':
+									value.push( i, '/', Reveal.getTotalSlides() );
+									break;
+								case 'h/v':
+									value.push( h + 1 );
+									if( typeof v === 'number' && !isNaN( v ) ) value.push( '/', v + 1 );
+									break;
+								default:
+									value.push( h + 1 );
+									if( typeof v === 'number' && !isNaN( v ) ) value.push( '.', v + 1 );
+							}
+
+							title = '<span class="slide-menu-item-number">' + value.join('') + '. </span>' + title;
+						}
+
+						var m = '';
+						if (markers) {
+							m = '<i class="fa fa-check-circle past"></i>' +
+										'<i class="fa fa-dot-circle-o active"></i>' + 
+										'<i class="fa fa-circle-thin future"></i>';
+						}
+
+						return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + (v === undefined ? 0 : v) + '">' + m + title + '</li>';
+					}
+
+					function openItem(item, force) {
+						var h = $(item).data('slide-h');
+						var v = $(item).data('slide-v');
+						var theme = $(item).data('theme');
+						var transition = $(item).data('transition');
+						if (typeof h !== "undefined" && typeof v !== "undefined") {
+							Reveal.slide(h, v);
+							closeMenu();
+						} else if (theme) {
+							$('#theme').attr('href', theme);
+							closeMenu();
+						} else if (transition) {
+							Reveal.configure({ transition: transition });
+							closeMenu();
+						} else {
+							var links = $(item).find('a');
+							if (links.length > 0) {
+								var link = links.get(0);
+								if (force || !sticky || (autoOpen && link.href.startsWith('#') || link.href.startsWith(window.location.origin + window.location.pathname + '#'))) {
+									links.get(0).click();
+								}
+							}
+							closeMenu();
+						}
+					}
+
+					function clicked(event) {
+						if (event.target.nodeName !== "A") {
+							event.preventDefault();
+						}
+						openItem(event.currentTarget);
+					}
+
+					function highlightCurrentSlide() {
+						var state = Reveal.getState();
+						$('li.slide-menu-item, li.slide-menu-item-vertical')
+							.removeClass('past')
+							.removeClass('active')
+							.removeClass('future');
+
+						$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
+							var h = $(e).data('slide-h');
+							var v = $(e).data('slide-v');
+							if (h < state.indexh || (h === state.indexh && v < state.indexv)) {
+								$(e).addClass('past');
+							}
+							else if (h === state.indexh && v === state.indexv) {
+								$(e).addClass('active');
+							}
+							else {
+								$(e).addClass('future');
+							}
+						});
+					}
+
+					function createSlideMenu() {
+						if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed])') ) {
+							$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
+								.appendTo(panels)
+								.addClass('active-menu-panel');
+							var items = $('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
+							var slideCount = 0;
+							$('.slides > section').each(function(section, h) {
+								var subsections = $('section', section);
+								if (subsections.length > 0) {
+									subsections.each(function(subsection, v) {
+										var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
+										var item = generateItem(type, subsection, slideCount, h, v);
+										if (item) {
+											slideCount++;
+											items.append(item);
+										}
+									});
+								} else {
+									var item = generateItem('slide-menu-item', section, slideCount, h);
+									if (item) {
+										slideCount++;
+										items.append(item);
+									}
+								}
+							});
+							$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+							highlightCurrentSlide();
+						}
+						else {
+						// wait for markdown to be loaded and parsed
+							setTimeout( createSlideMenu, 100 );
+						}
+					}
+
+					createSlideMenu();
+					Reveal.addEventListener('slidechanged', highlightCurrentSlide);
+
+					//
+					// Custom menu panels
+					//
+					if (custom) {
+						function xhrSuccess () {
+							if (this.status >= 200 && this.status < 300) {
+								$(this.responseText).appendTo(this.panel);
+								enableCustomLinks(this.panel);
+							}
+							else {
+								showErrorMsg(this)
+							}
+						}
+						function xhrError () {
+							showErrorMsg(this)
+						}
+						function loadCustomPanelContent (panel, sURL) {
+							var oReq = new XMLHttpRequest();
+							oReq.panel = panel;
+							oReq.arguments = Array.prototype.slice.call(arguments, 2);
+							oReq.onload = xhrSuccess;
+							oReq.onerror = xhrError;
+							oReq.open("get", sURL, true);
+							oReq.send(null);
+						}
+						function enableCustomLinks(panel) {
+							$(panel).find('ul.slide-menu-items li.slide-menu-item').each(function(item, i) {
+								$(item).attr('data-item', i+1);
+								$(item).click(clicked);
+							});
+						}
+						function showErrorMsg(response) {
+							var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
+								response.status + ' (' + response.statusText + ').</p>' +
+								'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
+								$(msg).appendTo(response.panel)
+						}
+
+						custom.forEach(function(element, index, array) {
+							var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
+							if (element.content) {
+								$(element.content).appendTo(panel);
+								enableCustomLinks(panel);
+							}
+							else if (element.src) {
+								loadCustomPanelContent(panel, element.src);
+							}
+							panel.appendTo(panels);
+						})
+					}
+
+					//
+					// Themes
+					//
+					if (themes) {
+						var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
+						var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
+						themes.forEach(function(t, i) {
+							$('<li class="slide-menu-item" data-theme="' + t.theme + '" data-item="' + (i+1) + '">' + t.name + '</li>').appendTo(menu).click(clicked);
+						})
+					}
+
+					//
+					// Transitions
+					//
+					if (transitions) {
+						var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>').appendTo(panels);
+						var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
+						['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
+							$('<li class="slide-menu-item" data-transition="' + name.toLowerCase() + '" data-item="' + (i+1) + '">' + name + '</li>').appendTo(menu).click(clicked);
+						})
+					}
+
+					//
+					// Open menu options
+					//
+					if (openButton) {
+						// add menu button
+						$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
+							.appendTo($('.reveal'))
+							.click(openMenu);
+					}
+
+					if (openSlideNumber) {
+						// wrap slide number in link
+						$('<div class="slide-number-wrapper"><a href="#"></a></div>').insertAfter($('div.slide-number'));
+						$('.slide-number').appendTo($('.slide-number-wrapper a'));
+						$('.slide-number-wrapper a').click(openMenu);
+					}
+
+					//
+					// Handle mouse overs
+					//
+					var mouseSelectionEnabled = true;
+					$('.slide-menu-panel .slide-menu-items li').mouseenter(function(event) {
+						if (mouseSelectionEnabled) {
+							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+							$(event.currentTarget).addClass('selected');
+						}
 					});
-					$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
-					highlightCurrentSlide();
 				}
-				else {
-				// wait for markdown to be loaded and parsed
-					setTimeout( createSlideMenu, 100 );
-				}
+				initialised = true;
 			}
-
-			createSlideMenu();
-			Reveal.addEventListener('slidechanged', highlightCurrentSlide);
-
-			//
-			// Custom menu panels
-			//
-			if (custom) {
-				function xhrSuccess () {
-					if (this.status >= 200 && this.status < 300) {
-						$(this.responseText).appendTo(this.panel);
-						enableCustomLinks(this.panel);
-					}
-					else {
-						showErrorMsg(this)
-					}
-				}
-				function xhrError () {
-					showErrorMsg(this)
-				}
-				function loadCustomPanelContent (panel, sURL) {
-					var oReq = new XMLHttpRequest();
-					oReq.panel = panel;
-					oReq.arguments = Array.prototype.slice.call(arguments, 2);
-					oReq.onload = xhrSuccess;
-					oReq.onerror = xhrError;
-					oReq.open("get", sURL, true);
-					oReq.send(null);
-				}
-				function enableCustomLinks(panel) {
-					$(panel).find('ul.slide-menu-items li.slide-menu-item').each(function(item, i) {
-						$(item).attr('data-item', i+1);
-						$(item).click(clicked);
-					});
-				}
-				function showErrorMsg(response) {
-					var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
-						response.status + ' (' + response.statusText + ').</p>' +
-						'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
-						$(msg).appendTo(response.panel)
-				}
-
-				custom.forEach(function(element, index, array) {
-					var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
-					if (element.content) {
-						$(element.content).appendTo(panel);
-						enableCustomLinks(panel);
-					}
-					else if (element.src) {
-						loadCustomPanelContent(panel, element.src);
-					}
-					panel.appendTo(panels);
-				})
-			}
-
-			//
-			// Themes
-			//
-			if (themes) {
-				var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
-				var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
-				themes.forEach(function(t, i) {
-					$('<li class="slide-menu-item" data-theme="' + t.theme + '" data-item="' + (i+1) + '">' + t.name + '</li>').appendTo(menu).click(clicked);
-				})
-			}
-
-			//
-			// Transitions
-			//
-			if (transitions) {
-				var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>').appendTo(panels);
-				var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
-				  ['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
-					$('<li class="slide-menu-item" data-transition="' + name.toLowerCase() + '" data-item="' + (i+1) + '">' + name + '</li>').appendTo(menu).click(clicked);
-				})
-			}
-
-			//
-			// Open menu options
-			//
-			if (openButton) {
-				// add menu button
-				$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
-					.appendTo($('.reveal'))
-					.click(openMenu);
-			}
-
-			if (openSlideNumber) {
-				// wrap slide number in link
-				$('<div class="slide-number-wrapper"><a href="#"></a></div>').insertAfter($('div.slide-number'));
-				$('.slide-number').appendTo($('.slide-number-wrapper a'));
-				$('.slide-number-wrapper a').click(openMenu);
-			}
-
-			//
-			// Handle mouse overs
-			//
-			var mouseSelectionEnabled = true;
-			$('.slide-menu-panel .slide-menu-items li').mouseenter(function(event) {
-				if (mouseSelectionEnabled) {
-					$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-					$(event.currentTarget).addClass('selected');
-				}
-			});
 
 			module.toggle = toggleMenu;
 			module.isOpen = isOpen;
+			module.init = init;
+			module.isInit = function() { return initialised };
+			
+			if (!delayInit) {
+				init();
+			}
 
 			/**
 			 * Extend object a with the properties of object b.

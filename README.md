@@ -149,7 +149,13 @@ Reveal.initialize({
 		// If 'true' standard menu items will be automatically opened
 		// when navigating using the keyboard. Note: this only takes 
 		// effect when both the 'keyboard' and 'sticky' options are enabled.
-		autoOpen: true
+		autoOpen: true,
+
+		// If 'true' the menu will not be created until it is explicitly
+		// requested by calling RevealMenu.init(). Note this will delay
+		// the creation of all menu panels, including custom panels, and
+		// the menu button.
+		delayInit: false
 	},
 
 });
