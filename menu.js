@@ -256,8 +256,12 @@ var RevealMenu = window.RevealMenu || (function(){
 
 				// handle key presses within speaker notes
 				window.addEventListener( 'message', function( event ) {
-					var data = JSON.parse( event.data );
-					if (data.method === 'triggerKey') {
+					var data;
+					try {
+						data = JSON.parse( event.data );
+					} catch (e) {
+					}
+					if (data && data.method === 'triggerKey') {
 						onDocumentKeyDown( { keyCode: data.args[0], stopImmediatePropagation: function() {} } );
 					}
 				});
