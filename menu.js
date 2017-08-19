@@ -354,6 +354,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
 			}
 
+			var buttons = 0;
 			function init() {
 				if (!initialised) {
 					$('<nav class="slide-menu slide-menu--' + side + '"></nav>')
@@ -363,7 +364,6 @@ var RevealMenu = window.RevealMenu || (function(){
 						.click(closeMenu);
 
 					var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
-					var buttons = 0;
 					$('<li data-panel="Slides" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
 						.appendTo(toolbar)
 						.addClass('active-toolbar-button')
