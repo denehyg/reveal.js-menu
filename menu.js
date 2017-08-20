@@ -436,7 +436,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						button.insertBefore(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
 						button.insertBefore(create('br'), select('i', button));
 						button.onclick = fn;
-						toolbar.append(button);
+						toolbar.appendChild(button);
 						return button;
 					}
 
@@ -459,7 +459,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					button.appendChild(create('br'));
 					button.appendChild(create('i', {'class': 'fa fa-times'}));
 					button.onclick = closeMenu;
-					toolbar.append(button);
+					toolbar.appendChild(button);
 
 					//
 					// Slide links
@@ -567,14 +567,14 @@ var RevealMenu = window.RevealMenu || (function(){
 										var item = generateItem(type, subsection, slideCount, h, v);
 										if (item) {
 											slideCount++;
-											items.append(item);
+											items.appendChild(item);
 										}
 									});
 								} else {
 									var item = generateItem('slide-menu-item', section, slideCount, h);
 									if (item) {
 										slideCount++;
-										items.append(item);
+										items.appendChild(item);
 									}
 								}
 							});
