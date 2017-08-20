@@ -12,13 +12,11 @@ var RevealMenu = window.RevealMenu || (function(){
 	
 	var module = {};
 
-
-	loadResource(options.path + '/lib/jeesh.min.js', 'script', function() {
-	loadResource(options.path + '/lib/bowser.min.js', 'script', function() {
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
 	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
 		// does not support IE8 or below
-		if (!bowser.msie || bowser.version >= 9) {
+		// if (!bowser.msie || bowser.version >= 9) {
+		if (!head.browser.ie || head.browser.version >= 9) {
 			//
 			// Set option defaults
 			//
@@ -48,7 +46,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 			var transitions = options.transitions;
 			if (typeof transitions === "undefined") transitions = true;
-			if (bowser.msie && bowser.version <= 9) {
+			if (head.browser.ie && head.browser.version <= 9) {
 				// transitions aren't support in IE9 anyway, so no point in showing them
 				transitions = false;
 			}
@@ -73,7 +71,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			function reenableMouseSelection() {
 				// wait until the mouse has moved before re-enabling mouse selection
 				// to avoid selections on scroll
-				$('nav.slide-menu').one('mousemove', function(event) {
+				select('nav.slide-menu').addEventListener('mousemove', function fn(e) {
+					select('nav.slide-menu').removeEventListener('mousemove', fn);
 					//XXX this should select the item under the mouse
 					mouseSelectionEnabled = true;
 				});
@@ -144,44 +143,40 @@ var RevealMenu = window.RevealMenu || (function(){
 							break;
 						// k, up
 						case 75: case 38:
-							var currItem = $('.active-menu-panel .slide-menu-items li.selected').get(0) || $('.active-menu-panel .slide-menu-items li.active').get(0);
+							var currItem = select('.active-menu-panel .slide-menu-items li.selected') || select('.active-menu-panel .slide-menu-items li.active');
 							if (currItem) {
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-								var nextItem = $('.active-menu-panel .slide-menu-items li[data-item="' + ($(currItem).data('item') - 1) + '"]').get(0) || currItem;
+								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(item) { item.classList.remove('selected') });
+								var nextItem = select('.active-menu-panel .slide-menu-items li[data-item="' + (parseInt(currItem.getAttribute('data-item')) - 1) + '"]') || currItem;
 								selectItem(nextItem);
 							} else {
-								var items = $('.active-menu-panel .slide-menu-items li.slide-menu-item');
-								if (items.length > 0) {
-									selectItem(items.get(0));
-								}
+								var item = select('.active-menu-panel .slide-menu-items li.slide-menu-item');
+								if (item) selectItem(item);
 							}
 							break;
 						// j, down
 						case 74: case 40:
-							var currItem = $('.active-menu-panel .slide-menu-items li.selected').get(0) || $('.active-menu-panel .slide-menu-items li.active').get(0);
+							var currItem = select('.active-menu-panel .slide-menu-items li.selected') || select('.active-menu-panel .slide-menu-items li.active');
 							if (currItem) {
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-								var nextItem = $('.active-menu-panel .slide-menu-items li[data-item="' + ($(currItem).data('item') + 1) + '"]').get(0) || currItem;
+								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(item) { item.classList.remove('selected') });
+								var nextItem = select('.active-menu-panel .slide-menu-items li[data-item="' + (parseInt(currItem.getAttribute('data-item')) + 1) + '"]') || currItem;
 								selectItem(nextItem);
 							} else {
-								var items = $('.active-menu-panel .slide-menu-items li.slide-menu-item');
-								if (items.length > 0) {
-									selectItem(items.get(0));
-								}
+								var item = select('.active-menu-panel .slide-menu-items li.slide-menu-item');
+								if (item) selectItem(item);
 							}
 							break;
 						// pageup, u
 						case 33: case 85:
-							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
-							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+							var itemsAbove = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
+							var visibleItems = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 
 							var firstVisible = (itemsAbove.length > 0 && Math.abs(visibleOffset(itemsAbove[itemsAbove.length-1])) < itemsAbove[itemsAbove.length-1].clientHeight ? itemsAbove[itemsAbove.length-1] : visibleItems[0]);
 							if (firstVisible) {
-								if ($(firstVisible).hasClass('selected') && itemsAbove.length > 0) {
+								if (firstVisible.classList.contains('selected') && itemsAbove.length > 0) {
 									// at top of viewport already, page scroll (if not at start)
 									// ...move selected item to bottom, and change selection to last fully visible item at top
 									scrollItemToBottom(firstVisible);
-									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+									visibleItems = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 									if (visibleItems[0] == firstVisible) {
 										// prev item is still beyond the viewport (for custom panels)
 										firstVisible = itemsAbove[itemsAbove.length-1];
@@ -189,7 +184,7 @@ var RevealMenu = window.RevealMenu || (function(){
 										firstVisible = visibleItems[0];
 									}
 								}
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(item) { item.classList.remove('selected') });
 								selectItem(firstVisible);
 								// ensure selected item is positioned at the top of the viewport
 								scrollItemToTop(firstVisible);
@@ -197,16 +192,16 @@ var RevealMenu = window.RevealMenu || (function(){
 							break;
 						// pagedown, d
 						case 34: case 68:
-							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
-							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
-
+							var visibleItems = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+							var itemsBelow = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
+							
 							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].clientHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
 							if (lastVisible) {
-								if ($(lastVisible).hasClass('selected') && itemsBelow.length > 0) {
+								if (lastVisible.classList.contains('selected') && itemsBelow.length > 0) {
 									// at bottom of viewport already, page scroll (if not at end)
 									// ...move selected item to top, and change selection to last fully visible item at bottom
 									scrollItemToTop(lastVisible);
-									visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
+									visibleItems = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 									if (visibleItems[visibleItems.length-1] == lastVisible) {
 										// next item is still beyond the viewport (for custom panels)
 										lastVisible = itemsBelow[0];
@@ -214,7 +209,7 @@ var RevealMenu = window.RevealMenu || (function(){
 										lastVisible = visibleItems[visibleItems.length-1];
 									}
 								}
-								$('.active-menu-panel .slide-menu-items li').removeClass('selected');
+								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(item) { item.classList.remove('selected') });
 								selectItem(lastVisible);
 								// ensure selected item is positioned at the bottom of the viewport
 								scrollItemToBottom(lastVisible);
@@ -222,23 +217,25 @@ var RevealMenu = window.RevealMenu || (function(){
 							break;
 						// home
 						case 36:
-							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-							var sel = $('.active-menu-panel .slide-menu-items li:first-of-type');
-							if (sel.length > 0) {
-								keepVisible(sel.addClass('selected').get(0));
+							selectAll('.active-menu-panel .slide-menu-items li').forEach(function(item) { item.classList.remove('selected') });
+							var item = select('.active-menu-panel .slide-menu-items li:first-of-type');
+							if (item) {
+								item.classList.add('selected');
+								keepVisible(item);
 							}
 							break;
 						// end
 						case 35:
-							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-							var sel = $('.active-menu-panel .slide-menu-items li:last-of-type');
-							if (sel.length > 0) {
-								keepVisible(sel.addClass('selected').get(0));
+							selectAll('.active-menu-panel .slide-menu-items li').forEach(function(item) { item.classList.remove('selected') });
+							var item = select('.active-menu-panel .slide-menu-items:last-of-type li:last-of-type');
+							if (item) {
+								item.classList.add('selected');
+								keepVisible(item);
 							}
 							break;
 						// space, return
 						case 32: case 13:
-							var currItem = $('.active-menu-panel .slide-menu-items li.selected').get(0);
+							var currItem = select('.active-menu-panel .slide-menu-items li.selected');
 							if (currItem) {
 								openItem(currItem, true);
 							}
@@ -311,12 +308,12 @@ var RevealMenu = window.RevealMenu || (function(){
 			function closeMenu(event, force) {
 				if (event) event.preventDefault();
 				if (!sticky || force) {
-			    select('body').classList.remove('slide-menu-active');
-			    select('.reveal').classList.remove('has-' + options.effect + '-' + side);
-			    select('.slide-menu').classList.remove('active');
-			    select('.slide-menu-overlay').classList.remove('active');
-			    selectAll('.slide-menu-panel li.selected').forEach(function(i) { i.classList.remove('selected') });
-			  }
+					select('body').classList.remove('slide-menu-active');
+					select('.reveal').classList.remove('has-' + options.effect + '-' + side);
+					select('.slide-menu').classList.remove('active');
+					select('.slide-menu-overlay').classList.remove('active');
+					selectAll('.slide-menu-panel li.selected').forEach(function(i) { i.classList.remove('selected') });
+				}
 			}
 
 			function toggleMenu(event) {
@@ -344,38 +341,37 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function nextPanel() {
-				var next = ($('.active-toolbar-button').data('button') + 1) % buttons;
-				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
+				var next = (parseInt(select('.active-toolbar-button').getAttribute('data-button')) + 1) % buttons;
+				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function prevPanel() {
-				var next = $('.active-toolbar-button').data('button') - 1;
+				var next = parseInt(select('.active-toolbar-button').getAttribute('data-button')) - 1;
 				if (next < 0) {
 					next = buttons - 1;
 				}
-				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
+				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function openItem(item, force) {
-				var h = $(item).data('slide-h');
-				var v = $(item).data('slide-v');
-				var theme = $(item).data('theme');
-				var transition = $(item).data('transition');
-				if (typeof h !== "undefined" && typeof v !== "undefined") {
+				var h = parseInt(item.getAttribute('data-slide-h'));
+				var v = parseInt(item.getAttribute('data-slide-v'));
+				var theme = item.getAttribute('data-theme');
+				var transition = item.getAttribute('data-transition');
+				if (!isNaN(h) && !isNaN(v)) {
 					Reveal.slide(h, v);
 					closeMenu();
 				} else if (theme) {
-					$('#theme').attr('href', theme);
+					select('#theme').setAttribute('href', theme);
 					closeMenu();
 				} else if (transition) {
 					Reveal.configure({ transition: transition });
 					closeMenu();
 				} else {
-					var links = $(item).find('a');
-					if (links.length > 0) {
-						var link = links.get(0);
+					var link = select('a', item);
+					if (link) {
 						if (force || !sticky || (autoOpen && link.href.startsWith('#') || link.href.startsWith(window.location.origin + window.location.pathname + '#'))) {
-							links.get(0).click();
+							link.click();
 						}
 					}
 					closeMenu();
@@ -391,22 +387,21 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function highlightCurrentSlide() {
 				var state = Reveal.getState();
-				$('li.slide-menu-item, li.slide-menu-item-vertical')
-					.removeClass('past')
-					.removeClass('active')
-					.removeClass('future');
+				selectAll('li.slide-menu-item, li.slide-menu-item-vertical').forEach(function(item) {
+					item.classList.remove('past');
+					item.classList.remove('active');
+					item.classList.remove('future');
 
-				$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
-					var h = $(e).data('slide-h');
-					var v = $(e).data('slide-v');
+					var h = parseInt(item.getAttribute('data-slide-h'));
+					var v = parseInt(item.getAttribute('data-slide-v'));
 					if (h < state.indexh || (h === state.indexh && v < state.indexv)) {
-						$(e).addClass('past');
+						item.classList.add('past');
 					}
 					else if (h === state.indexh && v === state.indexv) {
-						$(e).addClass('active');
+						item.classList.add('active');
 					}
 					else {
-						$(e).addClass('future');
+						item.classList.add('future');
 					}
 				});
 			}
@@ -566,9 +561,9 @@ var RevealMenu = window.RevealMenu || (function(){
 							var items = select('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
 							var slideCount = 0;
 							selectAll('.slides > section').forEach(function(section, h) {
-								var subsections = $('section', section);
+								var subsections = selectAll('section', section);
 								if (subsections.length > 0) {
-									subsections.each(function(subsection, v) {
+									subsections.forEach(function(subsection, v) {
 										var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
 										var item = generateItem(type, subsection, slideCount, h, v);
 										if (item) {
@@ -604,7 +599,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					if (custom) {
 						function xhrSuccess () {
 							if (this.status >= 200 && this.status < 300) {
-								$(this.responseText).appendTo(this.panel);
+								this.panel.innerHTML = this.responseText;
 								enableCustomLinks(this.panel);
 							}
 							else {
@@ -624,28 +619,31 @@ var RevealMenu = window.RevealMenu || (function(){
 							oReq.send(null);
 						}
 						function enableCustomLinks(panel) {
-							$(panel).find('ul.slide-menu-items li.slide-menu-item').each(function(item, i) {
-								$(item).attr('data-item', i+1);
-								$(item).click(clicked);
+							selectAll('ul.slide-menu-items li.slide-menu-item', panel).forEach(function(item, i) {
+								item.setAttribute('data-item', i+1);
+								item.onclick = clicked;
 							});
 						}
 						function showErrorMsg(response) {
 							var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
 								response.status + ' (' + response.statusText + ').</p>' +
 								'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
-								$(msg).appendTo(response.panel)
+								response.panel.innerHTML = msg;
 						}
 
 						custom.forEach(function(element, index, array) {
-							var panel = $('<div data-panel="Custom' + index + '" class="slide-menu-panel slide-menu-custom-panel"></div>');
+							var panel = create('div', {
+								'data-panel': 'Custom' + index,
+								class: 'slide-menu-panel slide-menu-custom-panel'
+							});
 							if (element.content) {
-								$(element.content).appendTo(panel);
+								panel.innerHTML = element.content;
 								enableCustomLinks(panel);
 							}
 							else if (element.src) {
 								loadCustomPanelContent(panel, element.src);
 							}
-							panel.appendTo(panels);
+							panels.appendChild(panel);
 						})
 					}
 
@@ -773,8 +771,6 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			dispatchEvent('menu-ready');
 		}
-	})
-	})
 	})
 	});
 
