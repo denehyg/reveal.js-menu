@@ -123,7 +123,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function selectItem(el) {
-				$(el).addClass('selected');
+				el.classList.add('selected');
 				keepVisible(el);
 				if (sticky && autoOpen) openItem(el);
 			}
@@ -286,34 +286,36 @@ var RevealMenu = window.RevealMenu || (function(){
 			function openMenu(event) {
 				if (event) event.preventDefault();
 				if (!isOpen()) {
-				    $('body').addClass('slide-menu-active');
-				    $('.reveal').addClass('has-' + options.effect + '-' + side);
-				    $('.slide-menu').addClass('active');
-				    $('.slide-menu-overlay').addClass('active');
-
+					select('body').classList.add('slide-menu-active');
+				    select('.reveal').classList.add('has-' + options.effect + '-' + side);
+				    select('.slide-menu').classList.add('active');
+				    select('.slide-menu-overlay').classList.add('active');
+					
 				    // identify active theme
-				    $('div[data-panel="Themes"] li').removeClass('active');
-				    $('li[data-theme="' + $('#theme').attr('href') + '"]').addClass('active');
+				    selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
+				    select('li[data-theme="' + select('#theme').getAttribute('href') + '"]').classList.add('active');
 
 				    // identify active transition
-				    $('div[data-panel="Transitions"] li').removeClass('active');
-				    $('li[data-transition="' + Reveal.getConfig().transition + '"]').addClass('active');
+				    selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
+				    select('li[data-transition="' + Reveal.getConfig().transition + '"]').classList.add('active');
 
 				    // set item selections to match active items
-				    $('.slide-menu-panel li.active')
-				    	.addClass('selected')
-				    	.each(function(item) { keepVisible(item) });
+					var items = selectAll('.slide-menu-panel li.active')
+					items.forEach(function(i) {
+						i.classList.add('selected');
+						keepVisible(i);
+					});
 				}
 			}
 
 			function closeMenu(event, force) {
 				if (event) event.preventDefault();
 				if (!sticky || force) {
-			    $('body').removeClass('slide-menu-active');
-			    $('.reveal').removeClass('has-' + options.effect + '-' + side);
-			    $('.slide-menu').removeClass('active');
-			    $('.slide-menu-overlay').removeClass('active');
-			    $('.slide-menu-panel li.selected').removeClass('selected');
+			    select('body').classList.remove('slide-menu-active');
+			    select('.reveal').classList.remove('has-' + options.effect + '-' + side);
+			    select('.slide-menu').classList.remove('active');
+			    select('.slide-menu-overlay').classList.remove('active');
+			    selectAll('.slide-menu-panel li.selected').forEach(function(i) { i.classList.remove('selected') });
 			  }
 			}
 
@@ -326,19 +328,19 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function isOpen() {
-				return $('body').hasClass('slide-menu-active');
+				return select('body').classList.contains('slide-menu-active');
 			}
 
 			function openPanel(e) {
 				openMenu();
 				var panel = e;
 				if (typeof e !== "string") {
-					panel = $(e.currentTarget).data('panel');
+					panel = e.currentTarget.getAttribute('data-panel');
 				}
-				$('.slide-menu-toolbar > li').removeClass('active-toolbar-button');
-				$('li[data-panel="' + panel + '"]').addClass('active-toolbar-button');
-				$('.slide-menu-panel').removeClass('active-menu-panel');
-				$('div[data-panel="' + panel + '"]').addClass('active-menu-panel');
+				select('.slide-menu-toolbar > li.active-toolbar-button').classList.remove('active-toolbar-button');
+				select('li[data-panel="' + panel + '"]').classList.add('active-toolbar-button');
+				select('.slide-menu-panel.active-menu-panel').classList.remove('active-menu-panel');
+				select('div[data-panel="' + panel + '"]').classList.add('active-menu-panel');
 			}
 
 			function nextPanel() {
@@ -354,44 +356,116 @@ var RevealMenu = window.RevealMenu || (function(){
 				openPanel($('.toolbar-panel-button[data-button="' + next + '"]').data('panel'));
 			}
 
+			function openItem(item, force) {
+				var h = $(item).data('slide-h');
+				var v = $(item).data('slide-v');
+				var theme = $(item).data('theme');
+				var transition = $(item).data('transition');
+				if (typeof h !== "undefined" && typeof v !== "undefined") {
+					Reveal.slide(h, v);
+					closeMenu();
+				} else if (theme) {
+					$('#theme').attr('href', theme);
+					closeMenu();
+				} else if (transition) {
+					Reveal.configure({ transition: transition });
+					closeMenu();
+				} else {
+					var links = $(item).find('a');
+					if (links.length > 0) {
+						var link = links.get(0);
+						if (force || !sticky || (autoOpen && link.href.startsWith('#') || link.href.startsWith(window.location.origin + window.location.pathname + '#'))) {
+							links.get(0).click();
+						}
+					}
+					closeMenu();
+				}
+			}
+
+			function clicked(event) {
+				if (event.target.nodeName !== "A") {
+					event.preventDefault();
+				}
+				openItem(event.currentTarget);
+			}
+
+			function highlightCurrentSlide() {
+				var state = Reveal.getState();
+				$('li.slide-menu-item, li.slide-menu-item-vertical')
+					.removeClass('past')
+					.removeClass('active')
+					.removeClass('future');
+
+				$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
+					var h = $(e).data('slide-h');
+					var v = $(e).data('slide-v');
+					if (h < state.indexh || (h === state.indexh && v < state.indexv)) {
+						$(e).addClass('past');
+					}
+					else if (h === state.indexh && v === state.indexv) {
+						$(e).addClass('active');
+					}
+					else {
+						$(e).addClass('future');
+					}
+				});
+			}
+
 			var buttons = 0;
 			function init() {
 				if (!initialised) {
-					$('<nav class="slide-menu slide-menu--' + side + '"></nav>')
-						.appendTo($('.reveal'));
-					$('<div class="slide-menu-overlay"></div>')
-						.appendTo($('.reveal'))
-						.click(closeMenu);
+					var top = select('.reveal');
+					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
+					top.appendChild(panels);
+					var overlay = create('div', { 'class': 'slide-menu-overlay'});
+					top.appendChild(overlay);
+					overlay.onclick = closeMenu;						
 
-					var toolbar = $('<ol class="slide-menu-toolbar"></ol>').prependTo($('.slide-menu'));
-					$('<li data-panel="Slides" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Slides</span><br/><i class="fa fa-list"></i></li>')
-						.appendTo(toolbar)
-						.addClass('active-toolbar-button')
-						.click(openPanel);
+					var toolbar = create('ol', {'class': 'slide-menu-toolbar'});
+					select('.slide-menu').appendChild(toolbar);
+
+					function addToolbarButton(title, ref, icon, fn, active) {
+						var attrs = {
+							'data-button': '' + (buttons++),
+							'class': 'toolbar-panel-button' + (active ? ' active-toolbar-button' : '')
+						};
+						if (ref) {
+							attrs['data-panel'] = ref;
+						}	
+						var button = create('li', attrs);
+
+						if (icon.startsWith('fa-')) {
+							button.appendChild(create('i', {'class': 'fa ' + icon}));
+						} else {
+							button.innerHTML = icon + '</i>';
+						}					
+						button.insertBefore(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
+						button.insertBefore(create('br'), select('i', button));
+						button.onclick = fn;
+						toolbar.append(button);
+						return button;
+					}
+
+					addToolbarButton('Slides', 'Slides', 'fa-list', openPanel, true);
 
 					if (custom) {
 						custom.forEach(function(element, index, array) {
-							$('<li data-panel="Custom' + index + '" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">' + element.title + '</span><br/>' + element.icon + '</i></li>')
-								.appendTo(toolbar)
-								.click(openPanel);
-						})
+							addToolbarButton(element.title, 'Custom' + index, element.icon, openPanel);
+						});
 					}
 
 					if (themes) {
-						$('<li data-panel="Themes" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Themes</span><br/><i class="fa fa-desktop"></i></li>')
-							.appendTo(toolbar)
-							.click(openPanel);
+						addToolbarButton('Themes', 'Themes', 'fa-desktop', openPanel);
 					}
 					if (transitions) {
-						$('<li data-panel="Transitions" data-button="' + (buttons++) + '" class="toolbar-panel-button"><span class="slide-menu-toolbar-label">Transitions</span><br/><i class="fa fa-arrows-h"></i></li>')
-							.appendTo(toolbar)
-							.click(openPanel);
+						addToolbarButton('Transitions', 'Transitions', 'fa-arrows-h', openPanel);
 					}
-					$('<li id="close"><span class="slide-menu-toolbar-label">Close</span><br/><i class="fa fa-times"></i></li>')
-						.appendTo(toolbar)
-						.click(closeMenu, true);
-
-					var panels = $('.slide-menu');
+					button = create('li', {id: 'close'});
+					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
+					button.appendChild(create('br'));
+					button.appendChild(create('i', {'class': 'fa fa-times'}));
+					button.onclick = closeMenu;
+					toolbar.append(button);
 
 					//
 					// Slide links
@@ -400,13 +474,18 @@ var RevealMenu = window.RevealMenu || (function(){
 						var link = '/#/' + h;
 						if (typeof v === 'number' && !isNaN( v )) link += '/' + v;
 
-						var title = $(section).data('menu-title') ||
-							$('.menu-title', section).text() ||
-							$(titleSelector, section).text();
+						function text(selector, parent) {
+							var el = (parent ? select(selector, section) : select(selector));
+							if (el) return el.textContent;
+							return null;
+						}
+						var title = section.getAttribute('data-menu-title') ||
+							text('.menu-title', section) ||
+							text(titleSelector, section);
 
 						if (!title && useTextContentForMissingTitles) {
 							// attempt to figure out a title based on the text in the slide
-							title = $(section).text().trim();
+							title = section.textContent.trim();
 							if (title) {
 								title = title.split('\n')
 									.map(function(t) { return t.trim() }).join(' ').trim()
@@ -425,7 +504,19 @@ var RevealMenu = window.RevealMenu || (function(){
 							title = "Slide " + i;
 						}
 
-						title = '<span class="slide-menu-item-title">' + title + '</span>';
+						var item = create('li', {
+							class: type,
+							'data-item': i,
+							'data-slide-h': h,
+							'data-slide-v': (v === undefined ? 0 : v)
+						});
+
+						if (markers) {
+							item.appendChild(create('i', {class: 'fa fa-check-circle past'}));
+							item.appendChild(create('i', {class: 'fa fa-dot-circle-o active'}));
+							item.appendChild(create('i', {class: 'fa fa-circle-thin future'}));
+						}
+
 						if (numbers) {
 							// Number formatting taken from reveal.js
 							var value = [];
@@ -456,82 +547,25 @@ var RevealMenu = window.RevealMenu || (function(){
 									if( typeof v === 'number' && !isNaN( v ) ) value.push( '.', v + 1 );
 							}
 
-							title = '<span class="slide-menu-item-number">' + value.join('') + '. </span>' + title;
+							item.appendChild(create('span', {class: 'slide-menu-item-number'}, value.join('') + '. '));
 						}
 
-						var m = '';
-						if (markers) {
-							m = '<i class="fa fa-check-circle past"></i>' +
-										'<i class="fa fa-dot-circle-o active"></i>' + 
-										'<i class="fa fa-circle-thin future"></i>';
-						}
-
-						return '<li class="' + type + '" data-item="' + i + '" data-slide-h="' + h + '" data-slide-v="' + (v === undefined ? 0 : v) + '">' + m + title + '</li>';
-					}
-
-					function openItem(item, force) {
-						var h = $(item).data('slide-h');
-						var v = $(item).data('slide-v');
-						var theme = $(item).data('theme');
-						var transition = $(item).data('transition');
-						if (typeof h !== "undefined" && typeof v !== "undefined") {
-							Reveal.slide(h, v);
-							closeMenu();
-						} else if (theme) {
-							$('#theme').attr('href', theme);
-							closeMenu();
-						} else if (transition) {
-							Reveal.configure({ transition: transition });
-							closeMenu();
-						} else {
-							var links = $(item).find('a');
-							if (links.length > 0) {
-								var link = links.get(0);
-								if (force || !sticky || (autoOpen && link.href.startsWith('#') || link.href.startsWith(window.location.origin + window.location.pathname + '#'))) {
-									links.get(0).click();
-								}
-							}
-							closeMenu();
-						}
-					}
-
-					function clicked(event) {
-						if (event.target.nodeName !== "A") {
-							event.preventDefault();
-						}
-						openItem(event.currentTarget);
-					}
-
-					function highlightCurrentSlide() {
-						var state = Reveal.getState();
-						$('li.slide-menu-item, li.slide-menu-item-vertical')
-							.removeClass('past')
-							.removeClass('active')
-							.removeClass('future');
-
-						$('li.slide-menu-item, li.slide-menu-item-vertical').each(function(e) {
-							var h = $(e).data('slide-h');
-							var v = $(e).data('slide-v');
-							if (h < state.indexh || (h === state.indexh && v < state.indexv)) {
-								$(e).addClass('past');
-							}
-							else if (h === state.indexh && v === state.indexv) {
-								$(e).addClass('active');
-							}
-							else {
-								$(e).addClass('future');
-							}
-						});
+						item.appendChild(create('span', {class: 'slide-menu-item-title'}, title));
+						
+						return item;
 					}
 
 					function createSlideMenu() {
 						if ( !document.querySelector('section[data-markdown]:not([data-markdown-parsed])') ) {
-							$('<div data-panel="Slides" class="slide-menu-panel"><ul class="slide-menu-items"></ul></div>')
-								.appendTo(panels)
-								.addClass('active-menu-panel');
-							var items = $('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
+							var panel = create('div', {
+								'data-panel': 'Slides',
+								'class': 'slide-menu-panel active-menu-panel'
+							});
+							panel.appendChild(create('ul', {class: "slide-menu-items"}));
+							panels.appendChild(panel);
+							var items = select('.slide-menu-panel[data-panel="Slides"] > .slide-menu-items');
 							var slideCount = 0;
-							$('.slides > section').each(function(section, h) {
+							selectAll('.slides > section').forEach(function(section, h) {
 								var subsections = $('section', section);
 								if (subsections.length > 0) {
 									subsections.each(function(subsection, v) {
@@ -550,7 +584,9 @@ var RevealMenu = window.RevealMenu || (function(){
 									}
 								}
 							});
-							$('.slide-menu-item, .slide-menu-item-vertical').click(clicked);
+							selectAll('.slide-menu-item, .slide-menu-item-vertical').forEach(function(i) {
+								i.onclick = clicked;
+							});
 							highlightCurrentSlide();
 						}
 						else {
@@ -617,10 +653,21 @@ var RevealMenu = window.RevealMenu || (function(){
 					// Themes
 					//
 					if (themes) {
-						var panel = $('<div data-panel="Themes" class="slide-menu-panel"></div>').appendTo(panels);
-						var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
+						var panel = create('div', {
+							class: 'slide-menu-panel',
+							'data-panel': 'Themes'
+						});
+						panels.appendChild(panel);
+						var menu = create('ul', {class: 'slide-menu-items'});
+						panel.appendChild(menu);
 						themes.forEach(function(t, i) {
-							$('<li class="slide-menu-item" data-theme="' + t.theme + '" data-item="' + (i+1) + '">' + t.name + '</li>').appendTo(menu).click(clicked);
+							var item = create('li', {
+								class: 'slide-menu-item',
+								'data-theme': t.theme,
+								'data-item': ''+(i+1)
+							 }, t.name);
+							 menu.appendChild(item);
+							 item.onclick = clicked;
 						})
 					}
 
@@ -628,10 +675,21 @@ var RevealMenu = window.RevealMenu || (function(){
 					// Transitions
 					//
 					if (transitions) {
-						var panel = $('<div data-panel="Transitions" class="slide-menu-panel"></div>').appendTo(panels);
-						var menu = $('<ul class="slide-menu-items"></ul>').appendTo(panel);
+						var panel = create('div', {
+							class: 'slide-menu-panel',
+							'data-panel': 'Transitions'
+						});
+						panels.appendChild(panel);
+						var menu = create('ul', {class: 'slide-menu-items'});
+						panel.appendChild(menu);
 						['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
-							$('<li class="slide-menu-item" data-transition="' + name.toLowerCase() + '" data-item="' + (i+1) + '">' + name + '</li>').appendTo(menu).click(clicked);
+							var item = create('li', {
+								class: 'slide-menu-item',
+								'data-transition': name.toLowerCase(),
+								'data-item': ''+(i+1)
+							}, name);
+							menu.appendChild(item);
+							item.onclick = clicked;
 						})
 					}
 
@@ -640,27 +698,38 @@ var RevealMenu = window.RevealMenu || (function(){
 					//
 					if (openButton) {
 						// add menu button
-						$('<div class="slide-menu-button"><a href="#"><i class="fa fa-bars"></i></a></div>')
-							.appendTo($('.reveal'))
-							.click(openMenu);
+						var div = create('div', {class: 'slide-menu-button'});
+						var link = create('a', {href: '#'});
+						link.appendChild(create('i', {class: 'fa fa-bars'}));
+						div.appendChild(link);
+						select('.reveal').appendChild(div);
+						div.onclick = openMenu;
 					}
 
 					if (openSlideNumber) {
 						// wrap slide number in link
-						$('<div class="slide-number-wrapper"><a href="#"></a></div>').insertAfter($('div.slide-number'));
-						$('.slide-number').appendTo($('.slide-number-wrapper a'));
-						$('.slide-number-wrapper a').click(openMenu);
+						var slideNumber = select('div.slide-number');
+						var wrapper = create('div', {class: 'slide-number-wrapper'});
+						var link = create('a', {href: '#'});
+						wrapper.appendChild(link);
+						slideNumber.parentElement.insertBefore(wrapper, slideNumber);
+						link.appendChild(slideNumber);
+						link.onclick = openMenu;
 					}
 
 					//
 					// Handle mouse overs
 					//
 					var mouseSelectionEnabled = true;
-					$('.slide-menu-panel .slide-menu-items li').mouseenter(function(event) {
-						if (mouseSelectionEnabled) {
-							$('.active-menu-panel .slide-menu-items li').removeClass('selected');
-							$(event.currentTarget).addClass('selected');
-						}
+					selectAll('.slide-menu-panel .slide-menu-items li').forEach(function(item) {
+						item.addEventListener("mouseenter", function(event) {
+							if (mouseSelectionEnabled) {
+								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(i) {
+									i.classList.remove('selected');
+								});
+								event.currentTarget.classList.add('selected');
+							}
+						});
 					});
 				}
 				initialised = true;
@@ -708,6 +777,31 @@ var RevealMenu = window.RevealMenu || (function(){
 	})
 	})
 	});
+
+	function select(selector, el) {
+		if (!el) {
+			el = document;
+		}
+		return el.querySelector(selector);
+	}
+
+	function selectAll(selector, el) {
+		if (!el) {
+			el = document;
+		}
+		return Array.prototype.slice.call(el.querySelectorAll(selector));
+	}
+
+	function create(tagName, attrs, content) {
+		var el = document.createElement(tagName);
+		if (attrs) {
+			Object.getOwnPropertyNames(attrs).forEach(function(n) {
+				el.setAttribute(n, attrs[n]);
+			});
+		}
+		if (content) el.innerHTML = content;
+		return el;
+	}
 
 	// modified from math plugin
 	function loadResource( url, type, callback ) {
