@@ -15,7 +15,6 @@ var RevealMenu = window.RevealMenu || (function(){
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
 	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
 		// does not support IE8 or below
-		// if (!bowser.msie || bowser.version >= 9) {
 		if (!head.browser.ie || head.browser.version >= 9) {
 			//
 			// Set option defaults
