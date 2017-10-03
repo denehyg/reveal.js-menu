@@ -155,7 +155,13 @@ Reveal.initialize({
 		// requested by calling RevealMenu.init(). Note this will delay
 		// the creation of all menu panels, including custom panels, and
 		// the menu button.
-		delayInit: false
+		delayInit: false,
+
+		// By default the menu will load it's own font-awesome library
+		// icons. If your presentation needs to load a different
+		// font-awesome library the 'loadIcons' option can be set to false
+		// and the menu will not attempt to load the font-awesome library.
+		loadIcons: true
 	},
 
 });

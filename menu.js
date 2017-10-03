@@ -8,12 +8,21 @@ var RevealMenu = window.RevealMenu || (function(){
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
 	options.path = options.path || scriptPath() || 'plugin/menu';
+	var loadIcons = options.loadIcons;
+	if (typeof loadIcons === "undefined") loadIcons = true;
 	var initialised = false;
 	
 	var module = {};
 
 	loadResource(options.path + '/menu.css', 'stylesheet', function() {
-	loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', function() {
+		if (loadIcons) {
+			loadResource(options.path + '/font-awesome-4.3.0/css/font-awesome.min.css', 'stylesheet', loadPlugin)
+		} else {
+			loadPlugin();
+		}
+	})
+
+	function loadPlugin() {
 		// does not support IE8 or below
 		if (!head.browser.ie || head.browser.version >= 9) {
 			//
@@ -770,8 +779,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			dispatchEvent('menu-ready');
 		}
-	})
-	});
+	}
 
 	function select(selector, el) {
 		if (!el) {
