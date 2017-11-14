@@ -298,11 +298,11 @@ var RevealMenu = window.RevealMenu || (function(){
 					
 				    // identify active theme
 				    selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
-				    select('li[data-theme="' + select('#theme').getAttribute('href') + '"]').classList.add('active');
+				    selectAll('li[data-theme="' + select('#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
 
 				    // identify active transition
 				    selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
-				    select('li[data-transition="' + Reveal.getConfig().transition + '"]').classList.add('active');
+				    selectAll('li[data-transition="' + Reveal.getConfig().transition + '"]').forEach(function(i) { i.classList.add('active') });
 
 				    // set item selections to match active items
 					var items = selectAll('.slide-menu-panel li.active')
