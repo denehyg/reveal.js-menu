@@ -267,3 +267,13 @@
   opacity: 0.7;
   transition: opacity 0.3s;
 }
+
+/*
+ * Hide menu for pdf printing
+ */
+body.print-pdf .reveal .slide-menu,
+body.print-pdf .reveal .slide-menu-button,
+body.print-pdf .reveal .slide-menu-overlay
+{
+	display: none;
+}
