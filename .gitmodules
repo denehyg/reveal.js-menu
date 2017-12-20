@@ -2,3 +2,6 @@
 	path = plugin/reveal.js-menu
 	url = https://denehyg@github.com/denehyg/reveal.js-menu.git
 	branch = master
+[submodule "lib/reveal.js"]
+	path = lib/reveal.js
+	url = https://github.com/hakimel/reveal.js.git

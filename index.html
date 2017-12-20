@@ -14,23 +14,23 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
-		<link rel="stylesheet" href="reveal.js/css/reveal.css">
-		<link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="lib/reveal.js/css/theme/black.css" id="theme">
 
 		<!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/reveal.js/lib/css/zenburn.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
 			link.rel = 'stylesheet';
 			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'lib/reveal.js/css/print/pdf.css' : 'lib/reveal.js/css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
 
 		<!--[if lt IE 9]>
-		<script src="reveal.js/lib/js/html5shiv.js"></script>
+		<script src="lib/reveal.js/lib/js/html5shiv.js"></script>
 		<![endif]-->
 
 		<style>
@@ -94,7 +94,7 @@
 					<h3>Markers</h3>
 					<p>The slide markers in the menu can be useful to show <br/>you the progress through the presentation.</p>
 					<p>You can hide them if you want.</p>
-					<p>You can also add slide numbers.</p>
+					<p>You can also show/hide slide numbers.</p>
 				</section>
 
 				<section id="titles">
@@ -181,8 +181,8 @@
 
 		</div>
 
-		<script src="reveal.js/lib/js/head.min.js"></script>
-		<script src="reveal.js/js/reveal.js"></script>
+		<script src="lib/reveal.js/lib/js/head.min.js"></script>
+		<script src="lib/reveal.js/js/reveal.js"></script>
 
 		<script>
 
@@ -199,19 +199,20 @@
 
 				menu: {
 					markers: true,
+					numbers: true,
 					openSlideNumber: true,
 					themes: [
-						{ name: 'Black', theme: 'reveal.js/css/theme/black.css' },
-						{ name: 'White', theme: 'reveal.js/css/theme/white.css' },
-						{ name: 'League', theme: 'reveal.js/css/theme/league.css' },
-						{ name: 'Sky', theme: 'reveal.js/css/theme/sky.css' },
-						{ name: 'Beige', theme: 'reveal.js/css/theme/beige.css' },
-						{ name: 'Simple', theme: 'reveal.js/css/theme/simple.css' },
-						{ name: 'Serif', theme: 'reveal.js/css/theme/serif.css' },
-						{ name: 'Blood', theme: 'reveal.js/css/theme/blood.css' },
-						{ name: 'Night', theme: 'reveal.js/css/theme/night.css' },
-						{ name: 'Moon', theme: 'reveal.js/css/theme/moon.css' },
-						{ name: 'Solarized', theme: 'reveal.js/css/theme/solarized.css' }
+						{ name: 'Black', theme: 'lib/reveal.js/css/theme/black.css' },
+						{ name: 'White', theme: 'lib/reveal.js/css/theme/white.css' },
+						{ name: 'League', theme: 'lib/reveal.js/css/theme/league.css' },
+						{ name: 'Sky', theme: 'lib/reveal.js/css/theme/sky.css' },
+						{ name: 'Beige', theme: 'lib/reveal.js/css/theme/beige.css' },
+						{ name: 'Simple', theme: 'lib/reveal.js/css/theme/simple.css' },
+						{ name: 'Serif', theme: 'lib/reveal.js/css/theme/serif.css' },
+						{ name: 'Blood', theme: 'lib/reveal.js/css/theme/blood.css' },
+						{ name: 'Night', theme: 'lib/reveal.js/css/theme/night.css' },
+						{ name: 'Moon', theme: 'lib/reveal.js/css/theme/moon.css' },
+						{ name: 'Solarized', theme: 'lib/reveal.js/css/theme/solarized.css' }
 			        ],
 			        custom: [
 			            { title: 'Custom', icon: '<i class="fa fa-bookmark">', src: 'links.html' },
@@ -220,12 +221,12 @@
 
 				// Optional reveal.js plugins
 				dependencies: [
-					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
-					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+					{ src: 'lib/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'lib/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal.js/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'lib/reveal.js/plugin/notes/notes.js', async: true },
 					{ src: 'plugin/reveal.js-menu/menu.js', async: true }
 				]
 			});
