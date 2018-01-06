@@ -422,7 +422,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					top.appendChild(panels);
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
 					top.appendChild(overlay);
-					overlay.onclick = closeMenu;						
+					overlay.onclick = function() { closeMenu(null, true) };
 
 					var toolbar = create('ol', {'class': 'slide-menu-toolbar'});
 					select('.slide-menu').appendChild(toolbar);
@@ -467,7 +467,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
 					button.appendChild(create('br'));
 					button.appendChild(create('i', {'class': 'fas fa-times'}));
-					button.onclick = closeMenu;
+					button.onclick = function() { closeMenu(null, true) };
 					toolbar.appendChild(button);
 
 					//
