@@ -453,7 +453,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 					if (custom) {
 						custom.forEach(function(element, index, array) {
-							addToolbarButton(element.title, 'Custom' + index, element.icon, openPanel);
+							addToolbarButton(element.title, 'Custom' + index, element.icon, null, openPanel);
 						});
 					}
 
