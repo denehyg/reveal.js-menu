@@ -167,6 +167,8 @@ Reveal.initialize({
 });
 ```
 
+### Themes Stylesheet
+
 If you are using the themes panel you need to ensure the theme stylesheet in the presentation uses the ```id="theme"``` attribute. For example...
 ```html
 <link rel="stylesheet" href="css/theme/black.css" id="theme">
