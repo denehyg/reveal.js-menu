@@ -298,13 +298,15 @@ var RevealMenu = window.RevealMenu || (function(){
 					
 					// identify active theme
 					if (themes) {
-				    selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
-				    selectAll('li[data-theme="' + select('#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
+						selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
+						selectAll('li[data-theme="' + select('#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
 					}
 					
-				    // identify active transition
-				    selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
-				    selectAll('li[data-transition="' + Reveal.getConfig().transition + '"]').forEach(function(i) { i.classList.add('active') });
+					// identify active transition
+					if (transitions) {
+						selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
+						selectAll('li[data-transition="' + Reveal.getConfig().transition + '"]').forEach(function(i) { i.classList.add('active') });
+					}
 
 				    // set item selections to match active items
 					var items = selectAll('.slide-menu-panel li.active')
