@@ -36,7 +36,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			var useTextContentForMissingTitles = options.useTextContentForMissingTitles || false;
 			var markers = options.markers || false;
 			var custom = options.custom;
-			var themes = options.themes;
+			var themes = select('link#theme') ? options.themes : false;
 			if (typeof themes === "undefined") {
 				themes = [
 					{ name: 'Black', theme: 'css/theme/black.css' },
@@ -299,7 +299,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					// identify active theme
 					if (themes) {
 						selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
-						selectAll('li[data-theme="' + select('#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
+						selectAll('li[data-theme="' + select('link#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
 					}
 					
 					// identify active transition
@@ -374,7 +374,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					Reveal.slide(h, v);
 					closeMenu();
 				} else if (theme) {
-					select('#theme').setAttribute('href', theme);
+					select('link#theme').setAttribute('href', theme);
 					closeMenu();
 				} else if (transition) {
 					Reveal.configure({ transition: transition });
