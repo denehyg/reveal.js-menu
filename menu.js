@@ -24,7 +24,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 	function loadPlugin() {
 		// does not support IE8 or below
-		if (!head.browser.ie || head.browser.version >= 9) {
+		if (!ieVersion || ieVersion >= 9) {
 			//
 			// Set option defaults
 			//
@@ -54,7 +54,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 			var transitions = options.transitions;
 			if (typeof transitions === "undefined") transitions = true;
-			if (head.browser.ie && head.browser.version <= 9) {
+			if (ieVersion && ieVersion <= 9) {
 				// transitions aren't support in IE9 anyway, so no point in showing them
 				transitions = false;
 			}
@@ -868,5 +868,13 @@ var RevealMenu = window.RevealMenu || (function(){
 	  };
 	}
 
+	var ieVersion = function() {
+		var browser = /(msie) ([\w.]+)/.exec(window.navigator.userAgent.toLowerCase());
+		if (browser && browser[1] === "msie") {
+			return parseFloat(browser[2]);
+		}
+		return null;
+	}();
+	
 	return module;
 })();
