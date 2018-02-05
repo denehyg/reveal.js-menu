@@ -445,15 +445,15 @@ var RevealMenu = window.RevealMenu || (function(){
 							button.appendChild(create('i', {'class': style + ' ' + icon}));
 						} else {
 							button.innerHTML = icon + '</i>';
-						}					
-						button.insertBefore(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
-						button.insertBefore(create('br'), select('i', button));
+						}
+						button.appendChild(create('br'), select('i', button));
+						button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
 						button.onclick = fn;
 						toolbar.appendChild(button);
 						return button;
 					}
 
-					addToolbarButton('Slides', 'Slides', 'fa-list', 'fas', openPanel, true);
+					addToolbarButton('Slides', 'Slides', 'fa-images', 'fas', openPanel, true);
 
 					if (custom) {
 						custom.forEach(function(element, index, array) {
@@ -462,15 +462,15 @@ var RevealMenu = window.RevealMenu || (function(){
 					}
 
 					if (themes) {
-						addToolbarButton('Themes', 'Themes', 'fa-desktop', 'fas', openPanel);
+						addToolbarButton('Themes', 'Themes', 'fa-adjust', 'fas', openPanel);
 					}
 					if (transitions) {
-						addToolbarButton('Transitions', 'Transitions', 'fa-arrows-alt-h', 'fas', openPanel);
+						addToolbarButton('Transitions', 'Transitions', 'fa-sticky-note', 'fas', openPanel);
 					}
-					button = create('li', {id: 'close'});
-					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
-					button.appendChild(create('br'));
+					button = create('li', {id: 'close', 'class': 'toolbar-panel-button'});
 					button.appendChild(create('i', {'class': 'fas fa-times'}));
+					button.appendChild(create('br'));
+					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
 					button.onclick = function() { closeMenu(null, true) };
 					toolbar.appendChild(button);
 

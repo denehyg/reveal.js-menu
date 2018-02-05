@@ -140,6 +140,15 @@
     cursor: pointer;
 	color: #aaa;
 	border-radius: 3px;
+	padding-top: 16px;
+}
+
+.reveal .slide-menu-toolbar > li.toolbar-panel-button i {
+	font-size: 1.7em;
+}
+
+.reveal .slide-menu-toolbar > li.toolbar-panel-button span.slide-menu-toolbar-label {
+	visibility: hidden;
 }
 
 .reveal .slide-menu-toolbar > li.active-toolbar-button {
@@ -147,8 +156,13 @@
  	text-shadow: 0 1px black;	
 }
 
-.slide-menu-toolbar > li:hover {
+.slide-menu-toolbar > li.toolbar-panel-button:hover {
 	color: white;
+}
+
+.slide-menu-toolbar > li.toolbar-panel-button:hover span.slide-menu-toolbar-label,
+.reveal .slide-menu-toolbar > li.active-toolbar-button span.slide-menu-toolbar-label {
+	visibility: visible;
 }
 
 /*
