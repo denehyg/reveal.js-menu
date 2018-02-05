@@ -1,6 +1,8 @@
 TODO
 
 Theme and transition menu off by default
+Remove cube & page from default transition list to be consistent with Reveal
+Allow custom transition list in config
 
 Sync speaker notes menu to main presentation #19
 Customise width
