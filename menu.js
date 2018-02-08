@@ -55,7 +55,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				themes = false;
 			}
 			var transitions = options.transitions;
-			if (typeof transitions === "undefined") transitions = true;
+			if (typeof transitions === "undefined") transitions = false;
 			if (ieVersion && ieVersion <= 9) {
 				// transitions aren't support in IE9 anyway, so no point in showing them
 				transitions = false;

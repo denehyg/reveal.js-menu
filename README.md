@@ -118,7 +118,7 @@ Reveal.initialize({
 		themes: false,
 
 		// Specifies if the transitions menu panel will be shown.
-		transitions: true,
+		transitions: false,
 
 		// Adds a menu button to the slides to open the menu panel.
 		// Set to 'false' to hide the button.
