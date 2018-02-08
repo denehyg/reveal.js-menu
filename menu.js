@@ -34,7 +34,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
 			var useTextContentForMissingTitles = options.useTextContentForMissingTitles || false;
-			var markers = options.markers || false;
+			var markers = options.markers;
+			if (typeof markers === "undefined") markers = true;
 			var custom = options.custom;
 			var themesPath = typeof options.themesPath === 'string' ? options.themesPath : 'css/theme/';
 			if (!themesPath.endsWith('/')) themesPath += '/';

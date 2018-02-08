@@ -96,9 +96,10 @@ Reveal.initialize({
 		// Set to 'true' to only list slides with titles.
 		hideMissingTitles: false,
 
-		// Add markers to the slide titles to indicate the 
-		// progress through the presentation
-		markers: false,
+		// Adds markers to the slide titles to indicate the 
+		// progress through the presentation. Set to 'false'
+		// to hide the markers.
+		markers: true,
 
 		// Specify custom panels to be included in the menu, by
 		// providing an array of objects with 'title', 'icon'
