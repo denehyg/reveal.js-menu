@@ -106,10 +106,10 @@ Reveal.initialize({
 		custom: false,
 
 		// Specifies the themes that will be available in the themes
-		// menu panel. Set to 'true' to show the themes panel with
-		// the default themes list. Alternatively, provide an array
-		// to specify specific themes to make available in the
-		// themes panel, for example...
+		// menu panel. Set to 'true' to show the themes menu panel
+		// with the default themes list. Alternatively, provide an
+		// array to specify the themes to make available in the
+		// themes menu panel, for example...
 		// [
 		//     { name: 'Black', theme: 'css/theme/black.css' },
 		//     { name: 'White', theme: 'css/theme/white.css' },
