@@ -37,7 +37,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			var markers = options.markers || false;
 			var custom = options.custom;
 			var themes = select('link#theme') ? options.themes : false;
-			if (typeof themes === "undefined") {
+			if (themes === true) {
 				themes = [
 					{ name: 'Black', theme: 'css/theme/black.css' },
 					{ name: 'White', theme: 'css/theme/white.css' },
@@ -51,6 +51,8 @@ var RevealMenu = window.RevealMenu || (function(){
 					{ name: 'Moon', theme: 'css/theme/moon.css' },
 					{ name: 'Solarized', theme: 'css/theme/solarized.css' }
 				];
+			} else if (!Array.isArray(themes)) {
+				themes = false;
 			}
 			var transitions = options.transitions;
 			if (typeof transitions === "undefined") transitions = true;

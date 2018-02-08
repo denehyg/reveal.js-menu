@@ -106,20 +106,16 @@ Reveal.initialize({
 		custom: false,
 
 		// Specifies the themes that will be available in the themes
-		// menu panel. Set to 'false' to hide themes panel.
-		themes: [
-			{ name: 'Black', theme: 'css/theme/black.css' },
-			{ name: 'White', theme: 'css/theme/white.css' },
-			{ name: 'League', theme: 'css/theme/league.css' },
-			{ name: 'Sky', theme: 'css/theme/sky.css' },
-			{ name: 'Beige', theme: 'css/theme/beige.css' },
-			{ name: 'Simple', theme: 'css/theme/simple.css' },
-			{ name: 'Serif', theme: 'css/theme/serif.css' },
-			{ name: 'Blood', theme: 'css/theme/blood.css' },
-			{ name: 'Night', theme: 'css/theme/night.css' },
-			{ name: 'Moon', theme: 'css/theme/moon.css' },
-			{ name: 'Solarized', theme: 'css/theme/solarized.css' }
-		],
+		// menu panel. Set to 'true' to show the themes panel with
+		// the default themes list. Alternatively, provide an array
+		// to specify specific themes to make available in the
+		// themes panel, for example...
+		// [
+		//     { name: 'Black', theme: 'css/theme/black.css' },
+		//     { name: 'White', theme: 'css/theme/white.css' },
+		//     { name: 'League', theme: 'css/theme/league.css' }
+		// ]
+		themes: false,
 
 		// Specifies if the transitions menu panel will be shown.
 		transitions: true,
