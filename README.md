@@ -118,6 +118,11 @@ Reveal.initialize({
 		themes: false,
 
 		// Specifies if the transitions menu panel will be shown.
+		// Set to 'true' to show the transitions menu panel with
+		// the default transitions list. Alternatively, provide an
+		// array to specify the transitions to make available in
+		// the transitions panel, for example...
+		// ['None', 'Fade', 'Slide']
 		transitions: false,
 
 		// Adds a menu button to the slides to open the menu panel.

@@ -54,8 +54,13 @@ var RevealMenu = window.RevealMenu || (function(){
 			} else if (!Array.isArray(themes)) {
 				themes = false;
 			}
-			var transitions = options.transitions;
-			if (typeof transitions === "undefined") transitions = false;
+			var transitions = options.transitions || false;
+			if (transitions === true) {
+				transitions = ['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom'];
+			} else if (transitions !== false && (!Array.isArray(transitions) || !transitions.every(function(e) { return typeof e === "string" }))) {
+				console.error("reveal.js-menu error: transitions config value must be 'true' or an array of strings, eg ['None', 'Fade', 'Slide')");
+				transitions = false;
+			}
 			if (ieVersion && ieVersion <= 9) {
 				// transitions aren't support in IE9 anyway, so no point in showing them
 				transitions = false;
@@ -696,7 +701,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						panels.appendChild(panel);
 						var menu = create('ul', {class: 'slide-menu-items'});
 						panel.appendChild(menu);
-						['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
+						transitions.forEach(function(name, i) {
 							var item = create('li', {
 								class: 'slide-menu-item',
 								'data-transition': name.toLowerCase(),
