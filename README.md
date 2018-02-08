@@ -117,6 +117,14 @@ Reveal.initialize({
 		// ]
 		themes: false,
 
+		// Specifies the path to the default theme files. If your
+		// presentation uses a different path to the standard reveal
+		// layout then you need to provide this option, but only
+		// when 'themes' is set to 'true'. If you provide your own 
+		// list of themes or 'themes' is set to 'false' the 
+		// 'themesPath' option is ignored.
+		themesPath: 'css/theme/',
+
 		// Specifies if the transitions menu panel will be shown.
 		// Set to 'true' to show the transitions menu panel with
 		// the default transitions list. Alternatively, provide an
