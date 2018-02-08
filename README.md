@@ -167,6 +167,9 @@ Reveal.initialize({
 		// the menu button.
 		delayInit: false,
 
+		// If 'true' the menu will be shown when the menu is initialised.
+		openOnInit: false,
+
 		// By default the menu will load it's own font-awesome library
 		// icons. If your presentation needs to load a different
 		// font-awesome library the 'loadIcons' option can be set to false

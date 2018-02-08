@@ -80,6 +80,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof autoOpen === "undefined") autoOpen = true;
 			var delayInit = options.delayInit;
 			if (typeof delayInit === "undefined") delayInit = false;
+			var openOnInit = options.openOnInit || false;
 			
 			var mouseSelectionEnabled = true;
 			function disableMouseSelection() {
@@ -754,6 +755,9 @@ var RevealMenu = window.RevealMenu || (function(){
 							event.currentTarget.classList.add('selected');
 						}
 					}
+				}
+				if (openOnInit) {
+					openMenu();
 				}
 				initialised = true;
 			}

@@ -4,6 +4,7 @@ TODO
 ✔ Remove cube & page from default transition list to be consistent with Reveal
 ✔ Allow custom transition list in config
 ✔ Need to determine correct path to theme css files
+✔ Open menu on init
 
 Sync speaker notes menu to main presentation #19
 Customise width
