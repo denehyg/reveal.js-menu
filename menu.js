@@ -634,8 +634,10 @@ var RevealMenu = window.RevealMenu || (function(){
 							selectAll('ul.slide-menu-items li.slide-menu-item', panel).forEach(function(item, i) {
 								item.setAttribute('data-item', i+1);
 								item.onclick = clicked;
+								item.addEventListener("mouseenter", handleMouseHighlight);
 							});
 						}
+
 						function showErrorMsg(response) {
 							var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
 								response.status + ' (' + response.statusText + ').</p>' +
@@ -731,15 +733,17 @@ var RevealMenu = window.RevealMenu || (function(){
 					// Handle mouse overs
 					//
 					selectAll('.slide-menu-panel .slide-menu-items li').forEach(function(item) {
-						item.addEventListener("mouseenter", function(event) {
-							if (mouseSelectionEnabled) {
-								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(i) {
-									i.classList.remove('selected');
-								});
-								event.currentTarget.classList.add('selected');
-							}
-						});
+						item.addEventListener("mouseenter", handleMouseHighlight);
 					});
+
+					function handleMouseHighlight(event) {
+						if (mouseSelectionEnabled) {
+							selectAll('.active-menu-panel .slide-menu-items li.selected').forEach(function(i) {
+								i.classList.remove('selected');
+							});
+							event.currentTarget.classList.add('selected');
+						}
+					}
 				}
 				initialised = true;
 			}
