@@ -71,7 +71,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			var delayInit = options.delayInit;
 			if (typeof delayInit === "undefined") delayInit = false;
 			
-
+			var mouseSelectionEnabled = true;
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
 			}
@@ -113,20 +113,20 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (offset) {
 					disableMouseSelection();
 					el.scrollIntoView(offset > 0);
-					reenableMouseSelection();	
+					reenableMouseSelection();
 				}
 			}
 
 			function scrollItemToTop(el) {
 				disableMouseSelection();
 				el.offsetParent.scrollTop = el.offsetTop;
-				reenableMouseSelection();	
+				reenableMouseSelection();
 			}
 
 			function scrollItemToBottom(el) {
 				disableMouseSelection();
 				el.offsetParent.scrollTop = el.offsetTop - el.offsetParent.offsetHeight + el.offsetHeight
-				reenableMouseSelection();	
+				reenableMouseSelection();
 			}
 
 			function selectItem(el) {
@@ -730,7 +730,6 @@ var RevealMenu = window.RevealMenu || (function(){
 					//
 					// Handle mouse overs
 					//
-					var mouseSelectionEnabled = true;
 					selectAll('.slide-menu-panel .slide-menu-items li').forEach(function(item) {
 						item.addEventListener("mouseenter", function(event) {
 							if (mouseSelectionEnabled) {
