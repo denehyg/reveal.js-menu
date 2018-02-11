@@ -5,6 +5,8 @@ TODO
 ✔ Allow custom transition list in config
 ✔ Need to determine correct path to theme css files
 ✔ Open menu on init
+Cleanup code
 
+Allow functions in config params ?
 Sync speaker notes menu to main presentation #19
 Customise width
