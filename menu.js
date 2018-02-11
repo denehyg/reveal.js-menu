@@ -385,7 +385,18 @@ var RevealMenu = window.RevealMenu || (function(){
 					Reveal.slide(h, v);
 					closeMenu();
 				} else if (theme) {
-					select('link#theme').setAttribute('href', theme);
+					// take note of the previous theme and remove it, then create a new stylesheet reference and insert it
+					// this is required to force a load event so we can change the menu style to match the new style
+					var stylesheet = select('link#theme');
+					var parent = stylesheet.parentElement;
+					var sibling = stylesheet.nextElementSibling;
+					stylesheet.remove();
+
+					var newStylesheet = stylesheet.cloneNode();
+					newStylesheet.setAttribute('href', theme);
+					newStylesheet.onload = function() { matchRevealStyle() };
+					parent.insertBefore(newStylesheet, sibling);
+
 					closeMenu();
 				} else if (transition) {
 					Reveal.configure({ transition: transition });
@@ -429,6 +440,13 @@ var RevealMenu = window.RevealMenu || (function(){
 				});
 			}
 
+			function matchRevealStyle() {
+				var revealStyle = window.getComputedStyle(select('.reveal'));
+				var element = select('.slide-menu');
+				element.style.fontFamily = revealStyle.fontFamily;
+				//XXX could adjust the complete menu style to match the theme, ie colors, etc
+			}
+
 			var buttons = 0;
 			function init() {
 				if (!initialised) {
@@ -437,6 +455,7 @@ var RevealMenu = window.RevealMenu || (function(){
 					parent.appendChild(top);
 					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
 					top.appendChild(panels);
+					matchRevealStyle();
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
 					top.appendChild(overlay);
 					overlay.onclick = function() { closeMenu(null, true) };
