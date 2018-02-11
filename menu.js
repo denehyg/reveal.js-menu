@@ -432,7 +432,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			var buttons = 0;
 			function init() {
 				if (!initialised) {
-					var top = select('.reveal');
+					var parent = select('.reveal').parentElement;
+					var top = create('div', { 'class': 'slide-menu-wrapper'});
+					parent.appendChild(top);
 					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
 					top.appendChild(panels);
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
