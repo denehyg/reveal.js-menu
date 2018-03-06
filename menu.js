@@ -27,7 +27,7 @@ var RevealMenu = window.RevealMenu || (function(){
 		var initialise = !ieVersion || ieVersion >= 9;
 
 		// do not load the menu in the upcoming slide panel in the speaker notes
-		if (Reveal.isSpeakerNotes() && window.location.search.includes('controls=false')) {
+		if (Reveal.isSpeakerNotes() && window.location.search.endsWith('controls=false')) {
 			initialise = false;
 		}
 
