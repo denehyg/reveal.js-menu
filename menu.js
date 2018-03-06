@@ -822,7 +822,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				// If we're in an iframe, post each reveal.js event to the
 				// parent window. Used by the notes plugin
 				if( config.postMessageEvents && window.parent !== window.self ) {
-					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: getState() }), '*' );
+					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: Reveal.getState() }), '*' );
 				}
 			}
 
