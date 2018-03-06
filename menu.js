@@ -24,7 +24,14 @@ var RevealMenu = window.RevealMenu || (function(){
 
 	function loadPlugin() {
 		// does not support IE8 or below
-		if (!ieVersion || ieVersion >= 9) {
+		var initialise = !ieVersion || ieVersion >= 9;
+
+		// do not load the menu in the upcoming slide panel in the speaker notes
+		if (Reveal.isSpeakerNotes() && window.location.search.includes('controls=false')) {
+			initialise = false;
+		}
+
+		if (initialise) {
 			//
 			// Set option defaults
 			//
