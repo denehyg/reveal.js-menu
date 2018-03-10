@@ -6,7 +6,10 @@ TODO
 ✔ Need to determine correct path to theme css files
 ✔ Open menu on init
 Cleanup code
+Cross-platform test
+Release notes
+Contribution guidelines ?
+Update live demo
 
-Allow functions in config params ?
-Sync speaker notes menu to main presentation #19
-Customise width
+✘ Allow functions in config params ?
+✘ Customise width
