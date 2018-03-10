@@ -392,21 +392,20 @@ var RevealMenu = window.RevealMenu || (function(){
 					Reveal.slide(h, v);
 					closeMenu();
 				} else if (theme) {
-					// take note of the previous theme and remove it, then create a new stylesheet reference and insert it
-					// this is required to force a load event so we can change the menu style to match the new style
-					var stylesheet = select('link#theme');
-					var parent = stylesheet.parentElement;
-					var sibling = stylesheet.nextElementSibling;
-					stylesheet.remove();
-
-					var newStylesheet = stylesheet.cloneNode();
-					newStylesheet.setAttribute('href', theme);
-					newStylesheet.onload = function() { matchRevealStyle() };
-					parent.insertBefore(newStylesheet, sibling);
-
+					if (Reveal.isSpeakerNotes()) {
+						dispatchEvent("menu-themechanged", { theme: theme, label: item.textContent });
+					}
+					else {
+						changeTheme(theme, item.textContent);
+					}
 					closeMenu();
 				} else if (transition) {
-					Reveal.configure({ transition: transition });
+					if (Reveal.isSpeakerNotes()) {
+						dispatchEvent("menu-transitionchanged", { transition: transition });
+					}
+					else {
+						changeTransition(transition);
+					}
 					closeMenu();
 				} else {
 					var link = select('a', item);
@@ -445,13 +444,6 @@ var RevealMenu = window.RevealMenu || (function(){
 						item.classList.add('future');
 					}
 				});
-			}
-
-			function matchRevealStyle() {
-				var revealStyle = window.getComputedStyle(select('.reveal'));
-				var element = select('.slide-menu');
-				element.style.fontFamily = revealStyle.fontFamily;
-				//XXX could adjust the complete menu style to match the theme, ie colors, etc
 			}
 
 			var buttons = 0;
@@ -799,34 +791,88 @@ var RevealMenu = window.RevealMenu || (function(){
 				init();
 			}
 
-			/**
-			 * Extend object a with the properties of object b.
-			 * If there's a conflict, object b takes precedence.
-			 */
-			function extend( a, b ) {
-				for( var i in b ) {
-					a[ i ] = b[ i ];
-				}
-			}
-
-			/**
-			 * Dispatches an event of the specified type from the
-			 * reveal DOM element.
-			 */
-			function dispatchEvent( type, args ) {
-				var event = document.createEvent( 'HTMLEvents', 1, 2 );
-				event.initEvent( type, true, true );
-				extend( event, args );
-				document.querySelector('.reveal').dispatchEvent( event );
-
-				// If we're in an iframe, post each reveal.js event to the
-				// parent window. Used by the notes plugin
-				if( config.postMessageEvents && window.parent !== window.self ) {
-					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: Reveal.getState() }), '*' );
-				}
-			}
-
 			dispatchEvent('menu-ready');
+		}
+	}
+
+	function matchRevealStyle() {
+		var revealStyle = window.getComputedStyle(select('.reveal'));
+		var element = select('.slide-menu');
+		element.style.fontFamily = revealStyle.fontFamily;
+		//XXX could adjust the complete menu style to match the theme, ie colors, etc
+	}
+
+	function changeTheme(theme, label, quiet = false) {
+		// take note of the previous theme and remove it, then create a new stylesheet reference and insert it
+		// this is required to force a load event so we can change the menu style to match the new style
+		var stylesheet = select('link#theme');
+		var parent = stylesheet.parentElement;
+		var sibling = stylesheet.nextElementSibling;
+		stylesheet.remove();
+
+		var newStylesheet = stylesheet.cloneNode();
+		newStylesheet.setAttribute('href', theme);
+		newStylesheet.onload = function() { matchRevealStyle() };
+		parent.insertBefore(newStylesheet, sibling);
+
+		if (!quiet) {
+			dispatchEvent("menu-themechanged", { theme: theme, label: label });
+		}
+	}
+
+	function changeTransition(transition, quiet = false) {
+		Reveal.configure({ transition: transition });
+		if (!quiet) {
+			dispatchEvent("menu-transitionchanged", { transition: transition });
+		}
+	}
+
+	/**
+	 * Dispatches an event of the specified type from the
+	 * reveal DOM element.
+	 */
+	function dispatchEvent( type, args ) {
+		var event = document.createEvent( 'HTMLEvents', 1, 2 );
+		event.initEvent( type, true, true );
+		extend( event, args );
+		document.querySelector('.reveal').dispatchEvent( event );
+
+		if (Reveal.isSpeakerNotes()) {
+			// if in speakers note, post the event to the main speaker notes
+			// window to propogate back to the main presentation window
+			var data = { namespace: 'reveal', eventName: type }
+			extend( data, args );
+			window.parent.postMessage( JSON.stringify(data), '*' );
+		}
+		else if( Reveal.speakerNotesWindow ) {
+			// if in main presentation and speakers notes are
+			// open, post the event to the speaker notes window
+			var data = { namespace: 'reveal-notes', type: type }
+			extend( data, args );
+			Reveal.speakerNotesWindow.postMessage( JSON.stringify(data), '*' );
+		}
+	}
+
+	window.addEventListener( 'message', function( event ) {
+		var data = JSON.parse( event.data );
+		if (data && (data.namespace === 'reveal-notes' || data.namespace === 'reveal')) {
+			var type = data.namespace === 'reveal' ? data.eventName : data.type;
+			if (type === 'menu-themechanged' && data.theme && data.label) {
+				changeTheme(data.theme, data.label, Reveal.isSpeakerNotes());
+			}
+			else if(type === 'menu-transitionchanged' && data.transition) {
+				changeTransition(data.transition, Reveal.isSpeakerNotes());
+			}
+		}
+	} );
+
+	/**
+	 * Extend object a with the properties of object b.
+	 * If there's a conflict, object b takes precedence.
+	 */
+	function extend( a, b ) {
+		for( var i in b ) {
+			a[ i ] = b[ i ];
 		}
 	}
 
