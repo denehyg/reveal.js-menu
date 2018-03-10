@@ -837,6 +837,7 @@ var RevealMenu = window.RevealMenu || (function(){
 		extend( event, args );
 		document.querySelector('.reveal').dispatchEvent( event );
 
+		var speakerNotesWindow = Reveal.getSpeakerNotesWindow();
 		if (Reveal.isSpeakerNotes()) {
 			// if in speakers note, post the event to the main speaker notes
 			// window to propogate back to the main presentation window
@@ -844,12 +845,12 @@ var RevealMenu = window.RevealMenu || (function(){
 			extend( data, args );
 			window.parent.postMessage( JSON.stringify(data), '*' );
 		}
-		else if( Reveal.speakerNotesWindow ) {
+		else if( speakerNotesWindow ) {
 			// if in main presentation and speakers notes are
 			// open, post the event to the speaker notes window
 			var data = { namespace: 'reveal-notes', type: type }
 			extend( data, args );
-			Reveal.speakerNotesWindow.postMessage( JSON.stringify(data), '*' );
+			speakerNotesWindow.postMessage( JSON.stringify(data), '*' );
 		}
 	}
 
