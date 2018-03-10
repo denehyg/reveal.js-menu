@@ -24,7 +24,14 @@ var RevealMenu = window.RevealMenu || (function(){
 
 	function loadPlugin() {
 		// does not support IE8 or below
-		if (!ieVersion || ieVersion >= 9) {
+		var initialise = !ieVersion || ieVersion >= 9;
+
+		// do not load the menu in the upcoming slide panel in the speaker notes
+		if (Reveal.isSpeakerNotes() && window.location.search.endsWith('controls=false')) {
+			initialise = false;
+		}
+
+		if (initialise) {
 			//
 			// Set option defaults
 			//
@@ -34,26 +41,36 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
 			var useTextContentForMissingTitles = options.useTextContentForMissingTitles || false;
-			var markers = options.markers || false;
+			var markers = options.markers;
+			if (typeof markers === "undefined") markers = true;
 			var custom = options.custom;
+			var themesPath = typeof options.themesPath === 'string' ? options.themesPath : 'css/theme/';
+			if (!themesPath.endsWith('/')) themesPath += '/';
 			var themes = select('link#theme') ? options.themes : false;
-			if (typeof themes === "undefined") {
+			if (themes === true) {
 				themes = [
-					{ name: 'Black', theme: 'css/theme/black.css' },
-					{ name: 'White', theme: 'css/theme/white.css' },
-					{ name: 'League', theme: 'css/theme/league.css' },
-					{ name: 'Sky', theme: 'css/theme/sky.css' },
-					{ name: 'Beige', theme: 'css/theme/beige.css' },
-					{ name: 'Simple', theme: 'css/theme/simple.css' },
-					{ name: 'Serif', theme: 'css/theme/serif.css' },
-					{ name: 'Blood', theme: 'css/theme/blood.css' },
-					{ name: 'Night', theme: 'css/theme/night.css' },
-					{ name: 'Moon', theme: 'css/theme/moon.css' },
-					{ name: 'Solarized', theme: 'css/theme/solarized.css' }
+					{ name: 'Black', theme: themesPath + 'black.css' },
+					{ name: 'White', theme: themesPath + 'white.css' },
+					{ name: 'League', theme: themesPath + 'league.css' },
+					{ name: 'Sky', theme: themesPath + 'sky.css' },
+					{ name: 'Beige', theme: themesPath + 'beige.css' },
+					{ name: 'Simple', theme: themesPath + 'simple.css' },
+					{ name: 'Serif', theme: themesPath + 'serif.css' },
+					{ name: 'Blood', theme: themesPath + 'blood.css' },
+					{ name: 'Night', theme: themesPath + 'night.css' },
+					{ name: 'Moon', theme: themesPath + 'moon.css' },
+					{ name: 'Solarized', theme: themesPath + 'solarized.css' }
 				];
+			} else if (!Array.isArray(themes)) {
+				themes = false;
 			}
-			var transitions = options.transitions;
-			if (typeof transitions === "undefined") transitions = true;
+			var transitions = options.transitions || false;
+			if (transitions === true) {
+				transitions = ['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom'];
+			} else if (transitions !== false && (!Array.isArray(transitions) || !transitions.every(function(e) { return typeof e === "string" }))) {
+				console.error("reveal.js-menu error: transitions config value must be 'true' or an array of strings, eg ['None', 'Fade', 'Slide')");
+				transitions = false;
+			}
 			if (ieVersion && ieVersion <= 9) {
 				// transitions aren't support in IE9 anyway, so no point in showing them
 				transitions = false;
@@ -70,6 +87,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof autoOpen === "undefined") autoOpen = true;
 			var delayInit = options.delayInit;
 			if (typeof delayInit === "undefined") delayInit = false;
+			var openOnInit = options.openOnInit || false;
 			
 			var mouseSelectionEnabled = true;
 			function disableMouseSelection() {
@@ -378,7 +396,18 @@ var RevealMenu = window.RevealMenu || (function(){
 					Reveal.slide(h, v);
 					closeMenu();
 				} else if (theme) {
-					select('link#theme').setAttribute('href', theme);
+					// take note of the previous theme and remove it, then create a new stylesheet reference and insert it
+					// this is required to force a load event so we can change the menu style to match the new style
+					var stylesheet = select('link#theme');
+					var parent = stylesheet.parentElement;
+					var sibling = stylesheet.nextElementSibling;
+					stylesheet.remove();
+
+					var newStylesheet = stylesheet.cloneNode();
+					newStylesheet.setAttribute('href', theme);
+					newStylesheet.onload = function() { matchRevealStyle() };
+					parent.insertBefore(newStylesheet, sibling);
+
 					closeMenu();
 				} else if (transition) {
 					Reveal.configure({ transition: transition });
@@ -422,12 +451,22 @@ var RevealMenu = window.RevealMenu || (function(){
 				});
 			}
 
+			function matchRevealStyle() {
+				var revealStyle = window.getComputedStyle(select('.reveal'));
+				var element = select('.slide-menu');
+				element.style.fontFamily = revealStyle.fontFamily;
+				//XXX could adjust the complete menu style to match the theme, ie colors, etc
+			}
+
 			var buttons = 0;
 			function init() {
 				if (!initialised) {
-					var top = select('.reveal');
+					var parent = select('.reveal').parentElement;
+					var top = create('div', { 'class': 'slide-menu-wrapper'});
+					parent.appendChild(top);
 					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
 					top.appendChild(panels);
+					matchRevealStyle();
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
 					top.appendChild(overlay);
 					overlay.onclick = function() { closeMenu(null, true) };
@@ -449,15 +488,15 @@ var RevealMenu = window.RevealMenu || (function(){
 							button.appendChild(create('i', {'class': style + ' ' + icon}));
 						} else {
 							button.innerHTML = icon + '</i>';
-						}					
-						button.insertBefore(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
-						button.insertBefore(create('br'), select('i', button));
+						}
+						button.appendChild(create('br'), select('i', button));
+						button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
 						button.onclick = fn;
 						toolbar.appendChild(button);
 						return button;
 					}
 
-					addToolbarButton('Slides', 'Slides', 'fa-list', 'fas', openPanel, true);
+					addToolbarButton('Slides', 'Slides', 'fa-images', 'fas', openPanel, true);
 
 					if (custom) {
 						custom.forEach(function(element, index, array) {
@@ -466,15 +505,15 @@ var RevealMenu = window.RevealMenu || (function(){
 					}
 
 					if (themes) {
-						addToolbarButton('Themes', 'Themes', 'fa-desktop', 'fas', openPanel);
+						addToolbarButton('Themes', 'Themes', 'fa-adjust', 'fas', openPanel);
 					}
 					if (transitions) {
-						addToolbarButton('Transitions', 'Transitions', 'fa-arrows-alt-h', 'fas', openPanel);
+						addToolbarButton('Transitions', 'Transitions', 'fa-sticky-note', 'fas', openPanel);
 					}
-					button = create('li', {id: 'close'});
-					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
-					button.appendChild(create('br'));
+					button = create('li', {id: 'close', 'class': 'toolbar-panel-button'});
 					button.appendChild(create('i', {'class': 'fas fa-times'}));
+					button.appendChild(create('br'));
+					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
 					button.onclick = function() { closeMenu(null, true) };
 					toolbar.appendChild(button);
 
@@ -698,7 +737,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						panels.appendChild(panel);
 						var menu = create('ul', {class: 'slide-menu-items'});
 						panel.appendChild(menu);
-						['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
+						transitions.forEach(function(name, i) {
 							var item = create('li', {
 								class: 'slide-menu-item',
 								'data-transition': name.toLowerCase(),
@@ -749,6 +788,9 @@ var RevealMenu = window.RevealMenu || (function(){
 						}
 					}
 				}
+				if (openOnInit) {
+					openMenu();
+				}
 				initialised = true;
 			}
 
@@ -784,7 +826,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				// If we're in an iframe, post each reveal.js event to the
 				// parent window. Used by the notes plugin
 				if( config.postMessageEvents && window.parent !== window.self ) {
-					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: getState() }), '*' );
+					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: Reveal.getState() }), '*' );
 				}
 			}
 

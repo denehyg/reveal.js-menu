@@ -1,4 +1,8 @@
-.reveal .slide-menu {
+.slide-menu-wrapper {
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+}
+
+.slide-menu-wrapper .slide-menu {
 	background-color: #333;
 	z-index: 200;
 	position: fixed;
@@ -15,15 +19,15 @@
  * Slides menu
  */
 
-.reveal .slide-menu-items {
+.slide-menu-wrapper .slide-menu-items {
 	margin: 0;
 	padding: 0;
 	width: 100%;
 	border-bottom: solid 1px #555;
 }
 
-.reveal .slide-menu-item, 
-.reveal .slide-menu-item-vertical {
+.slide-menu-wrapper .slide-menu-item, 
+.slide-menu-wrapper .slide-menu-item-vertical {
 	display: block;
 	text-align: left;
 	padding: 10px 18px;
@@ -31,89 +35,89 @@
 	cursor: pointer;
 }
 
-.reveal .slide-menu-item-vertical {
+.slide-menu-wrapper .slide-menu-item-vertical {
 	padding-left: 30px;
 }
 
-.reveal .slide-menu-item {
+.slide-menu-wrapper .slide-menu-item {
   border-top: solid 1px #555;
 }
 
-.reveal .active-menu-panel li.selected {
+.slide-menu-wrapper .active-menu-panel li.selected {
 	background-color: #222;
 	color: white;
 }
 
-.reveal .active-menu-panel li.active {
+.slide-menu-wrapper .active-menu-panel li.active {
 	color: #eee;
 }
 
-.reveal .slide-menu-item.no-title .slide-menu-item-title, 
-.reveal .slide-menu-item-vertical.no-title .slide-menu-item-title {
+.slide-menu-wrapper .slide-menu-item.no-title .slide-menu-item-title, 
+.slide-menu-wrapper .slide-menu-item-vertical.no-title .slide-menu-item-title {
 	font-style: italic;
 }
 
-.reveal .slide-menu-item-number {
+.slide-menu-wrapper .slide-menu-item-number {
 	color: #999;
 	padding-right:6px;
 }
 
-.reveal .slide-menu-item i.far,
-.reveal .slide-menu-item i.fas,
-.reveal .slide-menu-item-vertical i.far,
-.reveal .slide-menu-item-vertical i.fas {
+.slide-menu-wrapper .slide-menu-item i.far,
+.slide-menu-wrapper .slide-menu-item i.fas,
+.slide-menu-wrapper .slide-menu-item-vertical i.far,
+.slide-menu-wrapper .slide-menu-item-vertical i.fas {
 	padding-right: 12px;
 	display: none;
 }
 
-.reveal .slide-menu-item.past i.fas.past,
-.reveal .slide-menu-item-vertical.past i.fas.past,
-.reveal .slide-menu-item.active i.fas.active,
-.reveal .slide-menu-item-vertical.active i.fas.active,
-.reveal .slide-menu-item.future i.far.future,
-.reveal .slide-menu-item-vertical.future i.far.future {
+.slide-menu-wrapper .slide-menu-item.past i.fas.past,
+.slide-menu-wrapper .slide-menu-item-vertical.past i.fas.past,
+.slide-menu-wrapper .slide-menu-item.active i.fas.active,
+.slide-menu-wrapper .slide-menu-item-vertical.active i.fas.active,
+.slide-menu-wrapper .slide-menu-item.future i.far.future,
+.slide-menu-wrapper .slide-menu-item-vertical.future i.far.future {
 	display: inline-block;
 }
 
-.reveal .slide-menu-item.past i.fas.past,
-.reveal .slide-menu-item-vertical.past i.fas.past,
-.reveal .slide-menu-item.future i.far.future,
-.reveal .slide-menu-item-vertical.future i.far.future {
+.slide-menu-wrapper .slide-menu-item.past i.fas.past,
+.slide-menu-wrapper .slide-menu-item-vertical.past i.fas.past,
+.slide-menu-wrapper .slide-menu-item.future i.far.future,
+.slide-menu-wrapper .slide-menu-item-vertical.future i.far.future {
 	opacity: 0.4;
 }
 
-.reveal .slide-menu-item.active i.fas.active,
-.reveal .slide-menu-item-vertical.active i.fas.active {
+.slide-menu-wrapper .slide-menu-item.active i.fas.active,
+.slide-menu-wrapper .slide-menu-item-vertical.active i.fas.active {
 	opacity: 0.8;	
 }
 
-.reveal .slide-menu--left {
+.slide-menu-wrapper .slide-menu--left {
   left: 0;
   -webkit-transform: translateX(-300px);
   -ms-transform: translateX(-300px);
   transform: translateX(-300px);
 }
 
-.reveal .slide-menu--left.active {
+.slide-menu-wrapper .slide-menu--left.active {
   -webkit-transform: translateX(0);
   -ms-transform: translateX(0);
   transform: translateX(0);
 }
 
-.reveal .slide-menu--right {
+.slide-menu-wrapper .slide-menu--right {
   right: 0;
   -webkit-transform: translateX(300px);
   -ms-transform: translateX(300px);
   transform: translateX(300px);
 }
 
-.reveal .slide-menu--right.active {
+.slide-menu-wrapper .slide-menu--right.active {
   -webkit-transform: translateX(0);
   -ms-transform: translateX(0);
   transform: translateX(0);
 }
 
-.reveal {
+.slide-menu-wrapper {
 	transition: transform 0.3s;
 }
 
@@ -121,7 +125,7 @@
 /*
  * Toolbar
  */
-.reveal .slide-menu-toolbar {
+.slide-menu-wrapper .slide-menu-toolbar {
  	height: 60px;
  	width: 100%;
  	font-size: 12px;
@@ -132,7 +136,7 @@
 	border-bottom: solid 2px #666;
 }
 
-.reveal .slide-menu-toolbar > li {
+.slide-menu-wrapper .slide-menu-toolbar > li {
     display: table-cell;
  	line-height: 150%;
     text-align: center;
@@ -140,21 +144,35 @@
     cursor: pointer;
 	color: #aaa;
 	border-radius: 3px;
+	padding-top: 16px;
 }
 
-.reveal .slide-menu-toolbar > li.active-toolbar-button {
+.slide-menu-wrapper .slide-menu-toolbar > li.toolbar-panel-button i {
+	font-size: 1.7em;
+}
+
+.slide-menu-wrapper .slide-menu-toolbar > li.toolbar-panel-button span.slide-menu-toolbar-label {
+	visibility: hidden;
+}
+
+.slide-menu-wrapper .slide-menu-toolbar > li.active-toolbar-button {
  	color: white;
  	text-shadow: 0 1px black;	
 }
 
-.slide-menu-toolbar > li:hover {
+.slide-menu-toolbar > li.toolbar-panel-button:hover {
 	color: white;
+}
+
+.slide-menu-toolbar > li.toolbar-panel-button:hover span.slide-menu-toolbar-label,
+.slide-menu-wrapper .slide-menu-toolbar > li.active-toolbar-button span.slide-menu-toolbar-label {
+	visibility: visible;
 }
 
 /*
  * Panels
  */
-.reveal .slide-menu-panel {
+.slide-menu-wrapper .slide-menu-panel {
 	position: absolute;
 	width: 100%;
 	visibility: hidden;
@@ -164,16 +182,16 @@
 	color: #AAA;
 }
 
-.reveal .slide-menu-panel.active-menu-panel {
+.slide-menu-wrapper .slide-menu-panel.active-menu-panel {
 	visibility: visible;
 }
 
-.reveal .slide-menu-panel h1,
-.reveal .slide-menu-panel h2,
-.reveal .slide-menu-panel h3,
-.reveal .slide-menu-panel h4,
-.reveal .slide-menu-panel h5,
-.reveal .slide-menu-panel h6 {
+.slide-menu-wrapper .slide-menu-panel h1,
+.slide-menu-wrapper .slide-menu-panel h2,
+.slide-menu-wrapper .slide-menu-panel h3,
+.slide-menu-wrapper .slide-menu-panel h4,
+.slide-menu-wrapper .slide-menu-panel h5,
+.slide-menu-wrapper .slide-menu-panel h6 {
 	margin: 20px 0 10px 0;
 	color: #FFF;
 	line-height: 1.2;
@@ -181,49 +199,49 @@
 	text-shadow: none;
 }
 
-.reveal .slide-menu-panel h1 {
+.slide-menu-wrapper .slide-menu-panel h1 {
 	font-size: 1.6em;
 }
-.reveal .slide-menu-panel h2 {
+.slide-menu-wrapper .slide-menu-panel h2 {
 	font-size: 1.4em;
 }
-.reveal .slide-menu-panel h3 {
+.slide-menu-wrapper .slide-menu-panel h3 {
 	font-size: 1.3em;
 }
-.reveal .slide-menu-panel h4 {
+.slide-menu-wrapper .slide-menu-panel h4 {
 	font-size: 1.1em;
 }
-.reveal .slide-menu-panel h5 {
+.slide-menu-wrapper .slide-menu-panel h5 {
 	font-size: 1em;
 }
-.reveal .slide-menu-panel h6 {
+.slide-menu-wrapper .slide-menu-panel h6 {
 	font-size: 0.9em;
 }
 
-.reveal .slide-menu-panel p {
+.slide-menu-wrapper .slide-menu-panel p {
 	margin: 10px 0 5px 0;
 }
 
-.reveal .slide-menu-panel a {
+.slide-menu-wrapper .slide-menu-panel a {
 	color: #CCC;
 	text-decoration: underline;
 }
 
-.reveal .slide-menu-panel a:hover {
+.slide-menu-wrapper .slide-menu-panel a:hover {
 	color: white;
 }
 
-.reveal .slide-menu-item a {
+.slide-menu-wrapper .slide-menu-item a {
 	text-decoration: none;
 }
 
-.reveal .slide-menu-custom-panel {
+.slide-menu-wrapper .slide-menu-custom-panel {
 	width: calc(100% - 20px);
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
-.reveal .slide-menu-custom-panel .slide-menu-items {
+.slide-menu-wrapper .slide-menu-custom-panel .slide-menu-items {
 	width: calc(100% + 20px);
 	margin-left: -10px;
 	margin-right: 10px;
@@ -234,8 +252,8 @@
  * Theme and Transitions buttons
  */
 
-.reveal div[data-panel="Themes"] li,
-.reveal div[data-panel="Transitions"] li {
+.slide-menu-wrapper div[data-panel="Themes"] li,
+.slide-menu-wrapper div[data-panel="Transitions"] li {
 	display: block;
 	text-align: left;
 	cursor: pointer;
@@ -257,7 +275,7 @@
  * Menu overlay
  */
 
-.reveal .slide-menu-overlay {
+.slide-menu-wrapper .slide-menu-overlay {
   position: fixed;
   z-index: 199;
   top: 0;
@@ -270,7 +288,7 @@
   transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
 }
 
-.reveal .slide-menu-overlay.active {
+.slide-menu-wrapper .slide-menu-overlay.active {
   width: 100%;
   height: 100%;
   opacity: 0.7;
@@ -280,9 +298,9 @@
 /*
  * Hide menu for pdf printing
  */
-body.print-pdf .reveal .slide-menu,
+body.print-pdf .slide-menu-wrapper .slide-menu,
 body.print-pdf .reveal .slide-menu-button,
-body.print-pdf .reveal .slide-menu-overlay
+body.print-pdf .slide-menu-wrapper .slide-menu-overlay
 {
 	display: none;
 }

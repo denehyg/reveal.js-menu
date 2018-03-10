@@ -96,9 +96,10 @@ Reveal.initialize({
 		// Set to 'true' to only list slides with titles.
 		hideMissingTitles: false,
 
-		// Add markers to the slide titles to indicate the 
-		// progress through the presentation
-		markers: false,
+		// Adds markers to the slide titles to indicate the 
+		// progress through the presentation. Set to 'false'
+		// to hide the markers.
+		markers: true,
 
 		// Specify custom panels to be included in the menu, by
 		// providing an array of objects with 'title', 'icon'
@@ -106,23 +107,32 @@ Reveal.initialize({
 		custom: false,
 
 		// Specifies the themes that will be available in the themes
-		// menu panel. Set to 'false' to hide themes panel.
-		themes: [
-			{ name: 'Black', theme: 'css/theme/black.css' },
-			{ name: 'White', theme: 'css/theme/white.css' },
-			{ name: 'League', theme: 'css/theme/league.css' },
-			{ name: 'Sky', theme: 'css/theme/sky.css' },
-			{ name: 'Beige', theme: 'css/theme/beige.css' },
-			{ name: 'Simple', theme: 'css/theme/simple.css' },
-			{ name: 'Serif', theme: 'css/theme/serif.css' },
-			{ name: 'Blood', theme: 'css/theme/blood.css' },
-			{ name: 'Night', theme: 'css/theme/night.css' },
-			{ name: 'Moon', theme: 'css/theme/moon.css' },
-			{ name: 'Solarized', theme: 'css/theme/solarized.css' }
-		],
+		// menu panel. Set to 'true' to show the themes menu panel
+		// with the default themes list. Alternatively, provide an
+		// array to specify the themes to make available in the
+		// themes menu panel, for example...
+		// [
+		//     { name: 'Black', theme: 'css/theme/black.css' },
+		//     { name: 'White', theme: 'css/theme/white.css' },
+		//     { name: 'League', theme: 'css/theme/league.css' }
+		// ]
+		themes: false,
+
+		// Specifies the path to the default theme files. If your
+		// presentation uses a different path to the standard reveal
+		// layout then you need to provide this option, but only
+		// when 'themes' is set to 'true'. If you provide your own 
+		// list of themes or 'themes' is set to 'false' the 
+		// 'themesPath' option is ignored.
+		themesPath: 'css/theme/',
 
 		// Specifies if the transitions menu panel will be shown.
-		transitions: true,
+		// Set to 'true' to show the transitions menu panel with
+		// the default transitions list. Alternatively, provide an
+		// array to specify the transitions to make available in
+		// the transitions panel, for example...
+		// ['None', 'Fade', 'Slide']
+		transitions: false,
 
 		// Adds a menu button to the slides to open the menu panel.
 		// Set to 'false' to hide the button.
@@ -156,6 +166,9 @@ Reveal.initialize({
 		// the creation of all menu panels, including custom panels, and
 		// the menu button.
 		delayInit: false,
+
+		// If 'true' the menu will be shown when the menu is initialised.
+		openOnInit: false,
 
 		// By default the menu will load it's own font-awesome library
 		// icons. If your presentation needs to load a different
