@@ -88,6 +88,10 @@ Reveal.initialize({
 		// with a menu-title class will take precedence over this option
 		titleSelector: 'h1, h2, h3, h4, h5, h6',
 
+		// If slides do not have a matching title, attempt to use the
+		// start of the text content as the title instead
+		useTextContentForMissingTitles: false,
+
 		// Hide slides from the menu that do not have a title.
 		// Set to 'true' to only list slides with titles.
 		hideMissingTitles: false,
@@ -145,11 +149,25 @@ Reveal.initialize({
 		// If 'true' standard menu items will be automatically opened
 		// when navigating using the keyboard. Note: this only takes 
 		// effect when both the 'keyboard' and 'sticky' options are enabled.
-		autoOpen: true
+		autoOpen: true,
+
+		// If 'true' the menu will not be created until it is explicitly
+		// requested by calling RevealMenu.init(). Note this will delay
+		// the creation of all menu panels, including custom panels, and
+		// the menu button.
+		delayInit: false,
+
+		// By default the menu will load it's own font-awesome library
+		// icons. If your presentation needs to load a different
+		// font-awesome library the 'loadIcons' option can be set to false
+		// and the menu will not attempt to load the font-awesome library.
+		loadIcons: true
 	},
 
 });
 ```
+
+### Themes Stylesheet
 
 If you are using the themes panel you need to ensure the theme stylesheet in the presentation uses the ```id="theme"``` attribute. For example...
 ```html
