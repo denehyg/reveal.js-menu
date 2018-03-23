@@ -791,6 +791,8 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			module.toggle = toggleMenu;
+			module.openMenu = openMenu;
+			module.openPanel = openPanel;
 			module.isOpen = isOpen;
 			module.init = init;
 			module.isInit = function() { return initialised };
