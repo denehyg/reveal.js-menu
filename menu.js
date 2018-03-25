@@ -914,6 +914,14 @@ var RevealMenu = window.RevealMenu || (function(){
 		  return this.substr(position || 0, searchString.length) === searchString;
 	  };
 	}
+	if (!String.prototype.endsWith) {
+		String.prototype.endsWith = function(search, this_len) {
+			if (this_len === undefined || this_len > this.length) {
+				this_len = this.length;
+			}
+			return this.substring(this_len - search.length, this_len) === search;
+		};
+	}
 
 	var ieVersion = function() {
 		var browser = /(msie) ([\w.]+)/.exec(window.navigator.userAgent.toLowerCase());
