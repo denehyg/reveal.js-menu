@@ -312,7 +312,20 @@ Reveal.addEventListener( 'menu-ready', function( event ) {
 } );
 ```
 
- 
+## API
+
+The `RevealMenu` object exposes a JavaScript API for controlling the menu:
+
+| Function           | Description   |
+|--------------------|---------------|
+| toggle()           | Toggles the open state of the menu, ie open if it is closed, and close if it is open |
+| openMenu()         | Opens the menu |
+| closeMenu()        | Closes the menu | 
+| openPanel(panel)   | Opens the menu to a specific panel, passing the name of the panel or the panel element itself |
+| isOpen()           | Returns true if the menu is open |
+| init()             | Initialises the menu if it has not already been initialised. Used in conjunction with the `delayInit` option |
+
+
 ## License
 
 MIT licensed
