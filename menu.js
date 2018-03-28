@@ -801,6 +801,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			module.toggle = toggleMenu;
 			module.openMenu = openMenu;
+			module.closeMenu = closeMenu;
 			module.openPanel = openPanel;
 			module.isOpen = isOpen;
 			module.init = init;
