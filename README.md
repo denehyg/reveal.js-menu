@@ -75,6 +75,12 @@ Reveal.initialize({
 		// be shown. Use 'left' or 'right'.
 		side: 'left',
 
+		// Specifies the width of the menu.
+		// Can be one of the following:
+		// 'normal', 'wide', 'third', 'half', 'full', or
+		// any valid css length value
+		width: 'normal',
+
 		// Add slide numbers to the titles in the slide list.
 		// Use 'true' or format string (same as reveal.js slide numbers)
 		numbers: false,

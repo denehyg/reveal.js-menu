@@ -36,6 +36,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			// Set option defaults
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
+			var width = options.width;
 			var numbers = options.numbers || false;
 			var titleSelector = 'h1, h2, h3, h4, h5';
 			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
@@ -461,6 +462,14 @@ var RevealMenu = window.RevealMenu || (function(){
 					var top = create('div', { 'class': 'slide-menu-wrapper'});
 					parent.appendChild(top);
 					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
+					if (typeof width === 'string') {
+						if (['normal', 'wide', 'third', 'half', 'full'].indexOf(width) != -1) {
+							panels.classList.add('slide-menu--' + width);
+						}
+						else {
+							panels.style.width = width;
+						}
+					}
 					top.appendChild(panels);
 					matchRevealStyle();
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
