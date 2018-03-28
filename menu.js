@@ -467,6 +467,7 @@ var RevealMenu = window.RevealMenu || (function(){
 							panels.classList.add('slide-menu--' + width);
 						}
 						else {
+							panels.classList.add('slide-menu--custom');
 							panels.style.width = width;
 						}
 					}

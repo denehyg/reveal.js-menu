@@ -55,6 +55,14 @@
 	padding-left: 30px;
 }
 
+.slide-menu-wrapper .slide-menu--wide .slide-menu-item-vertical,
+.slide-menu-wrapper .slide-menu--third .slide-menu-item-vertical,
+.slide-menu-wrapper .slide-menu--half .slide-menu-item-vertical,
+.slide-menu-wrapper .slide-menu--full .slide-menu-item-vertical,
+.slide-menu-wrapper .slide-menu--custom .slide-menu-item-vertical {
+	padding-left: 50px;
+}
+
 .slide-menu-wrapper .slide-menu-item {
   border-top: solid 1px #555;
 }
