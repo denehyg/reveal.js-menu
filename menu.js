@@ -7,16 +7,19 @@
 var RevealMenu = window.RevealMenu || (function(){
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
-	options.path = options.path || scriptPath() || 'plugin/menu';
+	options.path = options.path || scriptPath() || 'plugin/menu/';
+	if (!options.path.endsWith('/')) {
+		options.path += '/';
+	}
 	var loadIcons = options.loadIcons;
 	if (typeof loadIcons === "undefined") loadIcons = true;
 	var initialised = false;
 	
 	var module = {};
 
-	loadResource(options.path + '/menu.css', 'stylesheet', function() {
+	loadResource(options.path + 'menu.css', 'stylesheet', function() {
 		if (loadIcons) {
-			loadResource(options.path + '/font-awesome/css/fontawesome-all.min.css', 'stylesheet', loadPlugin)
+			loadResource(options.path + 'font-awesome/css/fontawesome-all.min.css', 'stylesheet', loadPlugin)
 		} else {
 			loadPlugin();
 		}
