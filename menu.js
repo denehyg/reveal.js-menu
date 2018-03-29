@@ -359,11 +359,11 @@ var RevealMenu = window.RevealMenu || (function(){
 				return select('body').classList.contains('slide-menu-active');
 			}
 
-			function openPanel(e) {
-				openMenu();
-				var panel = e;
-				if (typeof e !== "string") {
-					panel = e.currentTarget.getAttribute('data-panel');
+			function openPanel(event, ref) {
+				openMenu(event);
+				var panel = ref;
+				if (typeof ref !== "string") {
+					panel = ref.currentTarget.getAttribute('data-panel');
 				}
 				select('.slide-menu-toolbar > li.active-toolbar-button').classList.remove('active-toolbar-button');
 				select('li[data-panel="' + panel + '"]').classList.add('active-toolbar-button');
