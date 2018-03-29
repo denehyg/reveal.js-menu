@@ -911,7 +911,7 @@ var RevealMenu = window.RevealMenu || (function(){
 		if (document.currentScript) {
 			path = document.currentScript.src.slice(0, -7);
 		} else {
-			var sel = document.querySelector('script[src$="/menu.js"]')
+			var sel = document.querySelector('script[src$="menu.js"]');
 			if (sel) {
 				path = sel.src.slice(0, -7);
 			}
