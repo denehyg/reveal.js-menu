@@ -909,11 +909,11 @@ var RevealMenu = window.RevealMenu || (function(){
 		// obtain plugin path from the script element
 		var path;
 		if (document.currentScript) {
-			path = document.currentScript.src.slice(0, -7);
+			path = document.currentScript.src.slice(0, -8);
 		} else {
 			var sel = document.querySelector('script[src$="/menu.js"]')
 			if (sel) {
-				path = sel.src.slice(0, -7);
+				path = sel.src.slice(0, -8);
 			}
 		}
 		return path;
