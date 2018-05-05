@@ -366,7 +366,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				openMenu(event);
 				var panel = ref;
 				if (typeof ref !== "string") {
-					panel = ref.currentTarget.getAttribute('data-panel');
+					panel = event.currentTarget.getAttribute('data-panel');
 				}
 				select('.slide-menu-toolbar > li.active-toolbar-button').classList.remove('active-toolbar-button');
 				select('li[data-panel="' + panel + '"]').classList.add('active-toolbar-button');
@@ -376,7 +376,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function nextPanel() {
 				var next = (parseInt(select('.active-toolbar-button').getAttribute('data-button')) + 1) % buttons;
-				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
+				openPanel(null, select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function prevPanel() {
@@ -384,7 +384,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (next < 0) {
 					next = buttons - 1;
 				}
-				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
+				openPanel(null, select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function openItem(item, force) {
