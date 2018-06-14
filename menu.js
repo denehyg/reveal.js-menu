@@ -7,16 +7,19 @@
 var RevealMenu = window.RevealMenu || (function(){
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
-	options.path = options.path || scriptPath() || 'plugin/menu';
+	options.path = options.path || scriptPath() || 'plugin/menu/';
+	if (!options.path.endsWith('/')) {
+		options.path += '/';
+	}
 	var loadIcons = options.loadIcons;
 	if (typeof loadIcons === "undefined") loadIcons = true;
 	var initialised = false;
 	
 	var module = {};
 
-	loadResource(options.path + '/menu.css', 'stylesheet', function() {
+	loadResource(options.path + 'menu.css', 'stylesheet', function() {
 		if (loadIcons) {
-			loadResource(options.path + '/font-awesome-5.0.2/css/fontawesome-all.min.css', 'stylesheet', loadPlugin)
+			loadResource(options.path + 'font-awesome/css/fontawesome-all.min.css', 'stylesheet', loadPlugin)
 		} else {
 			loadPlugin();
 		}
@@ -24,37 +27,55 @@ var RevealMenu = window.RevealMenu || (function(){
 
 	function loadPlugin() {
 		// does not support IE8 or below
-		if (!head.browser.ie || head.browser.version >= 9) {
+		var initialise = !ieVersion || ieVersion >= 9;
+
+		// do not load the menu in the upcoming slide panel in the speaker notes
+		if (Reveal.isSpeakerNotes() && window.location.search.endsWith('controls=false')) {
+			initialise = false;
+		}
+
+		if (initialise) {
 			//
 			// Set option defaults
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
+			var width = options.width;
 			var numbers = options.numbers || false;
 			var titleSelector = 'h1, h2, h3, h4, h5';
 			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
 			var hideMissingTitles = options.hideMissingTitles || false;
 			var useTextContentForMissingTitles = options.useTextContentForMissingTitles || false;
-			var markers = options.markers || false;
+			var markers = options.markers;
+			if (typeof markers === "undefined") markers = true;
 			var custom = options.custom;
-			var themes = options.themes;
-			if (typeof themes === "undefined") {
+			var themesPath = typeof options.themesPath === 'string' ? options.themesPath : 'css/theme/';
+			if (!themesPath.endsWith('/')) themesPath += '/';
+			var themes = select('link#theme') ? options.themes : false;
+			if (themes === true) {
 				themes = [
-					{ name: 'Black', theme: 'css/theme/black.css' },
-					{ name: 'White', theme: 'css/theme/white.css' },
-					{ name: 'League', theme: 'css/theme/league.css' },
-					{ name: 'Sky', theme: 'css/theme/sky.css' },
-					{ name: 'Beige', theme: 'css/theme/beige.css' },
-					{ name: 'Simple', theme: 'css/theme/simple.css' },
-					{ name: 'Serif', theme: 'css/theme/serif.css' },
-					{ name: 'Blood', theme: 'css/theme/blood.css' },
-					{ name: 'Night', theme: 'css/theme/night.css' },
-					{ name: 'Moon', theme: 'css/theme/moon.css' },
-					{ name: 'Solarized', theme: 'css/theme/solarized.css' }
+					{ name: 'Black', theme: themesPath + 'black.css' },
+					{ name: 'White', theme: themesPath + 'white.css' },
+					{ name: 'League', theme: themesPath + 'league.css' },
+					{ name: 'Sky', theme: themesPath + 'sky.css' },
+					{ name: 'Beige', theme: themesPath + 'beige.css' },
+					{ name: 'Simple', theme: themesPath + 'simple.css' },
+					{ name: 'Serif', theme: themesPath + 'serif.css' },
+					{ name: 'Blood', theme: themesPath + 'blood.css' },
+					{ name: 'Night', theme: themesPath + 'night.css' },
+					{ name: 'Moon', theme: themesPath + 'moon.css' },
+					{ name: 'Solarized', theme: themesPath + 'solarized.css' }
 				];
+			} else if (!Array.isArray(themes)) {
+				themes = false;
 			}
-			var transitions = options.transitions;
-			if (typeof transitions === "undefined") transitions = true;
-			if (head.browser.ie && head.browser.version <= 9) {
+			var transitions = options.transitions || false;
+			if (transitions === true) {
+				transitions = ['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom'];
+			} else if (transitions !== false && (!Array.isArray(transitions) || !transitions.every(function(e) { return typeof e === "string" }))) {
+				console.error("reveal.js-menu error: transitions config value must be 'true' or an array of strings, eg ['None', 'Fade', 'Slide')");
+				transitions = false;
+			}
+			if (ieVersion && ieVersion <= 9) {
 				// transitions aren't support in IE9 anyway, so no point in showing them
 				transitions = false;
 			}
@@ -70,8 +91,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			if (typeof autoOpen === "undefined") autoOpen = true;
 			var delayInit = options.delayInit;
 			if (typeof delayInit === "undefined") delayInit = false;
+			var openOnInit = options.openOnInit || false;
 			
-
+			var mouseSelectionEnabled = true;
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
 			}
@@ -113,20 +135,20 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (offset) {
 					disableMouseSelection();
 					el.scrollIntoView(offset > 0);
-					reenableMouseSelection();	
+					reenableMouseSelection();
 				}
 			}
 
 			function scrollItemToTop(el) {
 				disableMouseSelection();
 				el.offsetParent.scrollTop = el.offsetTop;
-				reenableMouseSelection();	
+				reenableMouseSelection();
 			}
 
 			function scrollItemToBottom(el) {
 				disableMouseSelection();
 				el.offsetParent.scrollTop = el.offsetTop - el.offsetParent.offsetHeight + el.offsetHeight
-				reenableMouseSelection();	
+				reenableMouseSelection();
 			}
 
 			function selectItem(el) {
@@ -298,13 +320,15 @@ var RevealMenu = window.RevealMenu || (function(){
 					
 					// identify active theme
 					if (themes) {
-				    selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
-				    selectAll('li[data-theme="' + select('#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
+						selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
+						selectAll('li[data-theme="' + select('link#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
 					}
 					
-				    // identify active transition
-				    selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
-				    selectAll('li[data-transition="' + Reveal.getConfig().transition + '"]').forEach(function(i) { i.classList.add('active') });
+					// identify active transition
+					if (transitions) {
+						selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
+						selectAll('li[data-transition="' + Reveal.getConfig().transition + '"]').forEach(function(i) { i.classList.add('active') });
+					}
 
 				    // set item selections to match active items
 					var items = selectAll('.slide-menu-panel li.active')
@@ -338,11 +362,11 @@ var RevealMenu = window.RevealMenu || (function(){
 				return select('body').classList.contains('slide-menu-active');
 			}
 
-			function openPanel(e) {
-				openMenu();
-				var panel = e;
-				if (typeof e !== "string") {
-					panel = e.currentTarget.getAttribute('data-panel');
+			function openPanel(event, ref) {
+				openMenu(event);
+				var panel = ref;
+				if (typeof ref !== "string") {
+					panel = event.currentTarget.getAttribute('data-panel');
 				}
 				select('.slide-menu-toolbar > li.active-toolbar-button').classList.remove('active-toolbar-button');
 				select('li[data-panel="' + panel + '"]').classList.add('active-toolbar-button');
@@ -352,7 +376,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function nextPanel() {
 				var next = (parseInt(select('.active-toolbar-button').getAttribute('data-button')) + 1) % buttons;
-				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
+				openPanel(null, select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function prevPanel() {
@@ -360,7 +384,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (next < 0) {
 					next = buttons - 1;
 				}
-				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
+				openPanel(null, select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function openItem(item, force) {
@@ -372,7 +396,18 @@ var RevealMenu = window.RevealMenu || (function(){
 					Reveal.slide(h, v);
 					closeMenu();
 				} else if (theme) {
-					select('#theme').setAttribute('href', theme);
+					// take note of the previous theme and remove it, then create a new stylesheet reference and insert it
+					// this is required to force a load event so we can change the menu style to match the new style
+					var stylesheet = select('link#theme');
+					var parent = stylesheet.parentElement;
+					var sibling = stylesheet.nextElementSibling;
+					stylesheet.remove();
+
+					var newStylesheet = stylesheet.cloneNode();
+					newStylesheet.setAttribute('href', theme);
+					newStylesheet.onload = function() { matchRevealStyle() };
+					parent.insertBefore(newStylesheet, sibling);
+
 					closeMenu();
 				} else if (transition) {
 					Reveal.configure({ transition: transition });
@@ -416,12 +451,31 @@ var RevealMenu = window.RevealMenu || (function(){
 				});
 			}
 
+			function matchRevealStyle() {
+				var revealStyle = window.getComputedStyle(select('.reveal'));
+				var element = select('.slide-menu');
+				element.style.fontFamily = revealStyle.fontFamily;
+				//XXX could adjust the complete menu style to match the theme, ie colors, etc
+			}
+
 			var buttons = 0;
 			function init() {
 				if (!initialised) {
-					var top = select('.reveal');
+					var parent = select('.reveal').parentElement;
+					var top = create('div', { 'class': 'slide-menu-wrapper'});
+					parent.appendChild(top);
 					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
+					if (typeof width === 'string') {
+						if (['normal', 'wide', 'third', 'half', 'full'].indexOf(width) != -1) {
+							panels.classList.add('slide-menu--' + width);
+						}
+						else {
+							panels.classList.add('slide-menu--custom');
+							panels.style.width = width;
+						}
+					}
 					top.appendChild(panels);
+					matchRevealStyle();
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
 					top.appendChild(overlay);
 					overlay.onclick = function() { closeMenu(null, true) };
@@ -443,15 +497,15 @@ var RevealMenu = window.RevealMenu || (function(){
 							button.appendChild(create('i', {'class': style + ' ' + icon}));
 						} else {
 							button.innerHTML = icon + '</i>';
-						}					
-						button.insertBefore(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
-						button.insertBefore(create('br'), select('i', button));
+						}
+						button.appendChild(create('br'), select('i', button));
+						button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, title), select('i', button));
 						button.onclick = fn;
 						toolbar.appendChild(button);
 						return button;
 					}
 
-					addToolbarButton('Slides', 'Slides', 'fa-list', 'fas', openPanel, true);
+					addToolbarButton('Slides', 'Slides', 'fa-images', 'fas', openPanel, true);
 
 					if (custom) {
 						custom.forEach(function(element, index, array) {
@@ -460,15 +514,15 @@ var RevealMenu = window.RevealMenu || (function(){
 					}
 
 					if (themes) {
-						addToolbarButton('Themes', 'Themes', 'fa-desktop', 'fas', openPanel);
+						addToolbarButton('Themes', 'Themes', 'fa-adjust', 'fas', openPanel);
 					}
 					if (transitions) {
-						addToolbarButton('Transitions', 'Transitions', 'fa-arrows-alt-h', 'fas', openPanel);
+						addToolbarButton('Transitions', 'Transitions', 'fa-sticky-note', 'fas', openPanel);
 					}
-					button = create('li', {id: 'close'});
-					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
-					button.appendChild(create('br'));
+					button = create('li', {id: 'close', 'class': 'toolbar-panel-button'});
 					button.appendChild(create('i', {'class': 'fas fa-times'}));
+					button.appendChild(create('br'));
+					button.appendChild(create('span', {'class': 'slide-menu-toolbar-label'}, 'Close'));
 					button.onclick = function() { closeMenu(null, true) };
 					toolbar.appendChild(button);
 
@@ -632,8 +686,10 @@ var RevealMenu = window.RevealMenu || (function(){
 							selectAll('ul.slide-menu-items li.slide-menu-item', panel).forEach(function(item, i) {
 								item.setAttribute('data-item', i+1);
 								item.onclick = clicked;
+								item.addEventListener("mouseenter", handleMouseHighlight);
 							});
 						}
+
 						function showErrorMsg(response) {
 							var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
 								response.status + ' (' + response.statusText + ').</p>' +
@@ -690,7 +746,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						panels.appendChild(panel);
 						var menu = create('ul', {class: 'slide-menu-items'});
 						panel.appendChild(menu);
-						['None', 'Fade', 'Slide', 'Convex', 'Concave', 'Zoom', 'Cube', 'Page'].forEach(function(name, i) {
+						transitions.forEach(function(name, i) {
 							var item = create('li', {
 								class: 'slide-menu-item',
 								'data-transition': name.toLowerCase(),
@@ -728,22 +784,29 @@ var RevealMenu = window.RevealMenu || (function(){
 					//
 					// Handle mouse overs
 					//
-					var mouseSelectionEnabled = true;
 					selectAll('.slide-menu-panel .slide-menu-items li').forEach(function(item) {
-						item.addEventListener("mouseenter", function(event) {
-							if (mouseSelectionEnabled) {
-								selectAll('.active-menu-panel .slide-menu-items li').forEach(function(i) {
-									i.classList.remove('selected');
-								});
-								event.currentTarget.classList.add('selected');
-							}
-						});
+						item.addEventListener("mouseenter", handleMouseHighlight);
 					});
+
+					function handleMouseHighlight(event) {
+						if (mouseSelectionEnabled) {
+							selectAll('.active-menu-panel .slide-menu-items li.selected').forEach(function(i) {
+								i.classList.remove('selected');
+							});
+							event.currentTarget.classList.add('selected');
+						}
+					}
+				}
+				if (openOnInit) {
+					openMenu();
 				}
 				initialised = true;
 			}
 
 			module.toggle = toggleMenu;
+			module.openMenu = openMenu;
+			module.closeMenu = closeMenu;
+			module.openPanel = openPanel;
 			module.isOpen = isOpen;
 			module.init = init;
 			module.isInit = function() { return initialised };
@@ -775,7 +838,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				// If we're in an iframe, post each reveal.js event to the
 				// parent window. Used by the notes plugin
 				if( config.postMessageEvents && window.parent !== window.self ) {
-					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: getState() }), '*' );
+					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: Reveal.getState() }), '*' );
 				}
 			}
 
@@ -851,7 +914,7 @@ var RevealMenu = window.RevealMenu || (function(){
 		if (document.currentScript) {
 			path = document.currentScript.src.slice(0, -7);
 		} else {
-			var sel = document.querySelector('script[src$="/menu.js"]')
+			var sel = document.querySelector('script[src$="menu.js"]');
 			if (sel) {
 				path = sel.src.slice(0, -7);
 			}
@@ -865,6 +928,22 @@ var RevealMenu = window.RevealMenu || (function(){
 		  return this.substr(position || 0, searchString.length) === searchString;
 	  };
 	}
+	if (!String.prototype.endsWith) {
+		String.prototype.endsWith = function(search, this_len) {
+			if (this_len === undefined || this_len > this.length) {
+				this_len = this.length;
+			}
+			return this.substring(this_len - search.length, this_len) === search;
+		};
+	}
 
+	var ieVersion = function() {
+		var browser = /(msie) ([\w.]+)/.exec(window.navigator.userAgent.toLowerCase());
+		if (browser && browser[1] === "msie") {
+			return parseFloat(browser[2]);
+		}
+		return null;
+	}();
+	
 	return module;
 })();
