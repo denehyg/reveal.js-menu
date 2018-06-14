@@ -87,6 +87,35 @@
 	opacity: 0.8;	
 }
 
+/*== If Font Awesome SVG with JS framework is used ==*/
+.reveal .slide-menu-wrapper .slide-menu-item svg.svg-inline--fa,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical svg.svg-inline--fa{
+	padding-right: 12px;
+	display: none;
+}
+
+.reveal .slide-menu-wrapper .slide-menu-item.past svg.svg-inline--fa.past,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical.past svg.svg-inline--fa.past,
+.reveal .slide-menu-wrapper .slide-menu-item.active svg.svg-inline--fa.active,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical.active svg.svg-inline--fa.active,
+.reveal .slide-menu-wrapper .slide-menu-item.future svg.svg-inline--fa.future,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical.future svg.svg-inline--fa.future {
+	display: inline-block;
+}
+
+.reveal .slide-menu-wrapper .slide-menu-item.past svg.svg-inline--fa.past,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical.past svg.svg-inline--fa.past,
+.reveal .slide-menu-wrapper .slide-menu-item.future svg.svg-inline--fa.future,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical.future svg.svg-inline--fa.future {
+	opacity: 0.4;
+}
+
+.reveal .slide-menu-wrapper .slide-menu-item.active svg.svg-inline--fa.active,
+.reveal .slide-menu-wrapper .slide-menu-item-vertical.active svg.svg-inline--fa.active {
+	opacity: 0.8;	
+}
+/*=====*/
+
 .reveal .slide-menu--left {
   left: 0;
   -webkit-transform: translateX(-300px);
