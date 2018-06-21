@@ -89,7 +89,9 @@
 .slide-menu-wrapper .slide-menu-item i.far,
 .slide-menu-wrapper .slide-menu-item i.fas,
 .slide-menu-wrapper .slide-menu-item-vertical i.far,
-.slide-menu-wrapper .slide-menu-item-vertical i.fas {
+.slide-menu-wrapper .slide-menu-item-vertical i.fas,
+.slide-menu-wrapper .slide-menu-item svg.svg-inline--fa,
+.slide-menu-wrapper .slide-menu-item-vertical svg.svg-inline--fa {
 	padding-right: 12px;
 	display: none;
 }
@@ -99,19 +101,31 @@
 .slide-menu-wrapper .slide-menu-item.active i.fas.active,
 .slide-menu-wrapper .slide-menu-item-vertical.active i.fas.active,
 .slide-menu-wrapper .slide-menu-item.future i.far.future,
-.slide-menu-wrapper .slide-menu-item-vertical.future i.far.future {
+.slide-menu-wrapper .slide-menu-item-vertical.future i.far.future,
+.slide-menu-wrapper .slide-menu-item.past svg.svg-inline--fa.past,
+.slide-menu-wrapper .slide-menu-item-vertical.past svg.svg-inline--fa.past,
+.slide-menu-wrapper .slide-menu-item.active svg.svg-inline--fa.active,
+.slide-menu-wrapper .slide-menu-item-vertical.active svg.svg-inline--fa.active,
+.slide-menu-wrapper .slide-menu-item.future svg.svg-inline--fa.future,
+.slide-menu-wrapper .slide-menu-item-vertical.future svg.svg-inline--fa.future {
 	display: inline-block;
 }
 
 .slide-menu-wrapper .slide-menu-item.past i.fas.past,
 .slide-menu-wrapper .slide-menu-item-vertical.past i.fas.past,
 .slide-menu-wrapper .slide-menu-item.future i.far.future,
-.slide-menu-wrapper .slide-menu-item-vertical.future i.far.future {
+.slide-menu-wrapper .slide-menu-item-vertical.future i.far.future,
+.slide-menu-wrapper .slide-menu-item.past svg.svg-inline--fa.past,
+.slide-menu-wrapper .slide-menu-item-vertical.past svg.svg-inline--fa.past,
+.slide-menu-wrapper .slide-menu-item.future svg.svg-inline--fa.future,
+.slide-menu-wrapper .slide-menu-item-vertical.future svg.svg-inline--fa.future {
 	opacity: 0.4;
 }
 
 .slide-menu-wrapper .slide-menu-item.active i.fas.active,
-.slide-menu-wrapper .slide-menu-item-vertical.active i.fas.active {
+.slide-menu-wrapper .slide-menu-item-vertical.active i.fas.active,
+.slide-menu-wrapper .slide-menu-item.active svg.svg-inline--fa.active,
+.slide-menu-wrapper .slide-menu-item-vertical.active svg.svg-inline--fa.active {
 	opacity: 0.8;	
 }
 
