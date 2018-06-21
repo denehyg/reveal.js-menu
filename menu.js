@@ -19,7 +19,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 	loadResource(options.path + 'menu.css', 'stylesheet', function() {
 		if (loadIcons) {
-			loadResource(options.path + 'font-awesome/css/fontawesome-all.min.css', 'stylesheet', loadPlugin)
+			loadResource(options.path + 'font-awesome/css/all.css', 'stylesheet', loadPlugin)
 		} else {
 			loadPlugin();
 		}
