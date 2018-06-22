@@ -185,7 +185,8 @@
 	padding-top: 16px;
 }
 
-.slide-menu-wrapper .slide-menu-toolbar > li.toolbar-panel-button i {
+.slide-menu-wrapper .slide-menu-toolbar > li.toolbar-panel-button i,
+.slide-menu-wrapper .slide-menu-toolbar > li.toolbar-panel-button svg.svg-inline--fa {
 	font-size: 1.7em;
 }
 
