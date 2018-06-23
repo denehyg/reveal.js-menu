@@ -75,6 +75,12 @@ Reveal.initialize({
 		// be shown. Use 'left' or 'right'.
 		side: 'left',
 
+		// Specifies the width of the menu.
+		// Can be one of the following:
+		// 'normal', 'wide', 'third', 'half', 'full', or
+		// any valid css length value
+		width: 'normal',
+
 		// Add slide numbers to the titles in the slide list.
 		// Use 'true' or format string (same as reveal.js slide numbers)
 		numbers: false,
@@ -306,7 +312,21 @@ Reveal.addEventListener( 'menu-ready', function( event ) {
 } );
 ```
 
- 
+## API
+
+The `RevealMenu` object exposes a JavaScript API for controlling the menu:
+
+| Function                 | Description   |
+|--------------------------|---------------|
+| toggle(event)            | Toggles the open state of the menu, ie open if it is closed, and close if it is open |
+| openMenu(event)          | Opens the menu |
+| closeMenu(event, force)  | Closes the menu. To force the menu to close (ie when `sticky` option is `true`) call `closeMenu(null, true)` | 
+| openPanel(event, ref)    | Opens the menu to a specific panel, passing the name of the panel or the panel element itself |
+| isOpen()                 | Returns true if the menu is open |
+| init()                   | Initialises the menu if it has not already been initialised. Used in conjunction with the `delayInit` option |
+| isInit()                 | Returns true if the menu has been initialised |
+
+
 ## License
 
 MIT licensed

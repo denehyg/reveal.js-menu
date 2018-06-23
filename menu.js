@@ -7,16 +7,19 @@
 var RevealMenu = window.RevealMenu || (function(){
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
-	options.path = options.path || scriptPath() || 'plugin/menu';
+	options.path = options.path || scriptPath() || 'plugin/menu/';
+	if (!options.path.endsWith('/')) {
+		options.path += '/';
+	}
 	var loadIcons = options.loadIcons;
 	if (typeof loadIcons === "undefined") loadIcons = true;
 	var initialised = false;
 	
 	var module = {};
 
-	loadResource(options.path + '/menu.css', 'stylesheet', function() {
+	loadResource(options.path + 'menu.css', 'stylesheet', function() {
 		if (loadIcons) {
-			loadResource(options.path + '/font-awesome/css/fontawesome-all.min.css', 'stylesheet', loadPlugin)
+			loadResource(options.path + 'font-awesome/css/all.css', 'stylesheet', loadPlugin)
 		} else {
 			loadPlugin();
 		}
@@ -36,6 +39,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			// Set option defaults
 			//
 			var side = options.side || 'left';	// 'left' or 'right'
+			var width = options.width;
 			var numbers = options.numbers || false;
 			var titleSelector = 'h1, h2, h3, h4, h5';
 			if (typeof options.titleSelector === 'string') titleSelector = options.titleSelector;
@@ -358,11 +362,11 @@ var RevealMenu = window.RevealMenu || (function(){
 				return select('body').classList.contains('slide-menu-active');
 			}
 
-			function openPanel(e) {
-				openMenu();
-				var panel = e;
-				if (typeof e !== "string") {
-					panel = e.currentTarget.getAttribute('data-panel');
+			function openPanel(event, ref) {
+				openMenu(event);
+				var panel = ref;
+				if (typeof ref !== "string") {
+					panel = event.currentTarget.getAttribute('data-panel');
 				}
 				select('.slide-menu-toolbar > li.active-toolbar-button').classList.remove('active-toolbar-button');
 				select('li[data-panel="' + panel + '"]').classList.add('active-toolbar-button');
@@ -372,7 +376,7 @@ var RevealMenu = window.RevealMenu || (function(){
 
 			function nextPanel() {
 				var next = (parseInt(select('.active-toolbar-button').getAttribute('data-button')) + 1) % buttons;
-				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
+				openPanel(null, select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function prevPanel() {
@@ -380,7 +384,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (next < 0) {
 					next = buttons - 1;
 				}
-				openPanel(select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
+				openPanel(null, select('.toolbar-panel-button[data-button="' + next + '"]').getAttribute('data-panel'));
 			}
 
 			function openItem(item, force) {
@@ -453,6 +457,15 @@ var RevealMenu = window.RevealMenu || (function(){
 					var top = create('div', { 'class': 'slide-menu-wrapper'});
 					parent.appendChild(top);
 					var panels = create('nav', { 'class': 'slide-menu slide-menu--' + side});
+					if (typeof width === 'string') {
+						if (['normal', 'wide', 'third', 'half', 'full'].indexOf(width) != -1) {
+							panels.classList.add('slide-menu--' + width);
+						}
+						else {
+							panels.classList.add('slide-menu--custom');
+							panels.style.width = width;
+						}
+					}
 					top.appendChild(panels);
 					matchRevealStyle();
 					var overlay = create('div', { 'class': 'slide-menu-overlay'});
@@ -783,6 +796,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			module.toggle = toggleMenu;
+			module.openMenu = openMenu;
+			module.closeMenu = closeMenu;
+			module.openPanel = openPanel;
 			module.isOpen = isOpen;
 			module.init = init;
 			module.isInit = function() { return initialised };
@@ -945,7 +961,7 @@ var RevealMenu = window.RevealMenu || (function(){
 		if (document.currentScript) {
 			path = document.currentScript.src.slice(0, -7);
 		} else {
-			var sel = document.querySelector('script[src$="/menu.js"]')
+			var sel = document.querySelector('script[src$="menu.js"]');
 			if (sel) {
 				path = sel.src.slice(0, -7);
 			}
@@ -958,6 +974,14 @@ var RevealMenu = window.RevealMenu || (function(){
 		String.prototype.startsWith = function(searchString, position){
 		  return this.substr(position || 0, searchString.length) === searchString;
 	  };
+	}
+	if (!String.prototype.endsWith) {
+		String.prototype.endsWith = function(search, this_len) {
+			if (this_len === undefined || this_len > this.length) {
+				this_len = this.length;
+			}
+			return this.substring(this_len - search.length, this_len) === search;
+		};
 	}
 
 	var ieVersion = function() {
