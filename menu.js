@@ -14,7 +14,7 @@ var RevealMenu = window.RevealMenu || (function(){
 	var loadIcons = options.loadIcons;
 	if (typeof loadIcons === "undefined") loadIcons = true;
 	var initialised = false;
-	
+
 	var module = {};
 
 	loadResource(options.path + 'menu.css', 'stylesheet', function() {
@@ -30,7 +30,7 @@ var RevealMenu = window.RevealMenu || (function(){
 		var initialise = !ieVersion || ieVersion >= 9;
 
 		// do not load the menu in the upcoming slide panel in the speaker notes
-		if (Reveal.isSpeakerNotes() && window.location.search.endsWith('controls=false')) {
+		if (Reveal.isSpeakerNotes && window.location.search.endsWith('controls=false')) {
 			initialise = false;
 		}
 
@@ -48,6 +48,9 @@ var RevealMenu = window.RevealMenu || (function(){
 			var markers = options.markers;
 			if (typeof markers === "undefined") markers = true;
 			var custom = options.custom;
+            var deckUrl = options.deckUrl;
+            var speakerNotes = options.speakerNotes;
+            var overview = options.overview;
 			var themesPath = typeof options.themesPath === 'string' ? options.themesPath : 'css/theme/';
 			if (!themesPath.endsWith('/')) themesPath += '/';
 			var themes = select('link#theme') ? options.themes : false;
@@ -92,7 +95,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			var delayInit = options.delayInit;
 			if (typeof delayInit === "undefined") delayInit = false;
 			var openOnInit = options.openOnInit || false;
-			
+
 			var mouseSelectionEnabled = true;
 			function disableMouseSelection() {
 				mouseSelectionEnabled = false;
@@ -126,7 +129,7 @@ var RevealMenu = window.RevealMenu || (function(){
 				var offsetFromTop = getOffset(el).top - el.offsetParent.offsetTop;
 				if (offsetFromTop < 0) return -offsetFromTop
 				var offsetFromBottom = el.offsetParent.offsetHeight - (el.offsetTop - el.offsetParent.scrollTop + el.offsetHeight);
-				if (offsetFromBottom < 0) return offsetFromBottom; 
+				if (offsetFromBottom < 0) return offsetFromBottom;
 				return 0;
 			}
 
@@ -224,7 +227,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						case 34: case 68:
 							var visibleItems = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 							var itemsBelow = selectAll('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
-							
+
 							var lastVisible = (itemsBelow.length > 0 && Math.abs(visibleOffset(itemsBelow[0])) < itemsBelow[0].clientHeight ? itemsBelow[0] : visibleItems[visibleItems.length-1]);
 							if (lastVisible) {
 								if (lastVisible.classList.contains('selected') && itemsBelow.length > 0) {
@@ -317,13 +320,13 @@ var RevealMenu = window.RevealMenu || (function(){
 				    select('.reveal').classList.add('has-' + options.effect + '-' + side);
 				    select('.slide-menu').classList.add('active');
 				    select('.slide-menu-overlay').classList.add('active');
-					
+
 					// identify active theme
 					if (themes) {
 						selectAll('div[data-panel="Themes"] li').forEach(function(i) { i.classList.remove('active') });
 						selectAll('li[data-theme="' + select('link#theme').getAttribute('href') + '"]').forEach(function(i) { i.classList.add('active') });
 					}
-					
+
 					// identify active transition
 					if (transitions) {
 						selectAll('div[data-panel="Transitions"] li').forEach(function(i) { i.classList.remove('active') });
@@ -490,7 +493,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						};
 						if (ref) {
 							attrs['data-panel'] = ref;
-						}	
+						}
 						var button = create('li', attrs);
 
 						if (icon.startsWith('fa-')) {
@@ -512,6 +515,26 @@ var RevealMenu = window.RevealMenu || (function(){
 							addToolbarButton(element.title, 'Custom' + index, element.icon, null, openPanel);
 						});
 					}
+
+                    if (deckUrl) {
+                        addToolbarButton(
+                            'Deck Page', 'Deck Page', '<i class="fa fa-th">', null,
+                            function() { window.open(deckUrl, '_blank'); },
+                        );
+                    }
+
+                    if (speakerNotes){
+					    addToolbarButton('Notes', 'Notes', '<i class="fa fa-sticky-note">', null,
+                            function() {
+					            console.log('open notes');
+                                RevealNotes.open();
+					        }
+                        );
+                    }
+
+                    if (overview) {
+					    addToolbarButton('Overview', 'Overview', '<i class="fa fa-search">', null, Reveal.toggleOverview);
+                    }
 
 					if (themes) {
 						addToolbarButton('Themes', 'Themes', 'fa-adjust', 'fas', openPanel);
@@ -610,7 +633,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						}
 
 						item.appendChild(create('span', {class: 'slide-menu-item-title'}, title));
-						
+
 						return item;
 					}
 
@@ -691,7 +714,7 @@ var RevealMenu = window.RevealMenu || (function(){
 						}
 
 						function showErrorMsg(response) {
-							var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' + 
+							var msg = '<p>ERROR: The attempt to fetch ' + response.responseURL + ' failed with HTTP status ' +
 								response.status + ' (' + response.statusText + ').</p>' +
 								'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>';
 								response.panel.innerHTML = msg;
@@ -810,7 +833,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			module.isOpen = isOpen;
 			module.init = init;
 			module.isInit = function() { return initialised };
-			
+
 			if (!delayInit) {
 				init();
 			}
@@ -944,6 +967,6 @@ var RevealMenu = window.RevealMenu || (function(){
 		}
 		return null;
 	}();
-	
+
 	return module;
 })();
