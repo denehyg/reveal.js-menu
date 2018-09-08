@@ -158,11 +158,13 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function onDocumentKeyDown(event) {
-				if (event.keyCode === 77) {
-					toggleMenu();
-				} else if (isOpen()) {
+				// opening menu is handled by registering key binding with Reveal below
+				if (isOpen()) {
 					event.stopImmediatePropagation();
 					switch( event.keyCode ) {
+						// case 77:
+						// 	closeMenu();
+						// 	break;
 						// h, left - change panel
 						case 72: case 37:
 							prevPanel();
@@ -297,11 +299,13 @@ var RevealMenu = window.RevealMenu || (function(){
 				if (config.keyboardCondition && typeof config.keyboardCondition === 'function') {
 					// combine user defined keyboard condition with the menu's own condition
 					var userCondition = config.keyboardCondition;
-					config.keyboardCondition = function() {
-						return userCondition() && !isOpen();
+					config.keyboardCondition = function(event) {
+						return userCondition(event) && (!isOpen() || event.keyCode == 77);
 					};
 				} else {
-					config.keyboardCondition = function() { return !isOpen(); }
+					config.keyboardCondition = function(event) {
+						return !isOpen() || event.keyCode == 77;
+					}
 				}
 			}
 
@@ -841,6 +845,8 @@ var RevealMenu = window.RevealMenu || (function(){
 					window.parent.postMessage( JSON.stringify({ namespace: 'reveal', eventName: type, state: Reveal.getState() }), '*' );
 				}
 			}
+
+			Reveal.addKeyBinding({keyCode: 77, key: 'M', description: 'Toggle menu'}, toggleMenu);
 
 			dispatchEvent('menu-ready');
 		}
