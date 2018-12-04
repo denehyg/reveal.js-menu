@@ -5,6 +5,29 @@
  */
 
 var RevealMenu = window.RevealMenu || (function(){
+	// polyfill
+	if (!String.prototype.startsWith) {
+		String.prototype.startsWith = function(searchString, position){
+		  return this.substr(position || 0, searchString.length) === searchString;
+	  };
+	}
+	if (!String.prototype.endsWith) {
+		String.prototype.endsWith = function(search, this_len) {
+			if (this_len === undefined || this_len > this.length) {
+				this_len = this.length;
+			}
+			return this.substring(this_len - search.length, this_len) === search;
+		};
+	}
+
+	var ieVersion = function() {
+		var browser = /(msie) ([\w.]+)/.exec(window.navigator.userAgent.toLowerCase());
+		if (browser && browser[1] === "msie") {
+			return parseFloat(browser[2]);
+		}
+		return null;
+	}();
+	
 	var config = Reveal.getConfig();
 	var options = config.menu || {};
 	options.path = options.path || scriptPath() || 'plugin/menu/';
@@ -928,28 +951,5 @@ var RevealMenu = window.RevealMenu || (function(){
 		return path;
 	}
 
-	// polyfill
-	if (!String.prototype.startsWith) {
-		String.prototype.startsWith = function(searchString, position){
-		  return this.substr(position || 0, searchString.length) === searchString;
-	  };
-	}
-	if (!String.prototype.endsWith) {
-		String.prototype.endsWith = function(search, this_len) {
-			if (this_len === undefined || this_len > this.length) {
-				this_len = this.length;
-			}
-			return this.substring(this_len - search.length, this_len) === search;
-		};
-	}
-
-	var ieVersion = function() {
-		var browser = /(msie) ([\w.]+)/.exec(window.navigator.userAgent.toLowerCase());
-		if (browser && browser[1] === "msie") {
-			return parseFloat(browser[2]);
-		}
-		return null;
-	}();
-	
 	return module;
 })();
