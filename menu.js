@@ -631,9 +631,15 @@ var RevealMenu = window.RevealMenu || (function(){
 							selectAll('.slides > section').forEach(function(section, h) {
 								var subsections = selectAll('section', section);
 								if (subsections.length > 0) {
-									subsections.forEach(function(subsection, v) {
-										var type = (v === 0 ? 'slide-menu-item' : 'slide-menu-item-vertical');
-										var item = generateItem(type, subsection, slideCount, h, v);
+									subsections.forEach(function(subsection, count) {
+										var item;
+										if (count === 0) {
+											item = generateItem('slide-menu-item', section, slideCount, h);
+										} else {
+										    if (count >0 ){
+												item = generateItem('slide-menu-item-vertical', subsection, slideCount, h, count -1);
+											}
+										}
 										if (item) {
 											slideCount++;
 											items.appendChild(item);
