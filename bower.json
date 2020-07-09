@@ -1,6 +1,6 @@
 {
   "name": "reveal.js-menu",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "homepage": "https://denehyg.github.io/reveal.js-menu",
   "authors": ["Greg Denehy"],
   "description": "A slideout menu for navigating reveal.js presentations",
