@@ -331,6 +331,10 @@ The `RevealMenu` object exposes a JavaScript API for controlling the menu:
 | initMenu()              | Initialises the menu if it has not already been initialised. Used in conjunction with the `delayInit` option |
 | isInit()                | Returns true if the menu has been initialised                                                                |
 
+## Compatibility
+
+reveal.js-menu v2.0 is built for reveal.js v4. It will not work with reveal.js v3. If you require a menu for reveal.js v3 you will need to install reveal.js-menu v1.2.0.
+
 ## License
 
 MIT licensed
