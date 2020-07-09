@@ -328,12 +328,14 @@ The `RevealMenu` object exposes a JavaScript API for controlling the menu:
 | closeMenu(event, force) | Closes the menu. To force the menu to close (ie when `sticky` option is `true`) call `closeMenu(null, true)` |
 | openPanel(event, ref)   | Opens the menu to a specific panel, passing the name of the panel or the panel element itself                |
 | isOpen()                | Returns true if the menu is open                                                                             |
-| initMenu()              | Initialises the menu if it has not already been initialised. Used in conjunction with the `delayInit` option |
-| isInit()                | Returns true if the menu has been initialised                                                                |
+| initialiseMenu()        | Initialises the menu if it has not already been initialised. Used in conjunction with the `delayInit` option |
+| isMenuInitialised()     | Returns true if the menu has been initialised                                                                |
 
 ## Compatibility
 
 reveal.js-menu v2.0 is built for reveal.js v4. It will not work with reveal.js v3. If you require a menu for reveal.js v3 you will need to install reveal.js-menu v1.2.0.
+
+v2.0 also introduces API changes that are not backwards compatible. `init()` has been renamed to `initMenu()` to deconflict with the reveal.js v4 plugin API. `isInit()` has also been changed to `isMenuInitialised()`.
 
 ## License
 
