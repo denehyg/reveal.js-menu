@@ -536,45 +536,40 @@ const Plugin = () => {
     var h = parseInt(item.getAttribute('data-slide-h'));
     var v = parseInt(item.getAttribute('data-slide-v'));
     var theme = item.getAttribute('data-theme');
+    var highlightTheme = item.getAttribute('data-highlight-theme');
     var transition = item.getAttribute('data-transition');
+
     if (!isNaN(h) && !isNaN(v)) {
       deck.slide(h, v);
-      closeMenu();
-    } else if (theme) {
-      // take note of the previous theme and remove it, then create a new stylesheet reference and insert it
-      // this is required to force a load event so we can change the menu style to match the new style
-      var stylesheet = select('link#theme');
-      var parent = stylesheet.parentElement;
-      var sibling = stylesheet.nextElementSibling;
-      stylesheet.remove();
-
-      var newStylesheet = stylesheet.cloneNode();
-      newStylesheet.setAttribute('href', theme);
-      newStylesheet.onload = function () {
-        matchRevealStyle();
-      };
-      parent.insertBefore(newStylesheet, sibling);
-
-      closeMenu();
-    } else if (transition) {
-      deck.configure({ transition: transition });
-      closeMenu();
-    } else {
-      var link = select('a', item);
-      if (link) {
-        if (
-          force ||
-          !options.sticky ||
-          (options.autoOpen && link.href.startsWith('#')) ||
-          link.href.startsWith(
-            window.location.origin + window.location.pathname + '#'
-          )
-        ) {
-          link.click();
-        }
-      }
-      closeMenu();
     }
+
+    if (theme) {
+      changeStylesheet('theme', theme);
+    }
+
+    if (highlightTheme) {
+      changeStylesheet('highlight-theme', highlightTheme);
+    }
+
+    if (transition) {
+      deck.configure({ transition: transition });
+    }
+
+    var link = select('a', item);
+    if (link) {
+      if (
+        force ||
+        !options.sticky ||
+        (options.autoOpen && link.href.startsWith('#')) ||
+        link.href.startsWith(
+          window.location.origin + window.location.pathname + '#'
+        )
+      ) {
+        link.click();
+      }
+    }
+
+    closeMenu();
   }
 
   function clicked(event) {
@@ -950,15 +945,17 @@ const Plugin = () => {
         var menu = create('ul', { class: 'slide-menu-items' });
         panel.appendChild(menu);
         options.themes.forEach(function (t, i) {
-          var item = create(
-            'li',
-            {
-              class: 'slide-menu-item',
-              'data-theme': t.theme,
-              'data-item': '' + (i + 1)
-            },
-            t.name
-          );
+          var attrs = {
+            class: 'slide-menu-item',
+            'data-item': '' + (i + 1)
+          };
+          if (t.theme) {
+            attrs['data-theme'] = t.theme;
+          }
+          if (t.highlightTheme) {
+            attrs['data-highlight-theme'] = t.highlightTheme;
+          }
+          var item = create('li', attrs, t.name);
           menu.appendChild(item);
           item.onclick = clicked;
         });
@@ -1134,6 +1131,22 @@ const Plugin = () => {
     }
     if (content) el.innerHTML = content;
     return el;
+  }
+
+  function changeStylesheet(id, href) {
+    // take note of the previous theme and remove it, then create a new stylesheet reference and insert it
+    // this is required to force a load event so we can change the menu style to match the new style
+    var stylesheet = select('link#' + id);
+    var parent = stylesheet.parentElement;
+    var sibling = stylesheet.nextElementSibling;
+    stylesheet.remove();
+
+    var newStylesheet = stylesheet.cloneNode();
+    newStylesheet.setAttribute('href', href);
+    newStylesheet.onload = function () {
+      matchRevealStyle();
+    };
+    parent.insertBefore(newStylesheet, sibling);
   }
 
   // modified from math plugin
