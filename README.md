@@ -108,11 +108,25 @@ Reveal.initialize({
     // with the default themes list. Alternatively, provide an
     // array to specify the themes to make available in the
     // themes menu panel, for example...
+    //
     // [
-    //     { name: 'Black', theme: 'css/theme/black.css' },
-    //     { name: 'White', theme: 'css/theme/white.css' },
-    //     { name: 'League', theme: 'css/theme/league.css' }
+    //     { name: 'Black', theme: 'dist/theme/black.css' },
+    //     { name: 'White', theme: 'dist/theme/white.css' },
+    //     { name: 'League', theme: 'dist/theme/league.css' },
+    //     {
+    //       name: 'Dark',
+    //       theme: 'lib/reveal.js/dist/theme/black.css',
+    //       highlightTheme: 'lib/reveal.js/plugin/highlight/monokai.css'
+    //     },
+    //     {
+    //       name: 'Code: Zenburn',
+    //       highlightTheme: 'lib/reveal.js/plugin/highlight/zenburn.css'
+    //     }
     // ]
+    //
+    // Note: specifying highlightTheme without a theme will
+    // change the code highlight theme while leaving the
+    // presentation theme unchanged.
     themes: false,
 
     // Specifies the path to the default theme files. If your
@@ -121,7 +135,7 @@ Reveal.initialize({
     // when 'themes' is set to 'true'. If you provide your own
     // list of themes or 'themes' is set to 'false' the
     // 'themesPath' option is ignored.
-    themesPath: 'css/theme/',
+    themesPath: 'dist/theme/',
 
     // Specifies if the transitions menu panel will be shown.
     // Set to 'true' to show the transitions menu panel with
@@ -182,6 +196,16 @@ If you are using the themes panel you need to ensure the theme stylesheet in the
 
 ```html
 <link rel="stylesheet" href="css/theme/black.css" id="theme" />
+```
+
+If your themes configuration includes code highlight themes you need to ensure the highlights theme stylesheet in the presentation uses the `id="highlight-theme"` attribute. For example...
+
+```html
+<link
+  rel="stylesheet"
+  href="plugin/highlight/zenburn.css"
+  id="highlight-theme"
+/>
 ```
 
 ## Slide Titles
