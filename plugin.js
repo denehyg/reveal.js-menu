@@ -61,7 +61,7 @@ const Plugin = () => {
     if (options.markers === undefined) options.markers = true;
 
     if (typeof options.themesPath !== 'string')
-      options.themesPath = 'css/theme/';
+      options.themesPath = 'dist/theme/';
     if (!options.themesPath.endsWith('/')) options.themesPath += '/';
 
     if (!select('link#theme')) options.themes = false;
