@@ -6,4 +6,5 @@ When reporting a bug make sure to include information about which browser and op
 ### Pull Requests
 - Should follow the coding style of the file you work in
 - Should be made towards the **dev branch**
+- Unminified plugin source code lives in plugin.js
 - Should be submitted from a feature/topic branch (not your master)

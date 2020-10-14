@@ -1,6 +1,6 @@
 # reveal.js-menu
 
-A slideout menu plugin for [Reveal.js](https://github.com/hakimel/reveal.js) to quickly jump to any slide by title. Also optionally change the theme and set the default transition. [Check out the live demo](https://denehyg.github.io/reveal.js-menu)
+A slideout menu plugin for [Reveal.js](https://github.com/hakimel/reveal.js) to quickly jump to any slide by title. Also optionally change the theme and set the default transition. [Check out the live demo](https://denehyg.github.io/reveal.js-menu).  The source code for the demo can be found in the **gh-pages branch**.
 
 ## Installation
 
