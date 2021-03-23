@@ -339,8 +339,8 @@
 /*
  * Hide menu for pdf printing
  */
-body.print-pdf .slide-menu-wrapper .slide-menu,
-body.print-pdf .reveal .slide-menu-button,
-body.print-pdf .slide-menu-wrapper .slide-menu-overlay {
+.print-pdf .slide-menu-wrapper .slide-menu,
+.print-pdf .reveal .slide-menu-button,
+.print-pdf .slide-menu-wrapper .slide-menu-overlay {
   display: none;
 }
