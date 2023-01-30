@@ -1137,16 +1137,14 @@ const Plugin = () => {
     // take note of the previous theme and remove it, then create a new stylesheet reference and insert it
     // this is required to force a load event so we can change the menu style to match the new style
     var stylesheet = select('link#' + id);
-    var parent = stylesheet.parentElement;
-    var sibling = stylesheet.nextElementSibling;
-    stylesheet.remove();
-
-    var newStylesheet = stylesheet.cloneNode();
-    newStylesheet.setAttribute('href', href);
-    newStylesheet.onload = function () {
-      matchRevealStyle();
-    };
-    parent.insertBefore(newStylesheet, sibling);
+    const preload=document.createElement("link");
+    preload.setAttribute("rel", "preload");
+    preload.setAttribute("as", "style");
+    preload.setAttribute("href", href);
+    preload.onload = function(){
+        stylesheet.setAttribute('href', href);
+    }
+    document.head.appendChild(preload);
   }
 
   // modified from math plugin
