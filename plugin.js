@@ -877,7 +877,11 @@ const Plugin = () => {
       if (options.custom) {
         function xhrSuccess() {
           if (this.status >= 200 && this.status < 300) {
-            this.panel.innerHTML = this.responseText;
+            if (this.markdown) {
+              this.panel.innerHTML = RevealMarkdown().marked(this.responseText);
+            } else {
+              this.panel.innerHTML = this.responseText;
+            }
             enableCustomLinks(this.panel);
           } else {
             showErrorMsg(this);
@@ -889,6 +893,9 @@ const Plugin = () => {
         function loadCustomPanelContent(panel, sURL) {
           var oReq = new XMLHttpRequest();
           oReq.panel = panel;
+          if (sURL.endsWith('.md') && RevealMarkdown() && RevealMarkdown().marked) {
+            oReq.markdown = true;
+          }
           oReq.arguments = Array.prototype.slice.call(arguments, 2);
           oReq.onload = xhrSuccess;
           oReq.onerror = xhrError;
