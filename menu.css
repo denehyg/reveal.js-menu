@@ -341,6 +341,9 @@
  */
 body.print-pdf .slide-menu-wrapper .slide-menu,
 body.print-pdf .reveal .slide-menu-button,
-body.print-pdf .slide-menu-wrapper .slide-menu-overlay {
+body.print-pdf .slide-menu-wrapper .slide-menu-overlay,
+html.print-pdf .slide-menu-wrapper .slide-menu,
+html.print-pdf .reveal .slide-menu-button,
+html.print-pdf .slide-menu-wrapper .slide-menu-overlay {
   display: none;
 }
