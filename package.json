@@ -20,6 +20,8 @@
     "url": "https://github.com/denehyg/reveal.js-menu/issues"
   },
   "homepage": "https://github.com/denehyg/reveal.js-menu#readme",
+  "main": "menu.js",
+  "module": "main.esm.js",
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
