@@ -30,7 +30,7 @@ const Plugin = () => {
       if (sel) {
         path = sel.src.slice(0, -7);
       }
-    } else {
+    } else if ('url' in import.meta) {
       path = import.meta.url.slice(0, import.meta.url.lastIndexOf('/') + 1);
     }
 
